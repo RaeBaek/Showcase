@@ -16,7 +16,7 @@ class TMDBClient {
     private lazy var baseUrl = URL(string: "https://" + baseUrlString)!
 
     func requestTMDB<T: Decodable>(_ path: String, query: [URLQueryItem] = []) async throws -> T {
-        var components = URLComponents(url: baseUrl.appendingPathComponent(path), resolvingAgainstBaseURL: true)!
+        var components = URLComponents(url: baseUrl.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
         components.queryItems = components.queryItems.map { $0 + query } ?? query
 
         var request = URLRequest(url: components.url!)
@@ -51,7 +51,7 @@ class TMDBClient {
     }
 
     // MARK: 인기 리스트 3종
-    func moviePopularList() async throws -> PopularListResponse {
+    func moviePopularList() async throws -> PopularListResponse<PopularMovieDTO> {
         try await self.requestTMDB(
             "/movie/popular",
             query: [
@@ -61,7 +61,7 @@ class TMDBClient {
         )
     }
 
-    func peoplePopularList() async throws -> PopularListResponse {
+    func peoplePopularList() async throws -> PopularListResponse<PopularPeopleDTO> {
         try await self.requestTMDB(
             "/person/popular",
             query: [
@@ -71,7 +71,7 @@ class TMDBClient {
         )
     }
 
-    func tvPopularList() async throws -> PopularListResponse {
+    func tvPopularList() async throws -> PopularListResponse<PopularTVDTO> {
         try await self.requestTMDB(
             "/tv/popular",
             query: [
