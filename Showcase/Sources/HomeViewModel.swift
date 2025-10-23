@@ -9,9 +9,9 @@ import Foundation
 
 @MainActor
 final class HomeViewModel: ObservableObject {
-    @Published var movies: [ModifyEntity] = []
-    @Published var peoples: [ModifyEntity] = []
-    @Published var tvs: [ModifyEntity] = []
+    @Published var movies: [PopularEntity] = []
+    @Published var peoples: [PopularEntity] = []
+    @Published var tvs: [PopularEntity] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -24,13 +24,13 @@ final class HomeViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            async let movies = try await tmdbClient.movieList()
-            async let peoples = try await tmdbClient.peopleList()
-            async let tvs = try await tmdbClient.tvList()
+            async let movies = try await tmdbClient.moviePopularList()
+            async let peoples = try await tmdbClient.peoplePopularList()
+            async let tvs = try await tmdbClient.tvPopularList()
 
-            self.movies = try await movies.results.map { $0.toModify }
-            self.peoples = try await peoples.results.map { $0.toModify }
-            self.tvs = try await tvs.results.map { $0.toModify }
+            self.movies = try await movies.results?.map { $0.toPopular } ?? []
+            self.peoples = try await peoples.results?.map { $0.toPopular } ?? []
+            self.tvs = try await tvs.results?.map { $0.toPopular } ?? []
         } catch {
             errorMessage = "데이터를 불러오지 못했어요. 잠시 후 다시 시도해주세요."
         }

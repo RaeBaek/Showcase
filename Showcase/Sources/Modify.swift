@@ -1,5 +1,5 @@
 //
-//  CommonList.swift
+//  Modify.swift
 //  Showcase
 //
 //  Created by 백래훈 on 10/23/25.
@@ -9,11 +9,20 @@ import Foundation
 
 // Network Response
 struct ModifyListResponse: Decodable {
-    let results: [ModifyListDTO]
+    let results: [ModifyDTO]
+    let page: Int
+    let totalPages: Int
+    let totalResults: Int
+
+    enum CodingKeys: String, CodingKey {
+        case results, page
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
 }
 
 // DTO
-struct ModifyListDTO: Decodable {
+struct ModifyDTO: Decodable {
     let id: Int?
     let adult: Bool?
 }
@@ -24,7 +33,7 @@ struct ModifyEntity: Identifiable {
     let adult: Bool?
 }
 
-extension ModifyListDTO {
+extension ModifyDTO {
     var toModify: ModifyEntity {
         ModifyEntity(id: id, adult: adult)
     }

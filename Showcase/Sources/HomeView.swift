@@ -42,7 +42,7 @@ struct HomeView: View {
 
 private struct SectionView: View {
     let title: String
-    let items: [ModifyEntity]
+    let items: [PopularEntity]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -50,15 +50,35 @@ private struct SectionView: View {
                 .font(.title3.bold())
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(items) { card in
+                    ForEach(items) { entity in
                         VStack(alignment: .leading, spacing: 6) {
                             RoundedRectangle(cornerRadius: 12)
                                 .overlay {
-                                    Image(systemName: "photo")
+                                    if let path = entity.posterPath,
+                                       let url = URL(string: "https://image.tmdb.org/t/p/w500" + path) {
+                                        AsyncImage(url: url) { img in
+                                            if let image = img.image {
+                                                image.resizable().scaledToFill()
+                                            } else if img.error != nil {
+                                                Color.gray.opacity(0.2)
+                                            } else {
+                                                ZStack {
+                                                    Color.gray.opacity(0.15)
+                                                    ProgressView()
+                                                }
+                                            }
+                                        }
+//                                        placeholder: {
+//                                            ZStack {
+//                                                Color.gray.opacity(0.15)
+//                                                ProgressView()
+//                                            }
+//                                        }
+                                    }
                                 }
                                 .frame(width: 120, height: 180)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                            Text("ID: \(card.id ?? 0)")
+                            Text(entity.title ?? "")
                                 .lineLimit(1)
                                 .font(.footnote)
                                 .frame(width: 120, alignment: .leading)

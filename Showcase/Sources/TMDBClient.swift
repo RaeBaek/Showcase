@@ -16,12 +16,8 @@ class TMDBClient {
     private lazy var baseUrl = URL(string: "https://" + baseUrlString)!
 
     func requestTMDB<T: Decodable>(_ path: String, query: [URLQueryItem] = []) async throws -> T {
-        print(baseUrlString)
-        print(baseUrl)
         var components = URLComponents(url: baseUrl.appendingPathComponent(path), resolvingAgainstBaseURL: true)!
         components.queryItems = components.queryItems.map { $0 + query } ?? query
-
-        print(components.url!)
 
         var request = URLRequest(url: components.url!)
         request.httpMethod = "GET"
@@ -40,16 +36,48 @@ class TMDBClient {
         return try JSONDecoder().decode(T.self, from: data)
     }
 
-    // MARK: EndPoints (인기 리스트 3종)
-    func movieList() async throws -> ModifyListResponse {
+    // MARK: EndPoints
+    // MARK: 수정 리스트 3종
+    func movieModifyList() async throws -> ModifyListResponse {
         try await self.requestTMDB("/movie/changes", query: [URLQueryItem(name: "page", value: "1")])
     }
 
-    func peopleList() async throws -> ModifyListResponse {
+    func peopleModifyList() async throws -> ModifyListResponse {
         try await self.requestTMDB("/person/changes", query: [URLQueryItem(name: "page", value: "1")])
     }
 
-    func tvList() async throws -> ModifyListResponse {
+    func tvModifyList() async throws -> ModifyListResponse {
         try await self.requestTMDB("/tv/changes", query: [URLQueryItem(name: "page", value: "1")])
+    }
+
+    // MARK: 인기 리스트 3종
+    func moviePopularList() async throws -> PopularListResponse {
+        try await self.requestTMDB(
+            "/movie/popular",
+            query: [
+                URLQueryItem(name: "language", value: "ko-KR"),
+                URLQueryItem(name: "page", value: "1")
+            ]
+        )
+    }
+
+    func peoplePopularList() async throws -> PopularListResponse {
+        try await self.requestTMDB(
+            "/person/popular",
+            query: [
+                URLQueryItem(name: "language", value: "ko-KR"),
+                URLQueryItem(name: "page", value: "1")
+            ]
+        )
+    }
+
+    func tvPopularList() async throws -> PopularListResponse {
+        try await self.requestTMDB(
+            "/tv/popular",
+            query: [
+                URLQueryItem(name: "language", value: "ko-KR"),
+                URLQueryItem(name: "page", value: "1")
+            ]
+        )
     }
 }
