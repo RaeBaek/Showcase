@@ -1,0 +1,118 @@
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### Xcode ###
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+*.xcuserstate
+
+## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
+*.xcscmblueprint
+*.xccheckout
+
+## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+### Xcode Patch ###
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+
+### Projects ###
+*.xcodeproj
+*.xcworkspace
+
+### Tuist derived files ###
+graph.dot
+Derived/
+
+### Tuist managed dependencies ###
+Tuist/.build
+
+### Swift Package Manager (SPM)
+.build/
+Package.resolved           # (루트 Package.swift 방식이면 커밋 정책에 따라 제외/포함 결정)
+
+### Tuist
+Tuist/Dependencies/        # SPM 캐시/체크아웃
+Tuist/Cache/               # Tuist 캐시
+Tuist/ProjectDescriptionHelpers/Derived/    # (생성 산출물 있을 때)
+
+### Xcode 추가
+*.xcresult                  # Test/Build 결과 번들
+*.trace
+*.dSYM
+*.ipa
+fastlane/report.xml
+fastlane/test_output/
+*.log
+
+### SwiftLint / SwiftFormat
+.swiftlint_baseline.yml     # 베이스라인 도입 시 (원하면 커밋 제외)
+.swiftlint.tmp
+.swiftformat.tmp
+
+### CocoaPods / Carthage (혹시 쓰게 될 경우)
+Pods/
+Carthage/Build/
+Carthage/Checkouts/
+
+### SPM in Xcode Workspace
+SourcePackages/
+.xcscmblueprint
+.xcworkspace/xcuserdata/
+
+### Simulator / Derived
+*.simdevicetype
+*.simruntime
+
+### Editor / OS
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Secrets
+Configs/
