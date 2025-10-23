@@ -7,6 +7,10 @@ let project = Project(
             "SWIFT_VERSION": "5.10",
             "DEVELOPMENT_TEAM": "DD66GTY4AT",
             "CODE_SIGN_STYLE": "Automatic"
+        ],
+        configurations: [
+            .debug(name: .debug, xcconfig: "Configs/Debug-Dev.xcconfig"),
+            .release(name: .release, xcconfig: "Configs/Release-Prod.xcconfig")
         ]
     ),
     targets: [
@@ -17,19 +21,23 @@ let project = Project(
             product: .app,
             bundleId: "com.raehoon.Showcase",
             deploymentTargets: .iOS("17.0"),
-            infoPlist: .extendingDefault(
-                with: [
+            infoPlist: .extendingDefault(with: [
                     "UILaunchScreen": [
                         "UIColorName": "",
                         "UIImageName": "",
                     ],
-                ]
-            ),
+                    "APP_ENV": "$(APP_ENV)",
+                    "TMDB_API_KEY": "$(TMDB_API_KEY)",
+                    "TMDB_READ_ACCESS_TOKEN": "$(TMDB_READ_ACCESS_TOKEN)",
+                    "TMDB_BASE_URL_STRING": "$(TMDB_BASE_URL_STRING)",
+                ]),
             buildableFolders: [
                 "Showcase/Sources",
                 "Showcase/Resources",
             ],
-            dependencies: []
+            dependencies: [
+
+            ]
         ),
         // Unit Tests
         .target(
