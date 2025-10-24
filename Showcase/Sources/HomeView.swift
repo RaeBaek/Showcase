@@ -67,12 +67,6 @@ private struct SectionView<T: HomeDisplayable>: View {
                                                 }
                                             }
                                         }
-//                                        placeholder: {
-//                                            ZStack {
-//                                                Color.gray.opacity(0.15)
-//                                                ProgressView()
-//                                            }
-//                                        }
                                     }
                                 }
                                 .frame(width: 120, height: 180)
@@ -90,6 +84,6 @@ private struct SectionView<T: HomeDisplayable>: View {
     }
 }
 
-#Preview {
-    HomeView()
-}
+//#Preview {
+//    HomeView()
+//}

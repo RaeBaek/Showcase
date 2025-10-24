@@ -9,11 +9,32 @@ import Foundation
 
 class TMDBClient {
     static let shared = TMDBClient()
-    private init() {}
 
-    private let accessToken = Bundle.main.object(forInfoDictionaryKey: "TMDB_READ_ACCESS_TOKEN") as? String ?? "UNKNOWN"
-    private let baseUrlString = Bundle.main.object(forInfoDictionaryKey: "TMDB_BASE_URL_STRING") as? String ?? "UNKNOWN"
-    private lazy var baseUrl = URL(string: "https://" + baseUrlString)!
+    private let accessToken: String
+    private let baseUrlString: String
+    private let baseUrl: URL
+
+    private init() {
+        // 1. Access Token 로드
+        guard let token = Bundle.main.object(forInfoDictionaryKey: "TMDB_READ_ACCESS_TOKEN") as? String,
+              !token.isEmpty else {
+            fatalError("TMDB_READ_ACCESS_TOKEN not found or is invalid in Info.plist")
+        }
+        self.accessToken = token
+
+        // 2. Base URL String 로드
+        guard let urlString = Bundle.main.object(forInfoDictionaryKey: "TMDB_BASE_URL_STRING") as? String,
+              !urlString.isEmpty else {
+            fatalError("TMDB_BASE_URL_STRING not found or is invalid in Info.plist")
+        }
+        self.baseUrlString = urlString
+
+        // 3. Base URL 생성
+        guard let url = URL(string: "https://" + baseUrlString) else {
+            fatalError("Failed to create baseUrl. Check TMDB_BASE_URL_STRING in Info.plist. It should NOT include 'https://'")
+        }
+        self.baseUrl = url
+    }
 
     func requestTMDB<T: Decodable>(_ path: String, query: [URLQueryItem] = []) async throws -> T {
         var components = URLComponents(url: baseUrl.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
