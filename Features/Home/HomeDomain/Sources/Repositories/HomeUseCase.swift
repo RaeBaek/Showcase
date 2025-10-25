@@ -1,5 +1,5 @@
 //
-//  HomeRepository.swift
+//  HomeUseCase.swift
 //  HomeDomain
 //
 //  Created by 백래훈 on 10/24/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol HomeRepository {
+public protocol HomeUseCase {
     // MARK: 수정 리스트 3종
     func movieModifyList() async throws -> [ModifyEntity]
     func peopleModifyList() async throws -> [ModifyEntity]

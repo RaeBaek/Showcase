@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import HomeDomain
 import Network
+import HomeDomain
 
 final class HomeRepositoryImpl: HomeRepository {
     private let client: HTTPClient
@@ -21,7 +21,7 @@ final class HomeRepositoryImpl: HomeRepository {
             "/movie/changes",
             query: [URLQueryItem(name: "page", value: "1")]
         )
-        return dto.results.map { $0.toEntity }
+        return dto.results?.map { $0.toEntity } ?? []
     }
     
     func peopleModifyList() async throws -> [ModifyEntity] {
@@ -29,7 +29,7 @@ final class HomeRepositoryImpl: HomeRepository {
             "/person/changes",
             query: [URLQueryItem(name: "page", value: "1")]
         )
-        return dto.results.map { $0.toEntity }
+        return dto.results?.map { $0.toEntity } ?? []
     }
     
     func tvModifyList() async throws -> [ModifyEntity] {
@@ -37,7 +37,7 @@ final class HomeRepositoryImpl: HomeRepository {
             "/tv/changes",
             query: [URLQueryItem(name: "page", value: "1")]
         )
-        return dto.results.map { $0.toEntity }
+        return dto.results?.map { $0.toEntity } ?? []
     }
     
     func moviePopularList() async throws -> [PopularMovieEntity] {
@@ -48,67 +48,28 @@ final class HomeRepositoryImpl: HomeRepository {
                 URLQueryItem(name: "page", value: "1")
             ]
         )
-        return dto.results.map { $0.toEntity }
+        return dto.results?.map { $0.toEntity } ?? []
     }
     
     func peoplePopularList() async throws -> [PopularPeopleEntity] {
         let dto: PopularListResponse<PopularPeopleDTO> = try await client.request(
-            "/tv/popular",
-            query: [URLQueryItem(name: "page", value: "1")]
+            "/person/popular",
+            query: [
+                URLQueryItem(name: "language", value: "ko-KR"),
+                URLQueryItem(name: "page", value: "1")
+            ]
         )
-        return dto.results.map { $0.toModify }
+        return dto.results?.map { $0.toEntity } ?? []
     }
     
     func tvPopularList() async throws -> [PopularTVEntity] {
         let dto: PopularListResponse<PopularTVDTO> = try await client.request(
             "/tv/popular",
-            query: [URLQueryItem(name: "page", value: "1")]
+            query: [
+                URLQueryItem(name: "language", value: "ko-KR"),
+                URLQueryItem(name: "page", value: "1")
+            ]
         )
-        return dto.results.map { $0.toModify }
+        return dto.results?.map { $0.toEntity } ?? []
     }
 }
-
-
- func movieModifyList() async throws -> ModifyListResponse {
-     try await self.requestTMDB("/movie/changes", query: [URLQueryItem(name: "page", value: "1")])
- }
-
- func peopleModifyList() async throws -> ModifyListResponse {
-     try await self.requestTMDB("/person/changes", query: [URLQueryItem(name: "page", value: "1")])
- }
-
- func tvModifyList() async throws -> ModifyListResponse {
-     try await self.requestTMDB("/tv/changes", query: [URLQueryItem(name: "page", value: "1")])
- }
-
- // MARK: 인기 리스트 3종
- func moviePopularList() async throws -> PopularListResponse<PopularMovieDTO> {
-     try await self.requestTMDB(
-         "/movie/popular",
-         query: [
-             URLQueryItem(name: "language", value: "ko-KR"),
-             URLQueryItem(name: "page", value: "1")
-         ]
-     )
- }
-
- func peoplePopularList() async throws -> PopularListResponse<PopularPeopleDTO> {
-     try await self.requestTMDB(
-         "/person/popular",
-         query: [
-             URLQueryItem(name: "language", value: "ko-KR"),
-             URLQueryItem(name: "page", value: "1")
-         ]
-     )
- }
-
- func tvPopularList() async throws -> PopularListResponse<PopularTVDTO> {
-     try await self.requestTMDB(
-         "/tv/popular",
-         query: [
-             URLQueryItem(name: "language", value: "ko-KR"),
-             URLQueryItem(name: "page", value: "1")
-         ]
-     )
- }
- 

@@ -8,10 +8,10 @@
 import Foundation
 
 struct ModifyListResponse: Decodable {
-    let results: [ModifyDTO]
-    let page: Int
-    let totalPages: Int
-    let totalResults: Int
+    let results: [ModifyDTO]?
+    let page: Int?
+    let totalPages: Int?
+    let totalResults: Int?
 
     enum CodingKeys: String, CodingKey {
         case results, page

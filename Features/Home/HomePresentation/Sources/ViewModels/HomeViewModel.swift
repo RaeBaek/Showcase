@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HomeDomain
 
 @MainActor
 final class HomeViewModel: ObservableObject {
@@ -15,7 +16,11 @@ final class HomeViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    private let tmdbClient = TMDBClient.shared
+    private let useCase: HomeUseCase
+
+    init(useCase: HomeUseCase) {
+        self.useCase = useCase
+    }
 
     func load() async {
         guard !isLoading else { return }
@@ -24,13 +29,13 @@ final class HomeViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            async let movies = try await tmdbClient.moviePopularList()
-            async let peoples = try await tmdbClient.peoplePopularList()
-            async let tvs = try await tmdbClient.tvPopularList()
+            async let movies = try await self.useCase.moviePopularList()
+            async let peoples = try await self.useCase.peoplePopularList()
+            async let tvs = try await self.useCase.tvPopularList()
 
-            self.movies = try await movies.results?.map { $0.toEntity } ?? []
-            self.peoples = try await peoples.results?.map { $0.toEntity } ?? []
-            self.tvs = try await tvs.results?.map { $0.toEntity } ?? []
+            self.movies = try await movies
+            self.peoples = try await peoples
+            self.tvs = try await tvs
         } catch {
             errorMessage = "데이터를 불러오지 못했어요. 잠시 후 다시 시도해주세요."
         }
