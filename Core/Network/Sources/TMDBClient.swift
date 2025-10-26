@@ -46,12 +46,16 @@ public class TMDBClient: HTTPClient {
           "Authorization": "Bearer \(accessToken)"
         ]
 
-        let (data, response) = try await URLSession.shared.data(for: request)
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
 
-        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-            throw URLError(.badServerResponse)
+            guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+            return try JSONDecoder().decode(T.self, from: data)
+        } catch let error {
+            print("request 메서드 에러: \(error)")
+            throw error
         }
-
-        return try JSONDecoder().decode(T.self, from: data)
     }
 }

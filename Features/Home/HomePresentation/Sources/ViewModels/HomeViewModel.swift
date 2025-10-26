@@ -9,7 +9,7 @@ import Foundation
 import HomeDomain
 
 @MainActor
-final class HomeViewModel: ObservableObject {
+public final class HomeViewModel: ObservableObject {
     @Published var movies: [PopularMovieEntity] = []
     @Published var peoples: [PopularPeopleEntity] = []
     @Published var tvs: [PopularTVEntity] = []
@@ -18,7 +18,7 @@ final class HomeViewModel: ObservableObject {
 
     private let useCase: HomeUseCase
 
-    init(useCase: HomeUseCase) {
+    public init(useCase: HomeUseCase) {
         self.useCase = useCase
     }
 

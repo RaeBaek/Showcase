@@ -7,35 +7,35 @@
 
 import Foundation
 
-final class HomeUseCaseImpl: HomeUseCase {
+public final class HomeUseCaseImpl: HomeUseCase {
 
     private let repository: HomeRepository
 
-    init(repository: HomeRepository) {
+    public init(repository: HomeRepository) {
         self.repository = repository
     }
 
-    func movieModifyList() async throws -> [ModifyEntity] {
+    public func movieModifyList() async throws -> [ModifyEntity] {
         try await self.repository.movieModifyList()
     }
     
-    func peopleModifyList() async throws -> [ModifyEntity] {
+    public func peopleModifyList() async throws -> [ModifyEntity] {
         try await self.repository.peopleModifyList()
     }
     
-    func tvModifyList() async throws -> [ModifyEntity] {
+    public func tvModifyList() async throws -> [ModifyEntity] {
         try await self.repository.tvModifyList()
     }
     
-    func moviePopularList() async throws -> [PopularMovieEntity] {
+    public func moviePopularList() async throws -> [PopularMovieEntity] {
         try await self.repository.moviePopularList()
     }
     
-    func peoplePopularList() async throws -> [PopularPeopleEntity] {
+    public func peoplePopularList() async throws -> [PopularPeopleEntity] {
         try await self.repository.peoplePopularList()
     }
     
-    func tvPopularList() async throws -> [PopularTVEntity] {
+    public func tvPopularList() async throws -> [PopularTVEntity] {
         try await self.repository.tvPopularList()
     }
 }

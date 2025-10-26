@@ -6,17 +6,22 @@
 //
 
 import SwiftUI
+import HomeDomain
 
-struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
+public struct HomeView: View {
+    @ObservedObject private var viewModel: HomeViewModel
 
-    var body: some View {
+    public init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    SectionView(title: "🎬 Movies", items: viewModel.movies)
-                    SectionView(title: "🧑‍🤝‍🧑 Peoples", items: viewModel.peoples)
-                    SectionView(title: "📺 TVs", items: viewModel.tvs)
+                    SectionView<PopularMovieEntity>(title: "🎬 Movies", items: viewModel.movies)
+                    SectionView<PopularPeopleEntity>(title: "🧑‍🤝‍🧑 Peoples", items: viewModel.peoples)
+                    SectionView<PopularTVEntity>(title: "📺 TVs", items: viewModel.tvs)
                 }
                 .padding(16)
             }
@@ -39,51 +44,3 @@ struct HomeView: View {
         }
     }
 }
-
-private struct SectionView<T: HomeDisplayable>: View {
-    let title: String
-    let items: [T]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.title3.bold())
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(items) { item in
-                        VStack(alignment: .leading, spacing: 6) {
-                            RoundedRectangle(cornerRadius: 12)
-                                .overlay {
-                                    if let imageURL = item.imageURL {
-                                        AsyncImage(url: imageURL) { img in
-                                            if let image = img.image {
-                                                image.resizable().scaledToFill()
-                                            } else if img.error != nil {
-                                                Color.gray.opacity(0.2)
-                                            } else {
-                                                ZStack {
-                                                    Color.gray.opacity(0.15)
-                                                    ProgressView()
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                .frame(width: 120, height: 180)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                            Text(item.displayTitle)
-                                .lineLimit(1)
-                                .font(.footnote)
-                                .frame(width: 120, alignment: .leading)
-                        }
-                    }
-                }
-                .padding(.trailing, 16)
-            }
-        }
-    }
-}
-
-//#Preview {
-//    HomeView()
-//}

@@ -7,13 +7,13 @@
 
 import Foundation
 
-protocol HomeDisplayable: Identifiable {
+public protocol HomeDisplayable: Identifiable {
     var displayTitle: String { get }
     var imagePath: String? { get }
 }
 
 extension HomeDisplayable {
-    var imageURL: URL? {
+    public var imageURL: URL? {
         guard let path = imagePath else { return nil }
         return URL(string: "https://image.tmdb.org/t/p/w500" + path)
     }
@@ -21,17 +21,17 @@ extension HomeDisplayable {
 
 // Movie
 extension PopularMovieEntity: HomeDisplayable {
-    var displayTitle: String { self.title ?? "" }
-    var imagePath: String? { self.posterPath }
+    public var displayTitle: String { self.title ?? "" }
+    public var imagePath: String? { self.posterPath }
 
 }
 
 extension PopularPeopleEntity: HomeDisplayable {
-    var displayTitle: String { self.name ?? "" }
-    var imagePath: String? { self.profilePath }
+    public var displayTitle: String { self.name ?? "" }
+    public var imagePath: String? { self.profilePath }
 }
 
 extension PopularTVEntity: HomeDisplayable {
-    var displayTitle: String { self.originalName ?? "" }
-    var imagePath: String? { self.posterPath }
+    public var displayTitle: String { self.originalName ?? "" }
+    public var imagePath: String? { self.posterPath }
 }

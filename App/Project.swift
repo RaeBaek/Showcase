@@ -38,10 +38,8 @@ let project = Project(
                 "TMDB_READ_ACCESS_TOKEN": "$(TMDB_READ_ACCESS_TOKEN)",
                 "TMDB_BASE_URL_STRING": "$(TMDB_BASE_URL_STRING)",
             ]),
-            buildableFolders: [
-                "Sources/**",
-                "Resources/**",
-            ],
+            sources: ["Sources/**"],
+            resources: ["Resources/**"],
             dependencies: [
                 .project(target: "Network", path: "../Core/Network"),
                 .project(target: "Model", path: "../Core/Model"),
@@ -57,9 +55,7 @@ let project = Project(
             product: .unitTests,
             bundleId: "com.raehoon.ShowcaseTests",
             infoPlist: .default,
-            buildableFolders: [
-                "Tests/**"
-            ],
+            sources: ["Tests/**"],
             dependencies: [.target(name: "App")]
         ),
     ]
