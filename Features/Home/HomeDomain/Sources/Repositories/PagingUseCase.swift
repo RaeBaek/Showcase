@@ -7,11 +7,11 @@
 
 import Foundation
 
-public protocol PagingUseCase: AnyObject {
-    associatedtype Entity: Identifiable
+public protocol PagingUseCase<Entity>: AnyObject {
+    associatedtype Entity: Identifiable where Entity.ID == Int
     var items: [Entity] { get }
     var hasNext: Bool { get }
 
     func loadFirst() async throws
-    func loadMoreIfNeeded(currentItem: Entity) async
+    func loadMoreIfNeeded(currentItem: Entity, threshold: Int) async
 }

@@ -18,8 +18,15 @@ struct ShowcaseApp: App {
         WindowGroup {
             let client = TMDBClient()
             let repository = HomeRepositoryImpl(client: client)
-            let useCase = HomeUseCaseImpl(repository: repository)
-            let viewModel = HomeViewModel(useCase: useCase)
+//            let useCase = HomeUseCaseImpl(repository: repository)
+            let moviesUsecase = MoviesPagingUseCase(repository: repository)
+            let peopleUsecase = PeoplePagingUseCase(repository: repository)
+            let tvsUsecase = TVsPagingUseCase(repository: repository)
+            let viewModel = HomeViewModel(
+                moviesUsecase: moviesUsecase,
+                peopleUsecase: peopleUsecase,
+                tvsUsecase: tvsUsecase
+            )
             HomeView(viewModel: viewModel)
                 .preferredColorScheme(.dark)
         }

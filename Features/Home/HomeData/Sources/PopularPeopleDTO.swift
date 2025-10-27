@@ -32,7 +32,7 @@ extension PopularPeopleDTO {
         PopularPeopleEntity(
             adult: adult,
             gender: gender,
-            id: id,
+            id: id ?? 0,
             knownFor: knownFor?.map { $0.toEntity },
             knownForDepartment: knownForDepartment,
             name: name,

@@ -11,7 +11,7 @@ public struct PopularMovieEntity: Identifiable {
     public let adult: Bool?
     public let backdropPath: String?
     public let genreIds: [Int]?
-    public let id: Int?
+    public let id: Int
     public let originalLanguage: String?
     public let originalTitle: String?
     public let overview: String?
@@ -27,7 +27,7 @@ public struct PopularMovieEntity: Identifiable {
         adult: Bool?,
         backdropPath: String?,
         genreIds: [Int]?,
-        id: Int?,
+        id: Int,
         originalLanguage: String?,
         originalTitle: String?,
         overview: String?,

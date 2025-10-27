@@ -43,7 +43,7 @@ extension PopularMovieDTO {
             adult: adult,
             backdropPath: backdropPath,
             genreIds: genreIds,
-            id: id,
+            id: id ?? 0,
             originalLanguage: originalLanguage,
             originalTitle: originalTitle,
             overview: overview,

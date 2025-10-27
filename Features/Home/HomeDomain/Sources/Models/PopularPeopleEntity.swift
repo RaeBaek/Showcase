@@ -10,7 +10,7 @@ import Foundation
 public struct PopularPeopleEntity: Identifiable {
     public let adult: Bool?
     public let gender: Int?
-    public let id: Int?
+    public let id: Int
     public let knownFor: [KnownForEntity]?
     public let knownForDepartment: String?
     public let name: String?
@@ -20,7 +20,7 @@ public struct PopularPeopleEntity: Identifiable {
     public init(
         adult: Bool?,
         gender: Int?,
-        id: Int?,
+        id: Int,
         knownFor: [KnownForEntity]?,
         knownForDepartment: String?,
         name: String?,

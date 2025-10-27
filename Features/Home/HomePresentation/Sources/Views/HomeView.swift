@@ -21,21 +21,23 @@ public struct HomeView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     SectionView<PopularMovieEntity>(
                         title: "🎬 Movies",
-                        items: viewModel.movies.items,
+                        items: viewModel.movies
                     ) { item in
-                        Task { await viewModel.loadNextMoviesIfNeeded(appearing: item)}
+                        Task { await viewModel.onMovieAppear(item) }
                     }
+
                     SectionView<PopularPeopleEntity>(
                         title: "🧑‍🤝‍🧑 Peoples",
-                        items: viewModel.people.items
+                        items: viewModel.people
                     ) { item in
-                        Task { await viewModel.loadNextPeopleIfNeeded(appearing: item)}
+                        Task { await viewModel.onPeopleAppear(item) }
                     }
+
                     SectionView<PopularTVEntity>(
                         title: "📺 TVs",
-                        items: viewModel.tvs.items
+                        items: viewModel.tvs
                     ) { item in
-                        Task { await viewModel.loadNextTVsIfNeeded(appearing: item)}
+                        Task { await viewModel.onTVAppear(item) }
                     }
                 }
                 .padding(16)

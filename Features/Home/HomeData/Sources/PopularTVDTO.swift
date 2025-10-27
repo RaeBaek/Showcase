@@ -44,7 +44,7 @@ extension PopularTVDTO {
             adult: adult,
             backdropPath: backdropPath,
             genreIDs: genreIDs,
-            id: id,
+            id: id ?? 0,
             originCountry: originCountry,
             originalLanguage: originalLanguage,
             originalName: originalName,

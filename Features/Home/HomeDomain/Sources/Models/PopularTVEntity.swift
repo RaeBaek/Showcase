@@ -11,7 +11,7 @@ public struct PopularTVEntity: Identifiable {
     public let adult: Bool?
     public let backdropPath: String?
     public let genreIDs: [Int]?
-    public let id: Int?
+    public let id: Int
     public let originCountry: [String]?
     public let originalLanguage: String?
     public let originalName: String?
@@ -27,7 +27,7 @@ public struct PopularTVEntity: Identifiable {
         adult: Bool?,
         backdropPath: String?,
         genreIDs: [Int]?,
-        id: Int?,
+        id: Int,
         originCountry: [String]?,
         originalLanguage: String?,
         originalName: String?,
