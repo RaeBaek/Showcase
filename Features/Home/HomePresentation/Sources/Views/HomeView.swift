@@ -19,16 +19,31 @@ public struct HomeView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    SectionView<PopularMovieEntity>(title: "🎬 Movies", items: viewModel.movies)
-                    SectionView<PopularPeopleEntity>(title: "🧑‍🤝‍🧑 Peoples", items: viewModel.peoples)
-                    SectionView<PopularTVEntity>(title: "📺 TVs", items: viewModel.tvs)
+                    SectionView<PopularMovieEntity>(
+                        title: "🎬 Movies",
+                        items: viewModel.movies.items,
+                    ) { item in
+                        Task { await viewModel.loadNextMoviesIfNeeded(appearing: item)}
+                    }
+                    SectionView<PopularPeopleEntity>(
+                        title: "🧑‍🤝‍🧑 Peoples",
+                        items: viewModel.people.items
+                    ) { item in
+                        Task { await viewModel.loadNextPeopleIfNeeded(appearing: item)}
+                    }
+                    SectionView<PopularTVEntity>(
+                        title: "📺 TVs",
+                        items: viewModel.tvs.items
+                    ) { item in
+                        Task { await viewModel.loadNextTVsIfNeeded(appearing: item)}
+                    }
                 }
                 .padding(16)
             }
             .navigationTitle("Showcase")
         }
         .task {
-            await viewModel.load()
+            await viewModel.firstLoad()
         }
         .overlay {
             if viewModel.isLoading {

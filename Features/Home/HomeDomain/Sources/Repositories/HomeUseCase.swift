@@ -14,7 +14,7 @@ public protocol HomeUseCase {
     func tvModifyList() async throws -> [ModifyEntity]
 
     // MARK: 인기 리스트 3종
-    func moviePopularList() async throws -> [PopularMovieEntity]
-    func peoplePopularList() async throws -> [PopularPeopleEntity]
-    func tvPopularList() async throws -> [PopularTVEntity]
+    func moviePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularMovieEntity>
+    func peoplePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularPeopleEntity>
+    func tvPopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularTVEntity>
 }

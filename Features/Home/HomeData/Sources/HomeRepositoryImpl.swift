@@ -40,36 +40,87 @@ public final class HomeRepositoryImpl: HomeRepository {
         return dto.results?.map { $0.toEntity } ?? []
     }
     
-    public func moviePopularList() async throws -> [PopularMovieEntity] {
+    public func moviePopularList(_ input: HomeFeedInput) async throws -> [PopularMovieEntity] {
         let dto: PopularListResponse<PopularMovieDTO> = try await self.client.request(
             "/movie/popular",
             query: [
-                URLQueryItem(name: "language", value: "ko-KR"),
-                URLQueryItem(name: "page", value: "1")
+                URLQueryItem(name: "language", value: input.language),
+                URLQueryItem(name: "page", value: String(input.page))
             ]
         )
         return dto.results?.map { $0.toEntity } ?? []
     }
     
-    public func peoplePopularList() async throws -> [PopularPeopleEntity] {
+    public func peoplePopularList(_ input: HomeFeedInput) async throws -> [PopularPeopleEntity] {
         let dto: PopularListResponse<PopularPeopleDTO> = try await self.client.request(
             "/person/popular",
             query: [
-                URLQueryItem(name: "language", value: "ko-KR"),
-                URLQueryItem(name: "page", value: "1")
+                URLQueryItem(name: "language", value: input.language),
+                URLQueryItem(name: "page", value: String(input.page))
             ]
         )
         return dto.results?.map { $0.toEntity } ?? []
     }
     
-    public func tvPopularList() async throws -> [PopularTVEntity] {
+    public func tvPopularList(_ input: HomeFeedInput) async throws -> [PopularTVEntity] {
         let dto: PopularListResponse<PopularTVDTO> = try await self.client.request(
             "/tv/popular",
             query: [
-                URLQueryItem(name: "language", value: "ko-KR"),
-                URLQueryItem(name: "page", value: "1")
+                URLQueryItem(name: "language", value: input.language),
+                URLQueryItem(name: "page", value: String(input.page))
             ]
         )
         return dto.results?.map { $0.toEntity } ?? []
+    }
+
+    public func moviePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularMovieEntity> {
+        let dto: PopularListResponse<PopularMovieDTO> = try await self.client.request(
+            "/movie/popular",
+            query: [
+                URLQueryItem(name: "language", value: input.language),
+                URLQueryItem(name: "page", value: String(input.page))
+            ]
+        )
+        let items = dto.results?.map { $0.toEntity } ?? []
+        return PopularPage(
+            items: items,
+            page: dto.page ?? input.page,
+            totalPages: dto.totalPages ?? input.page,
+            totalResults: dto.totalResults ?? items.count
+        )
+    }
+
+    public func peoplePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularPeopleEntity> {
+        let dto: PopularListResponse<PopularPeopleDTO> = try await self.client.request(
+            "/person/popular",
+            query: [
+                URLQueryItem(name: "language", value: input.language),
+                URLQueryItem(name: "page", value: String(input.page))
+            ]
+        )
+        let items = dto.results?.map { $0.toEntity } ?? []
+        return PopularPage(
+            items: items,
+            page: dto.page ?? input.page,
+            totalPages: dto.totalPages ?? input.page,
+            totalResults: dto.totalResults ?? items.count
+        )
+    }
+
+    public func tvPopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularTVEntity> {
+        let dto: PopularListResponse<PopularTVDTO> = try await self.client.request(
+            "/tv/popular",
+            query: [
+                URLQueryItem(name: "language", value: input.language),
+                URLQueryItem(name: "page", value: String(input.page))
+            ]
+        )
+        let items = dto.results?.map { $0.toEntity } ?? []
+        return PopularPage(
+            items: items,
+            page: dto.page ?? input.page,
+            totalPages: dto.totalPages ?? input.page,
+            totalResults: dto.totalResults ?? items.count
+        )
     }
 }

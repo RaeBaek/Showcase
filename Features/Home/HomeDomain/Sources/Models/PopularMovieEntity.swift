@@ -23,7 +23,6 @@ public struct PopularMovieEntity: Identifiable {
     public let voteAverage: Double?
     public let voteCount: Int?
 
-    // 🔹 추가
     public init(
         adult: Bool?,
         backdropPath: String?,

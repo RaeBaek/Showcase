@@ -11,15 +11,16 @@ import HomeDomain
 struct SectionView<T: HomeDisplayable>: View {
     let title: String
     let items: [T]
+    let onItemAppear: ((T) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.title3.bold())
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
+                LazyHStack(spacing: 12) {
                     ForEach(items) { item in
-                        VStack(alignment: .leading, spacing: 6) {
+                        LazyVStack(alignment: .leading, spacing: 6) {
                             RoundedRectangle(cornerRadius: 12)
                                 .overlay {
                                     if let imageURL = item.imageURL {
@@ -27,10 +28,10 @@ struct SectionView<T: HomeDisplayable>: View {
                                             if let image = img.image {
                                                 image.resizable().scaledToFill()
                                             } else if img.error != nil {
-                                                Color.gray.opacity(0.2)
+                                                Color.black.opacity(0.7)
                                             } else {
                                                 ZStack {
-                                                    Color.gray.opacity(0.15)
+                                                    Color.black.opacity(0.7)
                                                     ProgressView()
                                                 }
                                             }
@@ -41,8 +42,11 @@ struct SectionView<T: HomeDisplayable>: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                             Text(item.displayTitle)
                                 .lineLimit(1)
-                                .font(.footnote)
+                                .font(.subheadline).bold()
                                 .frame(width: 120, alignment: .leading)
+                        }
+                        .onAppear {
+                            onItemAppear?(item) // item이 보일 때 마다 트리거
                         }
                     }
                 }

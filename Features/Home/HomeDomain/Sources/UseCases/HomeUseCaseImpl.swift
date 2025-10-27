@@ -27,15 +27,31 @@ public final class HomeUseCaseImpl: HomeUseCase {
         try await self.repository.tvModifyList()
     }
     
-    public func moviePopularList() async throws -> [PopularMovieEntity] {
-        try await self.repository.moviePopularList()
+    public func moviePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularMovieEntity> {
+        try await self.repository.moviePopularList(input)
     }
     
-    public func peoplePopularList() async throws -> [PopularPeopleEntity] {
-        try await self.repository.peoplePopularList()
+    public func peoplePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularPeopleEntity> {
+        try await self.repository.peoplePopularList(input)
     }
     
-    public func tvPopularList() async throws -> [PopularTVEntity] {
-        try await self.repository.tvPopularList()
+    public func tvPopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularTVEntity> {
+        try await self.repository.tvPopularList(input)
     }
+
+//    public func loadHomeFeed() async throws -> HomeFeedOutput {
+//        async let movieTask = self.moviePopularList()
+//        async let peopleTask = self.peoplePopularList()
+//        async let tvTask = self.tvPopularList()
+//
+//        let movies = try await movieTask
+//        let people = try await peopleTask
+//        let tvs = try await tvTask
+//
+//        return HomeFeedOutput(
+//            movies: movies,
+//            people: people,
+//            tvs: tvs
+//        )
+//    }
 }

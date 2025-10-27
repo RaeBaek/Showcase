@@ -21,6 +21,7 @@ struct ShowcaseApp: App {
             let useCase = HomeUseCaseImpl(repository: repository)
             let viewModel = HomeViewModel(useCase: useCase)
             HomeView(viewModel: viewModel)
+                .preferredColorScheme(.dark)
         }
     }
 }
