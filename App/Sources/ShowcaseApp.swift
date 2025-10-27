@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-import Network
+import ShowNetwork
 import HomeData
 import HomeDomain
 import HomePresentation

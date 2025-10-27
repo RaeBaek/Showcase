@@ -25,7 +25,7 @@ let project = Project(
             name: "Model",
             destinations: .iOS,
             product: .framework,
-            bundleId: "com.raehoon.showcase.model",
+            bundleId: "com.raehoon.Showcase.model",
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
             dependencies: []
