@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PopularListResponse<T: Decodable>: Decodable {
+public struct PopularListResponse<T: Decodable>: Decodable {
     let page: Int?
     let results: [T]?
     let totalPages: Int?
@@ -17,5 +17,12 @@ struct PopularListResponse<T: Decodable>: Decodable {
         case page, results
         case totalPages = "total_pages"
         case totalResults = "total_results"
+    }
+
+    public init(page: Int?, results: [T]?, totalPages: Int?, totalResults: Int?) {
+        self.page = page
+        self.results = results
+        self.totalPages = totalPages
+        self.totalResults = totalResults
     }
 }

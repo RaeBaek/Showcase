@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NetworkInterface
 
 public class TMDBClient: HTTPClient {
     private let accessToken: String

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ShowNetwork
+import NetworkInterface
 import HomeDomain
 
 public final class HomeRepositoryImpl: HomeRepository {

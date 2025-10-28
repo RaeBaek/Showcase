@@ -29,6 +29,17 @@ let project = Project(
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
             dependencies: []
+        ),
+        .target(
+            name: "HomeDomainTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "com.raehoon.Showcase.home.domain.tests",
+            infoPlist: .default,
+            sources: ["Tests/**"],
+            dependencies: [
+                .target(name: "HomeDomain")
+            ]
         )
     ]
 )

@@ -8,7 +8,7 @@
 import ProjectDescription
 
 let project = Project(
-    name: "ShowNetwork",
+    name: "NetworkLive",
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",
@@ -22,13 +22,26 @@ let project = Project(
     ),
     targets: [
         .target(
-            name: "ShowNetwork",
+            name: "NetworkLive",
             destinations: .iOS,
             product: .framework,
-            bundleId: "com.raehoon.Showcase.showNetwork",
+            bundleId: "com.raehoon.Showcase.networkLive",
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
-            dependencies: []
+            dependencies: [
+                .project(target: "NetworkInterface", path: "../NetworkInterface")
+            ]
+        ),
+        .target(
+            name: "NetworkLiveTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "com.raehoon.Showcase.networkLive.tests",
+            infoPlist: .default,
+            sources: ["Tests/**"],
+            dependencies: [
+                .target(name: "NetworkLive")
+            ]
         )
     ]
 )

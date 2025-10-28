@@ -32,6 +32,17 @@ let project = Project(
                 .project(target: "HomeDomain", path: "../HomeDomain"),
                 .external(name: "Kingfisher", condition: .none)
             ]
+        ),
+        .target(
+            name: "HomePresentationTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "com.raehoon.Showcase.home.presentation.tests",
+            infoPlist: .default,
+            sources: ["Tests/**"],
+            dependencies: [
+                .target(name: "HomePresentation")
+            ]
         )
     ]
 )

@@ -29,7 +29,19 @@ let project = Project(
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
             dependencies: [
+                .project(target: "NetworkInterface", path: "../../../Core/NetworkInterface"),
                 .project(target: "HomeDomain", path: "../HomeDomain")
+            ]
+        ),
+        .target(
+            name: "HomeDataTests",
+            destinations: .iOS,
+            product: .unitTests,
+            bundleId: "com.raehoon.Showcase.home.data.tests",
+            infoPlist: .default,
+            sources: ["Tests/**"],
+            dependencies: [
+                .target(name: "HomeData")
             ]
         )
     ]
