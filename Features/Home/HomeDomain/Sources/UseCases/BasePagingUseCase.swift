@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 @MainActor
 public class BasePagingUseCase<T: Identifiable>: PagingUseCase where T.ID == Int {
@@ -17,13 +18,15 @@ public class BasePagingUseCase<T: Identifiable>: PagingUseCase where T.ID == Int
         self.fetch = fetch
     }
 
-    public private(set) var items: [T] = []
+    @Published public private(set) var items: [T] = []
     public private(set) var page = 0
     public private(set) var totalPages = Int.max
     public private(set) var isLoading = false
     private var lastRequested = 0
 
     public var hasNext: Bool { page < totalPages }
+
+    public var itemsPublisher: AnyPublisher<[T], Never> { $items.eraseToAnyPublisher() }
 
     public func loadFirst() async throws {
         items.removeAll()
@@ -50,7 +53,7 @@ public class BasePagingUseCase<T: Identifiable>: PagingUseCase where T.ID == Int
 
         do {
             let newPage = try await fetch(next)
-            items += newPage.items
+            items = (items + newPage.items).uniqued(by: \.id)
             page = newPage.page
             totalPages = newPage.totalPages
         } catch {
@@ -67,5 +70,12 @@ public class BasePagingUseCase<T: Identifiable>: PagingUseCase where T.ID == Int
         items = newPage.items
         page = newPage.page
         totalPages = newPage.totalPages
+    }
+}
+
+private extension Array {
+    func uniqued<ID: Hashable>(by keyPath: KeyPath<Element, ID>) -> [Element] {
+        var seen = Set<ID>()
+        return filter { seen.insert($0[keyPath: keyPath]).inserted }
     }
 }

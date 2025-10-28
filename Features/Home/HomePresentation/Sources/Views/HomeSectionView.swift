@@ -7,6 +7,7 @@
 
 import SwiftUI
 import HomeDomain
+import Kingfisher
 
 struct SectionView<T: HomeDisplayable>: View {
     let title: String
@@ -24,18 +25,16 @@ struct SectionView<T: HomeDisplayable>: View {
                             RoundedRectangle(cornerRadius: 12)
                                 .overlay {
                                     if let imageURL = item.imageURL {
-                                        AsyncImage(url: imageURL) { img in
-                                            if let image = img.image {
-                                                image.resizable().scaledToFill()
-                                            } else if img.error != nil {
+                                        KFImage(imageURL)
+                                            .resizable()
+                                            .placeholder {
                                                 Color.black.opacity(0.7)
-                                            } else {
-                                                ZStack {
-                                                    Color.black.opacity(0.7)
-                                                    ProgressView()
-                                                }
+                                                ProgressView()
                                             }
-                                        }
+                                            .onFailure { error in
+                                                print("이미지 로드 실패: \(error.localizedDescription)")
+                                            }
+                                            .scaledToFill()
                                     }
                                 }
                                 .frame(width: 120, height: 180)

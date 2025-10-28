@@ -35,10 +35,6 @@ public class TMDBClient: HTTPClient {
     }
 
     public func request<T: Decodable>(_ path: String, query: [URLQueryItem] = []) async throws -> T {
-        print("accessToken: \(accessToken)")
-        print("baseUrlString: \(baseUrlString)")
-        print("baseUrl: \(baseUrl)")
-        
         var components = URLComponents(url: baseUrl.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
         components.queryItems = components.queryItems.map { $0 + query } ?? query
 
@@ -49,6 +45,8 @@ public class TMDBClient: HTTPClient {
           "accept": "application/json",
           "Authorization": "Bearer \(accessToken)"
         ]
+
+        print("request: \(request)")
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)

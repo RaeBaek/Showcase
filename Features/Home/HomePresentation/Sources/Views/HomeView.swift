@@ -47,11 +47,6 @@ public struct HomeView: View {
         .task {
             await viewModel.firstLoad()
         }
-        .overlay {
-            if viewModel.isLoading {
-                ProgressView().scaleEffect(1.2)
-            }
-        }
         .alert("에러", isPresented: .constant(viewModel.errorMessage != nil)) {
             Button("닫기") {
                 viewModel.errorMessage = nil
