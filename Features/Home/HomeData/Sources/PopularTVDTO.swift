@@ -8,7 +8,7 @@
 import Foundation
 import HomeDomain
 
-struct PopularTVDTO: Decodable {
+public struct PopularTVDTO: Decodable {
     let adult: Bool?
     let backdropPath: String?
     let genreIDs: [Int]?
@@ -35,6 +35,38 @@ struct PopularTVDTO: Decodable {
         case firstAirDate = "first_air_date"
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
+    }
+
+    public init(
+        adult: Bool?,
+        backdropPath: String?,
+        genreIDs: [Int]?,
+        id: Int?,
+        originCountry: [String]?,
+        originalLanguage: String?,
+        originalName: String?,
+        overview: String?,
+        popularity: Double?,
+        posterPath: String?,
+        firstAirDate: String?,
+        name: String?,
+        voteAverage: Double?,
+        voteCount: Int?
+    ) {
+        self.adult = adult
+        self.backdropPath = backdropPath
+        self.genreIDs = genreIDs
+        self.id = id
+        self.originCountry = originCountry
+        self.originalLanguage = originalLanguage
+        self.originalName = originalName
+        self.overview = overview
+        self.popularity = popularity
+        self.posterPath = posterPath
+        self.firstAirDate = firstAirDate
+        self.name = name
+        self.voteAverage = voteAverage
+        self.voteCount = voteCount
     }
 }
 

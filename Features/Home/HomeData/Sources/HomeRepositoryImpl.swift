@@ -39,39 +39,6 @@ public final class HomeRepositoryImpl: HomeRepository {
         )
         return dto.results?.map { $0.toEntity } ?? []
     }
-    
-    public func moviePopularList(_ input: HomeFeedInput) async throws -> [PopularMovieEntity] {
-        let dto: PopularListResponse<PopularMovieDTO> = try await self.client.request(
-            "/movie/popular",
-            query: [
-                URLQueryItem(name: "language", value: input.language),
-                URLQueryItem(name: "page", value: String(input.page))
-            ]
-        )
-        return dto.results?.map { $0.toEntity } ?? []
-    }
-    
-    public func peoplePopularList(_ input: HomeFeedInput) async throws -> [PopularPeopleEntity] {
-        let dto: PopularListResponse<PopularPeopleDTO> = try await self.client.request(
-            "/person/popular",
-            query: [
-                URLQueryItem(name: "language", value: input.language),
-                URLQueryItem(name: "page", value: String(input.page))
-            ]
-        )
-        return dto.results?.map { $0.toEntity } ?? []
-    }
-    
-    public func tvPopularList(_ input: HomeFeedInput) async throws -> [PopularTVEntity] {
-        let dto: PopularListResponse<PopularTVDTO> = try await self.client.request(
-            "/tv/popular",
-            query: [
-                URLQueryItem(name: "language", value: input.language),
-                URLQueryItem(name: "page", value: String(input.page))
-            ]
-        )
-        return dto.results?.map { $0.toEntity } ?? []
-    }
 
     public func moviePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularMovieEntity> {
         let dto: PopularListResponse<PopularMovieDTO> = try await self.client.request(

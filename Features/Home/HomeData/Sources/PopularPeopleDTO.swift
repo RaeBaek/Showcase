@@ -8,7 +8,7 @@
 import Foundation
 import HomeDomain
 
-struct PopularPeopleDTO: Decodable {
+public struct PopularPeopleDTO: Decodable {
     let adult: Bool?
     let gender: Int?
     let id: Int?
@@ -24,6 +24,26 @@ struct PopularPeopleDTO: Decodable {
         case knownForDepartment = "known_for_department"
         case name, popularity
         case profilePath = "profile_path"
+    }
+
+    public init(
+        adult: Bool?,
+        gender: Int?,
+        id: Int?,
+        knownFor: [KnownForDTO]?,
+        knownForDepartment: String?,
+        name: String?,
+        popularity: Double?,
+        profilePath: String?
+    ) {
+        self.adult = adult
+        self.gender = gender
+        self.id = id
+        self.knownFor = knownFor
+        self.knownForDepartment = knownForDepartment
+        self.name = name
+        self.popularity = popularity
+        self.profilePath = profilePath
     }
 }
 
@@ -42,7 +62,7 @@ extension PopularPeopleDTO {
     }
 }
 
-struct KnownForDTO: Decodable {
+public struct KnownForDTO: Decodable {
     let adult: Bool?
     let backdropPath: String?
     let genreIDs: [Int]?
@@ -69,6 +89,38 @@ struct KnownForDTO: Decodable {
         case releaseDate = "release_date"
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
+    }
+
+    public init(
+        adult: Bool?,
+        backdropPath: String?,
+        genreIDs: [Int]?,
+        id: Int?,
+        mediaType: String?,
+        originalLanguage: String?,
+        originalTitle: String?,
+        overview: String?,
+        posterPath: String?,
+        releaseDate: String?,
+        title: String?,
+        video: Bool?,
+        voteAverage: Double?,
+        voteCount: Int?
+    ) {
+        self.adult = adult
+        self.backdropPath = backdropPath
+        self.genreIDs = genreIDs
+        self.id = id
+        self.mediaType = mediaType
+        self.originalLanguage = originalLanguage
+        self.originalTitle = originalTitle
+        self.overview = overview
+        self.posterPath = posterPath
+        self.releaseDate = releaseDate
+        self.title = title
+        self.video = video
+        self.voteAverage = voteAverage
+        self.voteCount = voteCount
     }
 }
 
