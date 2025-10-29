@@ -31,7 +31,7 @@ public class BasePagingUseCase<T: Identifiable>: PagingUseCase where T.ID == Int
     public func loadFirst() async throws {
         items.removeAll()
         page = 0
-        totalPages = .max
+        totalPages = Int.max
         lastRequested = 0
         try await load(next: 1)
     }

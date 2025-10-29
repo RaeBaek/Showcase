@@ -9,8 +9,8 @@ import XCTest
 
 import NetworkInterface
 
-import HomeData
-import HomeDomain
+@testable import HomeData
+@testable import HomeDomain
 
 final class HomeRepositoryImplTests: XCTestCase {
 
