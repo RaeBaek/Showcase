@@ -1,6 +1,6 @@
 //
 //  BasePagingUseCaseTests.swift
-//  Showcase
+//  HomeDomainTests
 //
 //  Created by 백래훈 on 10/23/25.
 //
@@ -248,7 +248,7 @@ final class BasePagingUseCaseTests: XCTestCase {
         XCTAssertEqual(uc.items.count, 20)
     }
 
-    /// 다음 페이지가 없을 때 다음 페이지를 요청하지 않는지 테스트
+    /// 다음 페이지가 없을 때 다음 페이지가 요청되지 않는지 테스트
     @MainActor
     func test_hasNextFalse_preventsFurtherLoad() async throws {
         let p1 = PopularPage<DummyEntity>(
@@ -272,7 +272,7 @@ final class BasePagingUseCaseTests: XCTestCase {
     }
 }
 
-private struct DummyEntity: Identifiable, Equatable {
+struct DummyEntity: Identifiable, Equatable {
     let id: Int
     let name: String
 }

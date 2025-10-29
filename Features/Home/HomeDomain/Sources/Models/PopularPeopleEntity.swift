@@ -36,6 +36,20 @@ public struct PopularPeopleEntity: Identifiable {
         self.popularity = popularity
         self.profilePath = profilePath
     }
+
+    public init(
+        id: Int,
+        name: String?,
+    ) {
+        self.id = id
+        self.name = name
+        self.adult = nil
+        self.gender = nil
+        self.knownFor = nil
+        self.knownForDepartment = nil
+        self.popularity = nil
+        self.profilePath = nil
+    }
 }
 
 public struct KnownForEntity {

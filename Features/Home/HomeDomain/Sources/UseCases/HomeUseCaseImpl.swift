@@ -14,18 +14,6 @@ public final class HomeUseCaseImpl: HomeUseCase {
     public init(repository: HomeRepository) {
         self.repository = repository
     }
-
-    public func movieModifyList() async throws -> [ModifyEntity] {
-        try await self.repository.movieModifyList()
-    }
-    
-    public func peopleModifyList() async throws -> [ModifyEntity] {
-        try await self.repository.peopleModifyList()
-    }
-    
-    public func tvModifyList() async throws -> [ModifyEntity] {
-        try await self.repository.tvModifyList()
-    }
     
     public func moviePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularMovieEntity> {
         try await self.repository.moviePopularList(input)

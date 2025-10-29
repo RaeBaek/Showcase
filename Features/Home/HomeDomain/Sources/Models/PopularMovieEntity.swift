@@ -54,4 +54,21 @@ public struct PopularMovieEntity: Identifiable {
         self.voteAverage = voteAverage
         self.voteCount = voteCount
     }
+
+    public init(id: Int, title: String?,) {
+        self.id = id
+        self.title = title
+        self.adult = nil
+        self.backdropPath = nil
+        self.genreIds = nil
+        self.originalLanguage = nil
+        self.originalTitle = nil
+        self.overview = nil
+        self.popularity = nil
+        self.posterPath = nil
+        self.releaseDate = nil
+        self.video = nil
+        self.voteAverage = nil
+        self.voteCount = nil
+    }
 }

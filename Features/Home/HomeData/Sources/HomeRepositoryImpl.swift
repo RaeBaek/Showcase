@@ -16,29 +16,29 @@ public final class HomeRepositoryImpl: HomeRepository {
         self.client = client
     }
 
-    public func movieModifyList() async throws -> [ModifyEntity] {
-        let dto: ModifyListResponse = try await self.client.request(
-            "/movie/changes",
-            query: [URLQueryItem(name: "page", value: "1")]
-        )
-        return dto.results?.map { $0.toEntity } ?? []
-    }
-    
-    public func peopleModifyList() async throws -> [ModifyEntity] {
-        let dto: ModifyListResponse = try await self.client.request(
-            "/person/changes",
-            query: [URLQueryItem(name: "page", value: "1")]
-        )
-        return dto.results?.map { $0.toEntity } ?? []
-    }
-    
-    public func tvModifyList() async throws -> [ModifyEntity] {
-        let dto: ModifyListResponse = try await self.client.request(
-            "/tv/changes",
-            query: [URLQueryItem(name: "page", value: "1")]
-        )
-        return dto.results?.map { $0.toEntity } ?? []
-    }
+//    public func movieModifyList() async throws -> [ModifyEntity] {
+//        let dto: ModifyListResponse = try await self.client.request(
+//            "/movie/changes",
+//            query: [URLQueryItem(name: "page", value: "1")]
+//        )
+//        return dto.results?.map { $0.toEntity } ?? []
+//    }
+//    
+//    public func peopleModifyList() async throws -> [ModifyEntity] {
+//        let dto: ModifyListResponse = try await self.client.request(
+//            "/person/changes",
+//            query: [URLQueryItem(name: "page", value: "1")]
+//        )
+//        return dto.results?.map { $0.toEntity } ?? []
+//    }
+//    
+//    public func tvModifyList() async throws -> [ModifyEntity] {
+//        let dto: ModifyListResponse = try await self.client.request(
+//            "/tv/changes",
+//            query: [URLQueryItem(name: "page", value: "1")]
+//        )
+//        return dto.results?.map { $0.toEntity } ?? []
+//    }
 
     public func moviePopularList(_ input: HomeFeedInput) async throws -> PopularPage<PopularMovieEntity> {
         let dto: PopularListResponse<PopularMovieDTO> = try await self.client.request(
