@@ -86,6 +86,7 @@ final class BasePagingUseCaseTests: XCTestCase {
         XCTAssertTrue(!published.isEmpty)
     }
 
+    /// 배열 끝단 근처에 도달했을 때 다음 페이지를 요청하는 테스트
     @MainActor
     func test_loadMoreIfNeeded_triggerNearTail_onlyOnce() async throws {
         // given
@@ -146,6 +147,7 @@ final class BasePagingUseCaseTests: XCTestCase {
         XCTAssertEqual(published.count, 4)
     }
 
+    /// 다음 페이지를 요청하고 이전 배열에 추가할 때 중복을 제거하는지 테스트
     @MainActor
     func test_noDuplicates_whenPagesOverlap() async throws {
         // given: page2 overlaps ids with page1
@@ -177,6 +179,96 @@ final class BasePagingUseCaseTests: XCTestCase {
         // then: id 6은 한 번만 등장해야 함
         XCTAssertEqual(uc.items.map { $0.id }.filter { $0 == 6 }.count, 1)
         XCTAssertEqual(uc.items.count, (p1.items.count + p2.items.count) - 1)
+    }
+
+    /// 첫 페이지 로드 실패 테스트
+    @MainActor
+    func test_errorOnLoadFirst_isPropagated_andStateRolledBack() async throws {
+        // given: page 1 throws
+        let counter = Counter()
+        let uc = BasePagingUseCase<DummyEntity>(fetch: { _ in
+            counter.value += 1
+            throw URLError(.timedOut)
+        })
+
+        // when / then
+        do {
+            try await uc.loadFirst()
+            XCTFail("Expected throw, but succeeded")
+        } catch {
+            XCTAssertTrue(error is URLError)
+        }
+
+        XCTAssertEqual(counter.value, 1)
+        XCTAssertTrue(uc.items.isEmpty)
+        XCTAssertEqual(uc.page, 0)
+        XCTAssertEqual(uc.totalPages, Int.max)
+    }
+
+    /// isLoading 가드, 동시 요청 중 오직 한 건만 처리 가능한지 테스트
+    @MainActor
+    func test_isLoadingGuards_concurrentLoadMore_requestOnlyOnce() async throws {
+        // given: slow fetch to simulate overlap
+        let p1 = PopularPage<DummyEntity>(
+            items: (1...10).map { .init(id: $0, name: "\($0)") },
+            page: 1,
+            totalPages: 3,
+            totalResults: 30
+        )
+        let p2 = PopularPage<DummyEntity>(
+            items: (11...20).map { .init(id: $0, name: "\($0)") },
+            page: 2,
+            totalPages: 3,
+            totalResults: 30
+        )
+        let counter = Counter()
+        let uc = makeUseCase(
+            pages: [1: p1, 2: p2],
+            fetchDelayNanos: 3,
+            callCounter: counter
+        )
+
+        try await uc.loadFirst()
+        let trigger = p1.items[p1.items.count - 3]
+
+        // when: fire two loadMore calls concurrently
+        /// 두 Task를 동시에 요청하기 위한 withTaskGroup
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                await uc.loadMoreIfNeeded(currentItem: trigger, threshold: 3)
+            }
+            group.addTask {
+                await uc.loadMoreIfNeeded(currentItem: trigger, threshold: 3)
+            }
+        }
+
+        // then: fetch should be called only once due to isLoading guard
+        XCTAssertEqual(counter.value, 2)
+        XCTAssertEqual(uc.page, 2)
+        XCTAssertEqual(uc.items.count, 20)
+    }
+
+    /// 다음 페이지가 없을 때 다음 페이지를 요청하지 않는지 테스트
+    @MainActor
+    func test_hasNextFalse_preventsFurtherLoad() async throws {
+        let p1 = PopularPage<DummyEntity>(
+            items: (1...10).map { .init(id: $0, name: "\($0)") },
+            page: 1,
+            totalPages: 1,
+            totalResults: 10
+        )
+        let counter = Counter()
+        let uc = makeUseCase(pages: [1: p1], callCounter: counter)
+
+        try await uc.loadFirst()
+        XCTAssertFalse(uc.hasNext)
+
+        let trigger = uc.items[uc.items.count - 3]
+        await uc.loadMoreIfNeeded(currentItem: trigger, threshold: 3)
+
+        XCTAssertEqual(counter.value, 1)
+        XCTAssertEqual(uc.page, 1)
+        XCTAssertEqual(uc.items.count, 10)
     }
 }
 
