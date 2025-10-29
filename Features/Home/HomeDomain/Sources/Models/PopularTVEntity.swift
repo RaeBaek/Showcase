@@ -54,4 +54,24 @@ public struct PopularTVEntity: Identifiable {
         self.voteAverage = voteAverage
         self.voteCount = voteCount
     }
+
+    public init(
+        id: Int,
+        name: String?,
+    ) {
+        self.id = id
+        self.name = name
+        self.adult = nil
+        self.backdropPath = nil
+        self.genreIDs = nil
+        self.originCountry = nil
+        self.originalLanguage = nil
+        self.originalName = nil
+        self.overview = nil
+        self.popularity = nil
+        self.posterPath = nil
+        self.firstAirDate = nil
+        self.voteAverage = nil
+        self.voteCount = nil
+    }
 }

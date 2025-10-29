@@ -1,5 +1,5 @@
 //
-//  PeoplePagingUseCaseTests.swift
+//  TVsPagingUseCaseTests.swift
 //  HomeDomainTests
 //
 //  Created by 백래훈 on 10/29/25.
@@ -10,8 +10,8 @@ import Combine
 @testable import HomeDomain
 
 @MainActor
-final class PeoplePagingUseCaseTests: XCTestCase {
-
+final class TVsPagingUseCaseTests: XCTestCase {
+    
     private var cancellables = Set<AnyCancellable>()
 
     override func tearDown() {
@@ -20,16 +20,16 @@ final class PeoplePagingUseCaseTests: XCTestCase {
     }
 
     /// usecase의 loadFirstMovies 메서드 정상 동작 테스트
-    func test_loadFirstPeople_publishesAndUpdateState() async throws {
+    func test_loadFirstTVs_publishedAndUpdateState() async throws {
         // given
         let repo = MockRepository()
-        repo.peoplePages[1] = PopularPage<PopularPeopleEntity>(
+        repo.tvPages[1] = PopularPage<PopularTVEntity>(
             items: (1...10).map { .init(id: $0, name: "\($0)") },
             page: 1,
             totalPages: 2,
             totalResults: 20
         )
-        let usecase = PeoplePagingUseCase(repository: repo)
+        let usecase = TVsPagingUseCase(repository: repo)
 
         let exp = expectation(description: "first page published")
         var latestCount = -1
@@ -43,36 +43,37 @@ final class PeoplePagingUseCaseTests: XCTestCase {
             .store(in: &cancellables)
 
         // when
-        try await usecase.loadFirstPeople()
+        try await usecase.loadFirstTvs()
 
         // then
         await fulfillment(of: [exp], timeout: 1.0)
         XCTAssertEqual(latestCount, 10)
-        XCTAssertEqual(repo.calls, [.people(1, "ko-KR")])
-        XCTAssertEqual(usecase.items.count, 10)
+        XCTAssertEqual(repo.calls, [.tv(1, "ko-KR")])
         XCTAssertEqual(usecase.page, 1)
         XCTAssertEqual(usecase.totalPages, 2)
+        XCTAssertEqual(usecase.items.count, 10)
+        XCTAssertTrue(usecase.hasNext)
     }
 
     /// 추가 페이지 요청 메서드 정상 동작 테스트 (feat. 병렬 요청, 1회 호출)
-    func test_loadMoreMovies_nearTail_loadSecondPageOnlyOnce() async throws {
+    func test_loadMoreTVs_nearTail_loadSecondPageOnlyOnce() async throws {
         // given
         let repo = MockRepository()
-        repo.peoplePages[1] = PopularPage<PopularPeopleEntity>(
+        repo.tvPages[1] = PopularPage<PopularTVEntity>(
             items: (1...10).map { .init(id: $0, name: "\($0)") },
             page: 1,
             totalPages: 2,
             totalResults: 20
         )
-        repo.peoplePages[2] = PopularPage<PopularPeopleEntity>(
+        repo.tvPages[2] = PopularPage<PopularTVEntity>(
             items: (11...20).map { .init(id: $0, name: "\($0)") },
             page: 2,
             totalPages: 2,
             totalResults: 20
         )
-        let usecase = PeoplePagingUseCase(repository: repo)
+        let usecase = TVsPagingUseCase(repository: repo)
 
-        try await usecase.loadFirstPeople()
+        try await usecase.loadFirstTvs()
         let trigger = usecase.items[usecase.items.count - 3]
 
         let exp = expectation(description: "second page appended")
@@ -86,32 +87,32 @@ final class PeoplePagingUseCaseTests: XCTestCase {
         // when: fire two concurrent calls, only one should pass the guards
         await withTaskGroup(of: Void.self) { group in
             group.addTask {
-                await usecase.loadMorePeopleIfNeeded(currentItem: trigger)
+                await usecase.loadMoreTvsIfNeeded(currentItem: trigger)
             }
             group.addTask {
-                await usecase.loadMorePeopleIfNeeded(currentItem: trigger)
+                await usecase.loadMoreTvsIfNeeded(currentItem: trigger)
             }
         }
-        
+
         // then
         await fulfillment(of: [exp], timeout: 1.0)
-        XCTAssertEqual(repo.calls, [.people(1, "ko-KR"), .people(2, "ko-KR")])
-        XCTAssertEqual(usecase.items.count, 20)
+        XCTAssertEqual(repo.calls, [.tv(1, "ko-KR"), .tv(2, "ko-KR")])
         XCTAssertEqual(usecase.page, 2)
         XCTAssertEqual(usecase.totalPages, 2)
+        XCTAssertEqual(usecase.items.count, 20)
         XCTAssertFalse(usecase.hasNext)
     }
 
     /// 첫 페이지 로드 실패 테스트
-    func test_loadFirstMovies_progratesError() async throws {
+    func test_loadFirstTVs_progratesError() async throws {
         // given
         let repo = MockRepository()
-        repo.peopleError = Stub.boom
-        let usecase = PeoplePagingUseCase(repository: repo)
+        repo.tvError = Stub.boom
+        let usecase = TVsPagingUseCase(repository: repo)
 
         // when
         do {
-            try await usecase.loadFirstPeople()
+            try await usecase.loadFirstTvs()
             XCTFail("Expected throw, but succeeded")
             XCTAssertTrue(usecase.items.isEmpty)
         } catch {
@@ -119,31 +120,32 @@ final class PeoplePagingUseCaseTests: XCTestCase {
         }
 
         // then
+        XCTAssertTrue(repo.calls.isEmpty)
+        XCTAssertTrue(usecase.items.isEmpty)
         XCTAssertEqual(usecase.items.count, 0)
         XCTAssertEqual(usecase.page, 0)
         XCTAssertEqual(usecase.totalPages, Int.max)
     }
 
     /// 다음 페이지가 없을 때 다음 페이지가 요청되지 않는지 테스트
-    func test_hasNextFalse_preventsFurtherLoad() async throws {
+    func test_hasNextFalse_preventFurtherLoad() async throws {
         // given
         let repo = MockRepository()
-        repo.peoplePages[1] = PopularPage<PopularPeopleEntity>(
+        repo.tvPages[1] = PopularPage<PopularTVEntity>(
             items: (1...10).map { .init(id: $0, name: "\($0)") },
             page: 1,
             totalPages: 1,
             totalResults: 10
         )
-        let usecase = PeoplePagingUseCase(repository: repo)
-        try await usecase.loadFirstPeople()
+        let usecase = TVsPagingUseCase(repository: repo)
+        try await usecase.loadFirstTvs()
 
         // when
         let trigger = usecase.items[usecase.items.count - 3]
-        await usecase.loadMorePeopleIfNeeded(currentItem: trigger)
+        await usecase.loadMoreTvsIfNeeded(currentItem: trigger)
 
         // then
-        XCTAssertEqual(repo.calls.count, 1)
-        XCTAssertEqual(repo.calls, [.people(1, "ko-KR")])
+        XCTAssertEqual(repo.calls, [.tv(1, "ko-KR")])
         XCTAssertEqual(usecase.items.count, 10)
         XCTAssertEqual(usecase.page, 1)
         XCTAssertEqual(usecase.totalPages, 1)

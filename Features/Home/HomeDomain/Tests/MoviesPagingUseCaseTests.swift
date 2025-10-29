@@ -11,7 +11,13 @@ import Combine
 
 @MainActor
 final class MoviesPagingUseCaseTests: XCTestCase {
+
     private var cancellables = Set<AnyCancellable>()
+
+    override func tearDown() {
+        cancellables.removeAll()
+        super.tearDown()
+    }
 
     /// usecase의 loadFirstMovies 메서드 정상 동작 테스트
     func test_loadFirstMovies_publishesAndUpdateState() async throws {
@@ -138,5 +144,4 @@ final class MoviesPagingUseCaseTests: XCTestCase {
         XCTAssertEqual(repo.calls.count, 1)
         XCTAssertEqual(repo.calls, [.movie(1, "ko-KR")])
     }
-
 }
