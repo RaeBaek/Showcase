@@ -27,7 +27,7 @@ public struct HomeView: View {
                     }
 
                     SectionView<PopularPeopleEntity>(
-                        title: "🧑‍🤝‍🧑 Peoples",
+                        title: "🧑‍🤝‍🧑 People",
                         items: viewModel.people
                     ) { item in
                         Task { await viewModel.onPeopleAppear(item) }

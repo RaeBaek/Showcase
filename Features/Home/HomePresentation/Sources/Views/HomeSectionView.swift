@@ -35,6 +35,15 @@ struct SectionView<T: HomeDisplayable>: View {
                                                 print("이미지 로드 실패: \(error.localizedDescription)")
                                             }
                                             .scaledToFill()
+                                    } else {
+                                        ZStack {
+                                            Color.gray.opacity(0.5)
+                                            Image(systemName: "film.fill")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 60, height: 60)
+                                                .foregroundStyle(.gray)
+                                        }
                                     }
                                 }
                                 .frame(width: 120, height: 180)
