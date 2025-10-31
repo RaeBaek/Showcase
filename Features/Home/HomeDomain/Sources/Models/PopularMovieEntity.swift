@@ -1,0 +1,74 @@
+//
+//  PopularMovieEntity.swift
+//  HomeDomain
+//
+//  Created by 백래훈 on 10/24/25.
+//
+
+import Foundation
+
+public struct PopularMovieEntity: Identifiable {
+    public let adult: Bool?
+    public let backdropPath: String?
+    public let genreIds: [Int]?
+    public let id: Int
+    public let originalLanguage: String?
+    public let originalTitle: String?
+    public let overview: String?
+    public let popularity: Double?
+    public let posterPath: String?
+    public let releaseDate: String?
+    public let title: String?
+    public let video: Bool?
+    public let voteAverage: Double?
+    public let voteCount: Int?
+
+    public init(
+        adult: Bool?,
+        backdropPath: String?,
+        genreIds: [Int]?,
+        id: Int,
+        originalLanguage: String?,
+        originalTitle: String?,
+        overview: String?,
+        popularity: Double?,
+        posterPath: String?,
+        releaseDate: String?,
+        title: String?,
+        video: Bool?,
+        voteAverage: Double?,
+        voteCount: Int?
+    ) {
+        self.adult = adult
+        self.backdropPath = backdropPath
+        self.genreIds = genreIds
+        self.id = id
+        self.originalLanguage = originalLanguage
+        self.originalTitle = originalTitle
+        self.overview = overview
+        self.popularity = popularity
+        self.posterPath = posterPath
+        self.releaseDate = releaseDate
+        self.title = title
+        self.video = video
+        self.voteAverage = voteAverage
+        self.voteCount = voteCount
+    }
+
+    public init(id: Int, title: String?,) {
+        self.id = id
+        self.title = title
+        self.adult = nil
+        self.backdropPath = nil
+        self.genreIds = nil
+        self.originalLanguage = nil
+        self.originalTitle = nil
+        self.overview = nil
+        self.popularity = nil
+        self.posterPath = nil
+        self.releaseDate = nil
+        self.video = nil
+        self.voteAverage = nil
+        self.voteCount = nil
+    }
+}
