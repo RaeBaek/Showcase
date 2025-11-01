@@ -1,5 +1,5 @@
 //
-//  MovieDTO.swift
+//  MovieDetailDTO.swift
 //  DetailData
 //
 //  Created by 백래훈 on 10/31/25.
@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Movie
-struct MovieDTO: Decodable, Hashable {
+struct MovieDetailDTO: Decodable, Hashable {
     let adult: Bool
     let backdropPath: String?
     let belongsToCollection: BelongsToCollectionDTO?

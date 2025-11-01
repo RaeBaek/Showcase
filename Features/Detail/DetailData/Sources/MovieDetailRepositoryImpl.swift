@@ -18,10 +18,9 @@ final class MovieDetailRepositoryImpl: MovieDetailRepository {
     }
 
     func fetchDetail(_ input: DetailInput) async throws {
-        let dto: MovieDTO = try await self.client.request(
+        let dto: MovieDetailDTO = try await self.client.request(
             "/movie/\(input.id)",
             query: [URLQueryItem(name: "language", value: input.language)]
         )
-
     }
 }

@@ -29,7 +29,8 @@ let project = Project(
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
             dependencies: [
-                .project(target: "DetailDomain", path: "../DetailDomain")
+                .project(target: "DetailDomain", path: "../DetailDomain"),
+                .external(name: "Kingfisher", condition: .none)
             ]
         ),
         .target(
