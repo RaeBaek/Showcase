@@ -10,9 +10,12 @@ import HomeDomain
 
 public struct HomeView: View {
     @ObservedObject private var viewModel: HomeViewModel
+    private let onMovieSelected: (Int32) -> Void
 
-    public init(viewModel: HomeViewModel) {
+    public init(viewModel: HomeViewModel,
+                onMovieSelected: @escaping (Int32) -> Void) {
         self.viewModel = viewModel
+        self.onMovieSelected = onMovieSelected
     }
 
     public var body: some View {
@@ -24,6 +27,12 @@ public struct HomeView: View {
                         items: viewModel.movies
                     ) { item in
                         Task { await viewModel.onMovieAppear(item) }
+                        Button(action: {
+                            onMovieSelected(Int32(item.id))
+                        }) {
+                            Text(item.displayTitle)
+
+                        }
                     }
 
                     SectionView<PopularPeopleEntity>(

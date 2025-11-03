@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVKit
+import DetailDomain
 
 public struct MovieDetailView: View {
     @ObservedObject private var viewModel: MovieDetailViewModel
@@ -36,11 +37,65 @@ public struct MovieDetailView: View {
                     ScrollView {
                         VStack {
                             HeaderBackdrop(detail: detail)
+                            ActionBar()
+                                .padding(.horizontal, 16)
+                                .padding(.top, 12)
 
+                            OverviewSection(
+                                text: detail.overview,
+                                expanded: $viewModel.showFullOverview
+                            )
+
+                            if !viewModel.credits.isEmpty {
+                                CreditSection(credits: viewModel.credits)
+                            }
+
+                            if !viewModel.videos.isEmpty {
+                                VideoSection(videos: viewModel.videos)
+                            }
+
+                            if !viewModel.similar.isEmpty {
+                                SimilarSection(list: viewModel.similar)
+                            }
+
+                            Spacer(minLength: 40)
                         }
                     }
+                    .ignoresSafeArea(edges: .top)
                 }
             }
         }
+    }
+}
+
+// 예시 Stub
+struct StubMovieDetailUseCase: MovieDetailUseCase {
+    func fetchDetail(id: Int32) async throws -> MovieDetailInfoEntity {
+        .init(id: id,
+              title: "다 이루어질지니",
+              originalTitle: "A Thousand Years Wish",
+              overview: "천 년 만에 램프의 정령을 깨운 그녀...",
+              releaseDate: "2025-05-01",
+              voteAverage: 7.8,
+              genres: [
+                .init(id: 213, name: "판타지"),
+                .init(id: 123, name: "로맨스")
+              ],
+              runtime: 123,
+              backdropURL: URL(string:"https://image.tmdb.org/t/p/w780/xxx.jpg"),
+              posterURL: URL(string:"https://image.tmdb.org/t/p/w342/yyy.jpg"))
+    }
+
+    func fetchCredits(id: Int) async throws -> [CreditPersonEntity] {
+        [.init(id: 1, name: "수지", role: "주연", profileURL: nil),
+         .init(id: 2, name: "김우빈", role: "주연", profileURL: nil)]
+    }
+
+    func fetchVideos(id: Int) async throws -> [VideoItemEntity] {
+        [.init(id: "1", name: "메인 트레일러", site: "YouTube", key: "abcd1234", type: "Trailer")]
+    }
+
+    func fetchSimilar(id: Int) async throws -> [SimilarMovieEntity] {
+        (1...10).map { .init(id: $0, title: "비슷한 영화 \($0)", posterURL: nil) }
     }
 }

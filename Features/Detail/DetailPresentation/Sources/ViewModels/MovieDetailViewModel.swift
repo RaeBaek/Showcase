@@ -11,7 +11,7 @@ import DetailDomain
 @MainActor
 public final class MovieDetailViewModel: ObservableObject {
     @Published var state: LoadState = .idle
-    @Published var detail: MovieDetailEntity?
+    @Published var detail: MovieDetailInfoEntity?
     @Published var credits: [CreditPersonEntity] = []
     @Published var videos: [VideoItemEntity] = []
     @Published var similar: [SimilarMovieEntity] = []

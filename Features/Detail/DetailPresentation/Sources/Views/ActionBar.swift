@@ -98,7 +98,7 @@ private struct SectionHeader: View {
     }
 }
 
-private struct CreditSection: View {
+struct CreditSection: View {
     let credits: [CreditPersonEntity]
 
     var body: some View {
@@ -143,7 +143,7 @@ private struct CreditSection: View {
     }
 }
 
-private struct VideoSection: View {
+struct VideoSection: View {
     let videos: [VideoItemEntity]
 
     var body: some View {
@@ -173,6 +173,49 @@ private struct VideoSection: View {
                         .onTapGesture {
                             // YouTube로 열기 또는 내장 플레이어 호출
                             // URL: https://www.youtube.com/watch?v=\(v.key)
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+            }
+        }
+        .padding(.top, 16)
+    }
+}
+
+struct SimilarSection: View {
+    let list: [SimilarMovieEntity]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionHeader(title: "비슷한 작품")
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(list) { item in
+                        VStack(alignment: .leading, spacing: 6) {
+                            if let posterUrl = item.posterURL {
+                                KFImage(posterUrl)
+                                    .resizable()
+                                    .placeholder {
+                                        Color.black.opacity(0.7)
+                                        ProgressView()
+                                    }
+                                    .onFailure { error in
+                                        print("이미지 로드 실패: \(error.localizedDescription)")
+                                    }
+                                    .scaledToFill()
+                                    .frame(height: 260)
+                                    .clipped()
+                            }
+
+                            Text(item.title)
+                                .font(.caption)
+                                .lineLimit(2)
+                                .frame(width: 120, alignment: .leading)
+                        }
+                        .onTapGesture {
+                            // 네비게이션: MovieDetailView(id: item.id)
                         }
                     }
                 }

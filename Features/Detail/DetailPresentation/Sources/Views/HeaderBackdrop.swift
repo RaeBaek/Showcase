@@ -10,7 +10,7 @@ import DetailDomain
 import Kingfisher
 
 struct HeaderBackdrop: View {
-    let detail: MovieDetailEntity
+    let detail: MovieDetailInfoEntity
 
     var metaText: String {
         let year = detail.releaseDate?.prefix(4) ?? ""

@@ -8,12 +8,19 @@
 import SwiftUI
 
 import NetworkLive
+
 import HomeData
 import HomeDomain
 import HomePresentation
 
+import DetailData
+import DetailDomain
+import DetailPresentation
+
 @main
 struct ShowcaseApp: App {
+    @State private var selectedMovieID: Int32? = nil   // ✅ 선택된 영화 ID 상태
+
     var body: some Scene {
         WindowGroup {
             let client = TMDBClient()
@@ -26,8 +33,15 @@ struct ShowcaseApp: App {
                 peopleUsecase: peopleUsecase,
                 tvsUsecase: tvsUsecase
             )
-            HomeView(viewModel: viewModel)
-                .preferredColorScheme(.dark)
+            HomeView(viewModel: viewModel) { id in
+                selectedMovieID = id
+            }
+            .navigationDestination(item: $selectedMovieID) { id in
+                let client = TMDBClient()
+                let repository = MovieDetailRepositoryImpl(client: client)
+                let usecase = MovieDetailUseCaseImpl(repository: MovieDetailRepositoryImpl)
+            }
+            .preferredColorScheme(.dark)
         }
     }
 }

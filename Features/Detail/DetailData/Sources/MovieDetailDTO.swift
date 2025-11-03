@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DetailDomain
 
 // MARK: - Movie
 struct MovieDetailDTO: Decodable, Hashable {
@@ -64,10 +65,48 @@ struct MovieDetailDTO: Decodable, Hashable {
     }
 }
 
+extension MovieDetailDTO {
+    var toEntity: MovieDetailEntity {
+        MovieDetailEntity(
+            adult: adult,
+            backdropPath: backdropPath,
+            belongsToCollection: belongsToCollection?.toEntity,
+            budget: budget,
+            genres: genres.map { $0.toEntity },
+            homepage: homepage,
+            id: id,
+            imdbID: imdbID,
+            originalLanguage: originalLanguage,
+            originalTitle: originalTitle,
+            overview: overview,
+            popularity: popularity,
+            posterPath: posterPath,
+            productionCompanies: productionCompanies.map { $0.toEntity },
+            productionCountries: productionCountries.map { $0.toEntity },
+            releaseDate: releaseDate,
+            revenue: revenue,
+            runtime: runtime,
+            spokenLanguages: spokenLanguages.map { $0.toEntity },
+            status: status,
+            tagline: tagline,
+            title: title,
+            video: video,
+            voteAverage: voteAverage,
+            voteCount: voteCount
+        )
+    }
+}
+
 // MARK: - Nested DTOs
 struct GenreDTO: Decodable, Hashable {
     let id: Int
     let name: String
+}
+
+extension GenreDTO {
+    var toEntity: GenreEntity {
+        GenreEntity(id: id, name: name)
+    }
 }
 
 struct ProductionCompanyDTO: Decodable, Hashable {
@@ -84,6 +123,17 @@ struct ProductionCompanyDTO: Decodable, Hashable {
     }
 }
 
+extension ProductionCompanyDTO {
+    var toEntity: ProductionCompanyEntity {
+        ProductionCompanyEntity(
+            id: id,
+            logoPath: logoPath,
+            name: name,
+            originCountry: originCountry
+        )
+    }
+}
+
 struct ProductionCountryDTO: Decodable, Hashable {
     let iso3166_1: String
     let name: String
@@ -91,6 +141,12 @@ struct ProductionCountryDTO: Decodable, Hashable {
     enum CodingKeys: String, CodingKey {
         case iso3166_1 = "iso_3166_1"
         case name
+    }
+}
+
+extension ProductionCountryDTO {
+    var toEntity: ProductionCountryEntity {
+        ProductionCountryEntity(iso3166_1: iso3166_1, name: name)
     }
 }
 
@@ -106,6 +162,12 @@ struct SpokenLanguageDTO: Decodable, Hashable {
     }
 }
 
+extension SpokenLanguageDTO {
+    var toEntity: SpokenLanguageEntity {
+        SpokenLanguageEntity(englishName: englishName, iso639_1: iso639_1, name: name)
+    }
+}
+
 // TMDB에서 종종 포함되는 컬렉션 정보(여기 예시는 null)
 struct BelongsToCollectionDTO: Decodable, Hashable {
     let id: Int
@@ -117,5 +179,16 @@ struct BelongsToCollectionDTO: Decodable, Hashable {
         case id, name
         case posterPath = "poster_path"
         case backdropPath = "backdrop_path"
+    }
+}
+
+extension BelongsToCollectionDTO {
+    var toEntity: BelongsToCollectionEntity {
+        BelongsToCollectionEntity(
+            id: id,
+            name: name,
+            posterPath: posterPath,
+            backdropPath: backdropPath
+        )
     }
 }

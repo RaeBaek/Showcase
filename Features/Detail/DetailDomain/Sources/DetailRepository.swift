@@ -7,12 +7,13 @@
 
 import Foundation
 
-public protocol DetailRepository {
-    func fetchDetail(_ input: DetailInput) async throws
+public protocol DetailRepository<Entity>: AnyObject {
+    associatedtype Entity: Identifiable where Entity.ID == Int
+    func fetchDetail(_ input: DetailInput) async throws -> Entity
 }
 
-public protocol MovieDetailRepository: DetailRepository {
-    func fetchDetail(_ input: DetailInput) async throws
+public protocol MovieDetailRepository: DetailRepository where Entity == MovieDetailEntity {
+    func fetchDetail(_ input: DetailInput) async throws -> MovieDetailEntity
 }
 
 public protocol PeopleDetailRepository: DetailRepository {

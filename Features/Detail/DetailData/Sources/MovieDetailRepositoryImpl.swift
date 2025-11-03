@@ -9,18 +9,18 @@ import Foundation
 import NetworkInterface
 import DetailDomain
 
-final class MovieDetailRepositoryImpl: MovieDetailRepository {
+public final class MovieDetailRepositoryImpl: MovieDetailRepository {
 
     private let client: HTTPClient
 
-    init(client: HTTPClient) {
+    public init(client: HTTPClient) {
         self.client = client
     }
 
-    func fetchDetail(_ input: DetailInput) async throws {
+    public func fetchDetail(_ input: DetailInput) async throws -> MovieDetailEntity {
         let dto: MovieDetailDTO = try await self.client.request(
             "/movie/\(input.id)",
-            query: [URLQueryItem(name: "language", value: input.language)]
-        )
+            query: [URLQueryItem(name: "language", value: input.language)])
+        return dto.toEntity
     }
 }
