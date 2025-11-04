@@ -19,40 +19,46 @@ public struct HomeView: View {
     }
 
     public var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    SectionView<PopularMovieEntity>(
-                        title: "🎬 Movies",
-                        items: viewModel.movies
-                    ) { item in
-                        Task { await viewModel.onMovieAppear(item) }
-                        Button(action: {
-                            onMovieSelected(Int32(item.id))
-                        }) {
-                            Text(item.displayTitle)
-
-                        }
-                    }
-
-                    SectionView<PopularPeopleEntity>(
-                        title: "🧑‍🤝‍🧑 People",
-                        items: viewModel.people
-                    ) { item in
-                        Task { await viewModel.onPeopleAppear(item) }
-                    }
-
-                    SectionView<PopularTVEntity>(
-                        title: "📺 TVs",
-                        items: viewModel.tvs
-                    ) { item in
-                        Task { await viewModel.onTVAppear(item) }
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                SectionView(
+                    title: "🎬 Movies",
+                    items: viewModel.movies
+                ) { item in
+                    Task { await viewModel.onMovieAppear(item) }
+                } onItemTap: { item in
+                    onMovieSelected(Int32(item.id))
                 }
-                .padding(16)
+
+//                SectionView<PopularMovieEntity>(
+//                    title: "🎬 Movies",
+//                    items: viewModel.movies
+//                ) { item in
+//                    Task { await viewModel.onMovieAppear(item) }
+//                    Button(action: {
+//                        onMovieSelected(Int32(item.id))
+//                    }) {
+//                        Text(item.displayTitle)
+//                    }
+//                }
+//
+//                SectionView<PopularPeopleEntity>(
+//                    title: "🧑‍🤝‍🧑 People",
+//                    items: viewModel.people
+//                ) { item in
+//                    Task { await viewModel.onPeopleAppear(item) }
+//                }
+//
+//                SectionView<PopularTVEntity>(
+//                    title: "📺 TVs",
+//                    items: viewModel.tvs
+//                ) { item in
+//                    Task { await viewModel.onTVAppear(item) }
+//                }
             }
-            .navigationTitle("Showcase")
+            .padding(16)
         }
+        .navigationTitle("Showcase")
         .task {
             await viewModel.firstLoad()
         }

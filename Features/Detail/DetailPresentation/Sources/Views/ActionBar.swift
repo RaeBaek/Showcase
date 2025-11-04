@@ -27,7 +27,7 @@ struct ActionBar: View {
             Button {
                 // 찜
             } label: {
-                VStack {
+                VStack(spacing: 3) {
                     Image(systemName: "plus")
                     Text("내가 찜한 리스트")
                         .font(.caption2)
@@ -38,7 +38,7 @@ struct ActionBar: View {
             Button {
                 // 평가
             } label: {
-                VStack {
+                VStack(spacing: 3) {
                     Image(systemName: "hand.thumbsup")
                     Text("평가")
                         .font(.caption2)
@@ -49,7 +49,7 @@ struct ActionBar: View {
             Button {
                 // 공유
             } label: {
-                VStack {
+                VStack(spacing: 3) {
                     Image(systemName: "paperplane")
                     Text("공유")
                         .font(.caption2)
@@ -57,6 +57,8 @@ struct ActionBar: View {
                 .frame(width: 60)
             }
         }
+        .padding(.horizontal, 16)
+        .padding(.top, 4)
     }
 }
 
@@ -94,7 +96,6 @@ private struct SectionHeader: View {
                 .font(.headline)
             Spacer()
         }
-        .padding(.horizontal, 16)
     }
 }
 

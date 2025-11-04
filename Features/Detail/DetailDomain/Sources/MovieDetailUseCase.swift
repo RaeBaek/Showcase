@@ -16,9 +16,9 @@ public protocol MovieDetailUseCase {
 
 public final class MovieDetailUseCaseImpl: MovieDetailUseCase {
 
-    private let repository: any DetailRepository<MovieDetailEntity>
+    private let repository: any MovieDetailRepository
 
-    public init(repository: any DetailRepository<MovieDetailEntity>) {
+    public init(repository: any MovieDetailRepository) {
         self.repository = repository
     }
 

@@ -17,10 +17,10 @@ public final class MovieDetailViewModel: ObservableObject {
     @Published var similar: [SimilarMovieEntity] = []
     @Published var showFullOverview = false
 
-    private let id: Int
+    private let id: Int32
     private let useCase: MovieDetailUseCase
 
-    public init(id: Int, useCase: MovieDetailUseCase) {
+    public init(id: Int32, useCase: MovieDetailUseCase) {
         self.id = id
         self.useCase = useCase
     }
@@ -30,17 +30,19 @@ public final class MovieDetailViewModel: ObservableObject {
             state = .loading
             do {
                 async let fetchDetail = useCase.fetchDetail(id: id)
-                async let fetchCredits = useCase.fetchCredits(id: id)
-                async let fetchVideos = useCase.fetchVideos(id: id)
-                async let fetchSimilar = useCase.fetchSimilar(id: id)
+//                async let fetchCredits = useCase.fetchCredits(id: id)
+//                async let fetchVideos = useCase.fetchVideos(id: id)
+//                async let fetchSimilar = useCase.fetchSimilar(id: id)
 
-                let (detail, credits, videos, similar) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilar)
+//                let (detail, credits, videos, similar) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilar)
+                let detail = try await fetchDetail
 
                 self.detail = detail
-                self.credits = credits
-                self.videos = videos
-                self.similar = similar
+//                self.credits = credits
+//                self.videos = videos
+//                self.similar = similar
                 state = .loaded
+                print("State changed to:", state)
             } catch {
                 state = .failed(error.localizedDescription)
             }

@@ -14,28 +14,43 @@ struct HeaderBackdrop: View {
 
     var metaText: String {
         let year = detail.releaseDate?.prefix(4) ?? ""
-        let genres = detail.genres.prefix(3).joined(separator: " · ")
         var arr: [String] = []
         if !year.isEmpty { arr.append(String(year)) }
         if let r = detail.runtime { arr.append("\(r)분") }
-        if !genres.isEmpty { arr.append(genres) }
-        return arr.joined(separator: "  •  ")
+        return arr.joined(separator: " · ")
     }
+
+    var genres: String {
+        return detail.genres.map { $0.name }.prefix(3).joined(separator: " · ")
+    }
+
+    let targetWidth  = UIScreen.main.bounds.width
+    let targetHeight: CGFloat = 350
+
+    @State private var ratio: CGFloat = 9.0/16.0 // 임시 비율
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            if let imageURL = detail.backdropURL {
-                KFImage(imageURL)
+            if let url = detail.backdropURL {
+                KFImage(url)
+                    .setProcessor(
+                        ResizingImageProcessor(
+                            referenceSize: CGSize(
+                                width: targetWidth * UIScreen.main.scale,
+                                height: targetHeight * UIScreen.main.scale
+                            ),
+                            mode: .aspectFill // ✅ 높이 350에 맞게 확대 + 크롭
+                        )
+                    )
+                    .onSuccess { result in
+                        let sz = result.image.size
+                        if sz.width > 0 { ratio = sz.width / sz.height }
+                    }
+                    .cacheOriginalImage()
+                    .fade(duration: 0.2)
                     .resizable()
-                    .placeholder {
-                        Color.black.opacity(0.7)
-                        ProgressView()
-                    }
-                    .onFailure { error in
-                        print("이미지 로드 실패: \(error.localizedDescription)")
-                    }
-                    .scaledToFill()
-                    .frame(height: 260)
+                    .aspectRatio(ratio, contentMode: .fill)  // ✅ 비율 유지 + 채우기(확대)
+                    .frame(width: targetWidth, height: targetHeight)
                     .clipped()
             }
 
@@ -51,7 +66,7 @@ struct HeaderBackdrop: View {
 
             HStack(alignment: .bottom, spacing: 12) {
                 PosterView(url: detail.posterURL)
-                    .offset(y: 30)
+                    .offset(y: 0)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(detail.title)
@@ -64,10 +79,13 @@ struct HeaderBackdrop: View {
                             .foregroundStyle(.secondary)
                     }
 
-                    HStack(spacing: 8) {
+                    HStack(alignment: .top, spacing: 8) {
                         Image(systemName: "star.fill").font(.caption)
                         Text(String(format: "%.1f", detail.voteAverage))
-                        Text(metaText)
+                        VStack(alignment: .leading) {
+                            Text(metaText)
+                            Text(genres)
+                        }
                     }
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -91,6 +109,6 @@ private struct PosterView: View {
         }
         .frame(width: 110, height: 160)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(radius: 6, y: 3)
+        //        .shadow(radius: 6, y: 3)
     }
 }

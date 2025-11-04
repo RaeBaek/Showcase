@@ -10,10 +10,11 @@ import AVKit
 import DetailDomain
 
 public struct MovieDetailView: View {
-    @ObservedObject private var viewModel: MovieDetailViewModel
+    @StateObject private var viewModel: MovieDetailViewModel
 
     public init(viewModel: MovieDetailViewModel) {
-        self.viewModel = viewModel
+//        self.viewModel = viewModel
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     public var body: some View {
@@ -34,12 +35,11 @@ public struct MovieDetailView: View {
                 .padding(.top, 80)
             case .loaded:
                 if let detail = viewModel.detail {
-                    ScrollView {
-                        VStack {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(alignment: .leading) {
                             HeaderBackdrop(detail: detail)
+
                             ActionBar()
-                                .padding(.horizontal, 16)
-                                .padding(.top, 12)
 
                             OverviewSection(
                                 text: detail.overview,
@@ -58,7 +58,7 @@ public struct MovieDetailView: View {
                                 SimilarSection(list: viewModel.similar)
                             }
 
-                            Spacer(minLength: 40)
+//                            Spacer(minLength: 40)
                         }
                     }
                     .ignoresSafeArea(edges: .top)
@@ -86,16 +86,16 @@ struct StubMovieDetailUseCase: MovieDetailUseCase {
               posterURL: URL(string:"https://image.tmdb.org/t/p/w342/yyy.jpg"))
     }
 
-    func fetchCredits(id: Int) async throws -> [CreditPersonEntity] {
+    func fetchCredits(id: Int32) async throws -> [CreditPersonEntity] {
         [.init(id: 1, name: "수지", role: "주연", profileURL: nil),
          .init(id: 2, name: "김우빈", role: "주연", profileURL: nil)]
     }
 
-    func fetchVideos(id: Int) async throws -> [VideoItemEntity] {
+    func fetchVideos(id: Int32) async throws -> [VideoItemEntity] {
         [.init(id: "1", name: "메인 트레일러", site: "YouTube", key: "abcd1234", type: "Trailer")]
     }
 
-    func fetchSimilar(id: Int) async throws -> [SimilarMovieEntity] {
+    func fetchSimilar(id: Int32) async throws -> [SimilarMovieEntity] {
         (1...10).map { .init(id: $0, title: "비슷한 영화 \($0)", posterURL: nil) }
     }
 }

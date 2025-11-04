@@ -16,7 +16,7 @@ struct MovieDetailDTO: Decodable, Hashable {
     let budget: Int?
     let genres: [GenreDTO]
     let homepage: String?
-    let id: Int
+    let id: Int32
     let imdbID: String?
     let originalLanguage: String
     let originalTitle: String

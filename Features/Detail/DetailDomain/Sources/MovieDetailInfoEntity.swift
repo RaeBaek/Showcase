@@ -14,7 +14,7 @@ public struct MovieDetailEntity: Identifiable {
     let budget: Int?
     let genres: [GenreEntity]
     let homepage: String?
-    public let id: Int
+    public let id: Int32
     let imdbID: String?
     let originalLanguage: String
     let originalTitle: String
@@ -41,7 +41,7 @@ public struct MovieDetailEntity: Identifiable {
         budget: Int?,
         genres: [GenreEntity],
         homepage: String?,
-        id: Int,
+        id: Int32,
         imdbID: String?,
         originalLanguage: String,
         originalTitle: String,
@@ -97,7 +97,7 @@ protocol DetailURLConvertible {
 extension MovieDetailEntity: DetailURLConvertible {
     var backdropURL: URL? {
         guard let backdropPath else { return nil }
-        return URL(string: "https://image.tmdb.org/t/p/w500/\(backdropPath)")
+        return URL(string: "https://image.tmdb.org/t/p/original/\(backdropPath)")
     }
 
     var posterURL: URL? {
@@ -122,14 +122,14 @@ extension MovieDetailEntity {
         )
     }
 
-    var toCredits: [CreditPersonEntity] {
-
-    }
+//    var toCredits: [CreditPersonEntity] {
+//
+//    }
 }
 
 public struct GenreEntity {
-    let id: Int
-    let name: String
+    public let id: Int
+    public let name: String
 
     public init(id: Int, name: String) {
         self.id = id

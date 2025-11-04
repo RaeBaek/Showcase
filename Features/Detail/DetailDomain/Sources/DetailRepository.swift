@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol DetailRepository<Entity>: AnyObject {
-    associatedtype Entity: Identifiable where Entity.ID == Int
+    associatedtype Entity: Identifiable where Entity.ID == Int32
     func fetchDetail(_ input: DetailInput) async throws -> Entity
 }
 
