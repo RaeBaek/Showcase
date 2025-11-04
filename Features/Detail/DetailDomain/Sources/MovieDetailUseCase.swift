@@ -9,8 +9,8 @@ import Foundation
 
 public protocol MovieDetailUseCase {
     func fetchDetail(id: Int32) async throws -> MovieDetailInfoEntity
-//    func fetchCredits(id: Int32) async throws -> [CreditPersonEntity]
-//    func fetchVideos(id: Int32) async throws -> [VideoItemEntity]
+    func fetchCredits(id: Int32) async throws -> [CreditPersonEntity]
+    func fetchVideos(id: Int32) async throws -> [VideoItemEntity]
 //    func fetchSimilar(id: Int32) async throws -> [SimilarMovieEntity]
 }
 
@@ -28,15 +28,18 @@ public final class MovieDetailUseCaseImpl: MovieDetailUseCase {
         return detail.toDetail
     }
 
-//    public func fetchCredits(id: Int32) async throws -> [CreditPersonEntity] {
-//        let input = DetailInput(id: id, language: "ko-KR")
-//        return try await self.repository.fetchDetail(input)
-//    }
-//
-//    public func fetchVideos(id: Int32) async throws -> [VideoItemEntity] {
-//        let input = DetailInput(id: id, language: "ko-KR")
-//    }
-//
+    public func fetchCredits(id: Int32) async throws -> [CreditPersonEntity] {
+        let input = DetailInput(id: id, language: "ko-KR")
+        let credits = try await self.repository.fetchCredits(input)
+        return credits.cast.map { $0.toCredit }
+    }
+
+    public func fetchVideos(id: Int32) async throws -> [VideoItemEntity] {
+        let input = DetailInput(id: id, language: "ko-KR")
+        let videos = try await self.repository.fetchVideos(input)
+        return videos.results.map { $0.toVideoItemEntity }
+    }
+
 //    public func fetchSimilar(id: Int32) async throws -> [SimilarMovieEntity] {
 //        let input = DetailInput(id: id, language: "ko-KR")
 //    }

@@ -102,7 +102,7 @@ extension MovieDetailEntity: DetailURLConvertible {
 
     var posterURL: URL? {
         guard let posterPath else { return nil }
-        return URL(string: "https://image.tmdb.org/t/p/w500/\(posterPath)")
+        return URL(string: "https://image.tmdb.org/t/p/w780/\(posterPath)")
     }
 }
 
@@ -121,10 +121,6 @@ extension MovieDetailEntity {
             posterURL: posterURL
         )
     }
-
-//    var toCredits: [CreditPersonEntity] {
-//
-//    }
 }
 
 public struct GenreEntity {
@@ -252,6 +248,16 @@ public struct VideoItemEntity: Identifiable {
         self.site = site
         self.key = key
         self.type = type
+    }
+}
+
+public extension VideoItemEntity {
+    var thumbnailURL: URL? {
+        return URL(string: "https://img.youtube.com/vi/\(key)/hqdefault.jpg")
+    }
+
+    var watchURL: URL? {
+        return URL(string: "https://www.youtube.com/watch?v=\(key)")!
     }
 }
 

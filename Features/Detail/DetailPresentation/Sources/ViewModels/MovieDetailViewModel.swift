@@ -30,16 +30,16 @@ public final class MovieDetailViewModel: ObservableObject {
             state = .loading
             do {
                 async let fetchDetail = useCase.fetchDetail(id: id)
-//                async let fetchCredits = useCase.fetchCredits(id: id)
-//                async let fetchVideos = useCase.fetchVideos(id: id)
+                async let fetchCredits = useCase.fetchCredits(id: id)
+                async let fetchVideos = useCase.fetchVideos(id: id)
 //                async let fetchSimilar = useCase.fetchSimilar(id: id)
 
 //                let (detail, credits, videos, similar) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilar)
-                let detail = try await fetchDetail
+                let (detail, credits, videos) = try await (fetchDetail, fetchCredits, fetchVideos)
 
                 self.detail = detail
-//                self.credits = credits
-//                self.videos = videos
+                self.credits = credits
+                self.videos = videos
 //                self.similar = similar
                 state = .loaded
                 print("State changed to:", state)

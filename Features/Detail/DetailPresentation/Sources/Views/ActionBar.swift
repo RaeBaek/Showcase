@@ -107,7 +107,7 @@ struct CreditSection: View {
             SectionHeader(title: "출연/제작")
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
+                LazyHStack(spacing: 12) {
                     ForEach(credits) { credit in
                         VStack(spacing: 6) {
                             if let profileURL = credit.profileURL {
@@ -137,10 +137,11 @@ struct CreditSection: View {
                         .frame(width: 90)
                     }
                 }
-                .padding(.horizontal, 16)
+//                .padding(.horizontal, 16)
             }
         }
-        .padding(.top, 16)
+        .padding(.top, 8)
+        .padding(.horizontal, 16)
     }
 }
 
@@ -155,12 +156,26 @@ struct VideoSection: View {
                 HStack(spacing: 12) {
                     ForEach(videos) { video in
                         ZStack(alignment: .center) {
-                            Rectangle().fill(.gray.opacity(0.25))
-                                .frame(width: 260, height: 146)
-                                .overlay(
-                                    Image(systemName: "play.circle.fill")
-                                        .font(.system(size: 44))
-                                )
+                            if video.site.lowercased() == "youtube",
+                               let thumbURL = video.thumbnailURL {
+                                KFImage(thumbURL)
+                                    .resizable()
+                                    .placeholder {
+                                        Color.black.opacity(0.7)
+                                        ProgressView()
+                                    }
+                                    .onFailure { error in
+                                        print("썸네일 이미지 로드 실패: \(error.localizedDescription)")
+                                    }
+                                    .scaledToFill()
+                                    .frame(width: 260, height: 146)
+                                    .clipped()
+                            } else {
+                                Rectangle().fill(.gray.opacity(0.25))
+                                    .frame(width: 260, height: 146)
+                            }
+                            Image(systemName: "play.circle.fill")
+                                .font(.system(size: 44))
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .overlay(alignment: .bottomLeading) {
@@ -172,15 +187,17 @@ struct VideoSection: View {
                                 .padding(8)
                         }
                         .onTapGesture {
-                            // YouTube로 열기 또는 내장 플레이어 호출
-                            // URL: https://www.youtube.com/watch?v=\(v.key)
+                            if video.site.lowercased() == "youtube",
+                               let watchURL = video.watchURL {
+                                UIApplication.shared.open(watchURL)
+                            }
                         }
                     }
                 }
-                .padding(.horizontal, 16)
             }
         }
-        .padding(.top, 16)
+        .padding(.top, 8)
+        .padding(.horizontal, 16)
     }
 }
 

@@ -15,7 +15,7 @@ public protocol HomeDisplayable: Identifiable {
 extension HomeDisplayable {
     public var imageURL: URL? {
         guard let path = imagePath else { return nil }
-        return URL(string: "https://image.tmdb.org/t/p/w500" + path)
+        return URL(string: "https://image.tmdb.org/t/p/w780" + path)
     }
 }
 
