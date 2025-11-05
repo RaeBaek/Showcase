@@ -23,7 +23,7 @@ public struct MovieDetailEntity: Identifiable {
     let posterPath: String?
     let productionCompanies: [ProductionCompanyEntity]
     let productionCountries: [ProductionCountryEntity]
-    let releaseDate: String?         // 필요 시 Date로 변환해서 써도 OK
+    let releaseDate: String?
     let revenue: Int?
     let runtime: Int?
     let spokenLanguages: [SpokenLanguageEntity]

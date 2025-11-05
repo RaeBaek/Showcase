@@ -57,8 +57,7 @@ public struct MovieDetailView: View {
                             if !viewModel.similar.isEmpty {
                                 SimilarSection(list: viewModel.similar)
                             }
-
-//                            Spacer(minLength: 40)
+                            Spacer(minLength: 40)
                         }
                     }
                     .ignoresSafeArea(edges: .top)
