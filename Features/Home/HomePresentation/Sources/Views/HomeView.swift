@@ -8,14 +8,23 @@
 import SwiftUI
 import HomeDomain
 
+//public enum Route: Hashable {
+//    case movieDetail(id: Int32)
+//}
+
 public struct HomeView: View {
     @ObservedObject private var viewModel: HomeViewModel
-    private let onMovieSelected: (Int32) -> Void
+//    private let onMovieSelected: (Int32) -> Void
+    private let onNavigate: (Route) -> Void
 
-    public init(viewModel: HomeViewModel,
-                onMovieSelected: @escaping (Int32) -> Void) {
+    public init(
+        viewModel: HomeViewModel,
+//        onMovieSelected: @escaping (Int32) -> Void
+        onNavigate: @escaping (Route) -> Void
+    ) {
         self.viewModel = viewModel
-        self.onMovieSelected = onMovieSelected
+//        self.onMovieSelected = onMovieSelected
+        self.onNavigate = onNavigate
     }
 
     public var body: some View {
@@ -27,7 +36,8 @@ public struct HomeView: View {
                 ) { item in
                     Task { await viewModel.onMovieAppear(item) }
                 } onItemTap: { item in
-                    onMovieSelected(Int32(item.id))
+//                    onMovieSelected(Int32(item.id))
+                    onNavigate(.movieDetail(id: Int32(item.id)))
                 }
 
 //                SectionView<PopularMovieEntity>(

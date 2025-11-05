@@ -14,7 +14,7 @@ public final class MovieDetailViewModel: ObservableObject {
     @Published var detail: MovieDetailInfoEntity?
     @Published var credits: [CreditPersonEntity] = []
     @Published var videos: [VideoItemEntity] = []
-    @Published var similar: [SimilarMovieEntity] = []
+    @Published var similar: [SimilarMovieItemEntity] = []
     @Published var showFullOverview = false
 
     private let id: Int32
@@ -32,15 +32,15 @@ public final class MovieDetailViewModel: ObservableObject {
                 async let fetchDetail = useCase.fetchDetail(id: id)
                 async let fetchCredits = useCase.fetchCredits(id: id)
                 async let fetchVideos = useCase.fetchVideos(id: id)
-//                async let fetchSimilar = useCase.fetchSimilar(id: id)
+                async let fetchSimilar = useCase.fetchSimilar(id: id)
 
-//                let (detail, credits, videos, similar) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilar)
-                let (detail, credits, videos) = try await (fetchDetail, fetchCredits, fetchVideos)
+                let (detail, credits, videos, similar) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilar)
 
                 self.detail = detail
                 self.credits = credits
                 self.videos = videos
-//                self.similar = similar
+                self.similar = similar
+
                 state = .loaded
                 print("State changed to:", state)
             } catch {

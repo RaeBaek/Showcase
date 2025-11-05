@@ -40,4 +40,15 @@ public final class MovieDetailRepositoryImpl: MovieDetailRepository {
         )
         return dto.toEntity
     }
+
+    public func fetchSimilars(_ input: DetailInput) async throws -> SimilarMovieEntity {
+        let dto: SimilarMovieDTO = try await self.client.request(
+            "movie/\(input.id)/similar",
+            query: [
+                URLQueryItem(name: "language", value: input.language),
+                URLQueryItem(name: "page", value: "\(input.page)")
+            ]
+        )
+        return dto.toEntity
+    }
 }

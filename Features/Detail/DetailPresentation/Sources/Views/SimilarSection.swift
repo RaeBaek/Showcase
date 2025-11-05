@@ -10,7 +10,8 @@ import DetailDomain
 import Kingfisher
 
 struct SimilarSection: View {
-    let list: [SimilarMovieEntity]
+    let list: [SimilarMovieItemEntity]
+    let onItemTap: ((SimilarMovieItemEntity) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -31,8 +32,9 @@ struct SimilarSection: View {
                                         print("이미지 로드 실패: \(error.localizedDescription)")
                                     }
                                     .scaledToFill()
-                                    .frame(height: 260)
+                                    .frame(width: 120, height: 180)
                                     .clipped()
+                                    .background(Color.black.opacity(0.08))
                             }
 
                             Text(item.title)
@@ -41,13 +43,13 @@ struct SimilarSection: View {
                                 .frame(width: 120, alignment: .leading)
                         }
                         .onTapGesture {
-                            // 네비게이션: MovieDetailView(id: item.id)
+                            onItemTap?(item)
                         }
                     }
                 }
-                .padding(.horizontal, 16)
             }
         }
-        .padding(.top, 16)
+        .padding(.top, 8)
+        .padding(.horizontal, 16)
     }
 }

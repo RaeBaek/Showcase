@@ -19,11 +19,11 @@ import DetailPresentation
 
 @main
 struct ShowcaseApp: App {
-    @State private var selectedMovieID: Int32? = nil   // ✅ 선택된 영화 ID 상태
+    @State private var path = NavigationPath()
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
+            NavigationStack(path: $path) {
                 let client = TMDBClient()
                 let repository = HomeRepositoryImpl(client: client)
                 let moviesUsecase = MoviesPagingUseCase(repository: repository)
@@ -34,19 +34,28 @@ struct ShowcaseApp: App {
                     peopleUsecase: peopleUsecase,
                     tvsUsecase: tvsUsecase
                 )
-                HomeView(viewModel: viewModel) { id in
-                    selectedMovieID = id
+                HomeView(viewModel: viewModel) { item in
+                    path.append(item)
                 }
-                .navigationDestination(item: $selectedMovieID) { id in
-                    let client = TMDBClient()
-                    let repository = MovieDetailRepositoryImpl(client: client)
-                    let usecase = MovieDetailUseCaseImpl(repository: repository)
-                    let viewModel = MovieDetailViewModel(id: id, useCase: usecase)
-                    MovieDetailView(viewModel: viewModel)
-
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .movieDetail(let id):
+                        let client = TMDBClient()
+                        let repository = MovieDetailRepositoryImpl(client: client)
+                        let usecase = MovieDetailUseCaseImpl(repository: repository)
+                        let viewModel = MovieDetailViewModel(id: id, useCase: usecase)
+                        MovieDetailView(
+                            viewModel: viewModel) { item in
+                                path.append(item)
+                            }
+                    }
                 }
                 .preferredColorScheme(.dark)
             }
         }
     }
+}
+
+public enum Route: Hashable {
+    case movieDetail(id: Int32)
 }

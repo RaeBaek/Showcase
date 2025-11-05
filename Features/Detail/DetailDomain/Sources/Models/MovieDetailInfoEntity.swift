@@ -261,7 +261,7 @@ public extension VideoItemEntity {
     }
 }
 
-public struct SimilarMovieEntity: Identifiable {
+public struct SimilarMovieItemEntity: Identifiable {
     public let id: Int
     public let title: String
     public let posterURL: URL?

@@ -47,7 +47,6 @@ struct CreditSection: View {
                         .frame(width: 90)
                     }
                 }
-//                .padding(.horizontal, 16)
             }
         }
         .padding(.top, 8)
