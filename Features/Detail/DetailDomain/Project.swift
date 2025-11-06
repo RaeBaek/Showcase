@@ -8,7 +8,7 @@
 import ProjectDescription
 
 let project = Project(
-    name: "HomePresentation",
+    name: "DetailDomain",
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",
@@ -22,27 +22,23 @@ let project = Project(
     ),
     targets: [
         .target(
-            name: "HomePresentation",
+            name: "DetailDomain",
             destinations: .iOS,
             product: .framework,
-            bundleId: "com.raehoon.Showcase.home.presentation",
+            bundleId: "com.raehoon.Showcase.detail.domain",
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
-            dependencies: [
-                .project(target: "NavigationInterface", path: "../../../Core/NavigationInterface"),
-                .project(target: "HomeDomain", path: "../HomeDomain"),
-                .external(name: "Kingfisher", condition: .none)
-            ]
+            dependencies: []
         ),
         .target(
-            name: "HomePresentationTests",
+            name: "DetailDomainTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "com.raehoon.Showcase.home.presentation.tests",
+            bundleId: "com.raehoon.Showcase.detail.domain.tests",
             infoPlist: .default,
             sources: ["Tests/**"],
             dependencies: [
-                .target(name: "HomePresentation")
+                .target(name: "DetailDomain")
             ]
         )
     ]

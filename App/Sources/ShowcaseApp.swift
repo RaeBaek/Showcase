@@ -7,27 +7,33 @@
 
 import SwiftUI
 
+import NavigationInterface
 import NetworkLive
-import HomeData
-import HomeDomain
+
 import HomePresentation
+import DetailPresentation
 
 @main
 struct ShowcaseApp: App {
+    @StateObject private var navigator = AppNavigator()
+    private let container = DIContainer(httpClient: TMDBClient())
+
     var body: some Scene {
         WindowGroup {
-            let client = TMDBClient()
-            let repository = HomeRepositoryImpl(client: client)
-            let moviesUsecase = MoviesPagingUseCase(repository: repository)
-            let peopleUsecase = PeoplePagingUseCase(repository: repository)
-            let tvsUsecase = TVsPagingUseCase(repository: repository)
-            let viewModel = HomeViewModel(
-                moviesUsecase: moviesUsecase,
-                peopleUsecase: peopleUsecase,
-                tvsUsecase: tvsUsecase
-            )
-            HomeView(viewModel: viewModel)
+            NavigationStack(path: $navigator.path) {
+                HomeView(viewModel: container.makeHomeViewModel()) { item in
+                    navigator.push(item)
+                }
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .movieDetail(let id):
+                        MovieDetailView(viewModel: container.makeMovieDetailViewModel(id: id)) { item in
+                            navigator.push(item)
+                        }
+                    }
+                }
                 .preferredColorScheme(.dark)
+            }
         }
     }
 }

@@ -41,11 +41,14 @@ let project = Project(
             sources: ["Sources/**"],
             resources: ["Resources/**"],
             dependencies: [
+                .project(target: "NavigationInterface", path: "../Core/NavigationInterface"),
                 .project(target: "NetworkLive", path: "../Core/NetworkLive"),
-                .project(target: "Model", path: "../Core/Model"),
-                .project(target: "HomePresentation", path: "../Features/Home/HomePresentation"),
                 .project(target: "HomeData", path: "../Features/Home/HomeData"),
-                .project(target: "HomeDomain", path: "../Features/Home/HomeDomain")
+                .project(target: "HomeDomain", path: "../Features/Home/HomeDomain"),
+                .project(target: "HomePresentation", path: "../Features/Home/HomePresentation"),
+                .project(target: "DetailData", path: "../Features/Detail/DetailData"),
+                .project(target: "DetailDomain", path: "../Features/Detail/DetailDomain"),
+                .project(target: "DetailPresentation", path: "../Features/Detail/DetailPresentation")
             ]
         ),
         // Unit Tests

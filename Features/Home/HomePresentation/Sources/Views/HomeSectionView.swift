@@ -13,6 +13,7 @@ struct SectionView<T: HomeDisplayable>: View {
     let title: String
     let items: [T]
     let onItemAppear: ((T) -> Void)?
+    let onItemTap: ((T) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -55,6 +56,9 @@ struct SectionView<T: HomeDisplayable>: View {
                         }
                         .onAppear {
                             onItemAppear?(item) // item이 보일 때 마다 트리거
+                        }
+                        .onTapGesture {
+                            onItemTap?(item)
                         }
                     }
                 }
