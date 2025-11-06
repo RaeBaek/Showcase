@@ -6,65 +6,50 @@
 //
 
 import SwiftUI
+import NavigationInterface
 import HomeDomain
 
-//public enum Route: Hashable {
-//    case movieDetail(id: Int32)
-//}
-
 public struct HomeView: View {
-    @ObservedObject private var viewModel: HomeViewModel
-//    private let onMovieSelected: (Int32) -> Void
+    @StateObject private var viewModel: HomeViewModel
     private let onNavigate: (Route) -> Void
 
     public init(
         viewModel: HomeViewModel,
-//        onMovieSelected: @escaping (Int32) -> Void
         onNavigate: @escaping (Route) -> Void
     ) {
-        self.viewModel = viewModel
-//        self.onMovieSelected = onMovieSelected
+        _viewModel = StateObject(wrappedValue: viewModel)
         self.onNavigate = onNavigate
     }
 
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                SectionView(
+                SectionView<PopularMovieEntity>(
                     title: "🎬 Movies",
                     items: viewModel.movies
                 ) { item in
                     Task { await viewModel.onMovieAppear(item) }
                 } onItemTap: { item in
-//                    onMovieSelected(Int32(item.id))
                     onNavigate(.movieDetail(id: Int32(item.id)))
                 }
 
-//                SectionView<PopularMovieEntity>(
-//                    title: "🎬 Movies",
-//                    items: viewModel.movies
-//                ) { item in
-//                    Task { await viewModel.onMovieAppear(item) }
-//                    Button(action: {
-//                        onMovieSelected(Int32(item.id))
-//                    }) {
-//                        Text(item.displayTitle)
-//                    }
-//                }
-//
-//                SectionView<PopularPeopleEntity>(
-//                    title: "🧑‍🤝‍🧑 People",
-//                    items: viewModel.people
-//                ) { item in
-//                    Task { await viewModel.onPeopleAppear(item) }
-//                }
-//
-//                SectionView<PopularTVEntity>(
-//                    title: "📺 TVs",
-//                    items: viewModel.tvs
-//                ) { item in
-//                    Task { await viewModel.onTVAppear(item) }
-//                }
+                SectionView<PopularPeopleEntity>(
+                    title: "🧑‍🤝‍🧑 People",
+                    items: viewModel.people
+                ) { item in
+                    Task { await viewModel.onPeopleAppear(item) }
+                } onItemTap: { item in
+//                    onNavigate(.movieDetail(id: Int32(item.id)))
+                }
+
+                SectionView<PopularTVEntity>(
+                    title: "📺 TVs",
+                    items: viewModel.tvs
+                ) { item in
+                    Task { await viewModel.onTVAppear(item) }
+                } onItemTap: { item in
+//                    onNavigate(.movieDetail(id: Int32(item.id)))
+                }
             }
             .padding(16)
         }

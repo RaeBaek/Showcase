@@ -7,55 +7,33 @@
 
 import SwiftUI
 
+import NavigationInterface
 import NetworkLive
 
-import HomeData
-import HomeDomain
 import HomePresentation
-
-import DetailData
-import DetailDomain
 import DetailPresentation
 
 @main
 struct ShowcaseApp: App {
-    @State private var path = NavigationPath()
+    @StateObject private var navigator = AppNavigator()
+    private let container = DIContainer(httpClient: TMDBClient())
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $path) {
-                let client = TMDBClient()
-                let repository = HomeRepositoryImpl(client: client)
-                let moviesUsecase = MoviesPagingUseCase(repository: repository)
-                let peopleUsecase = PeoplePagingUseCase(repository: repository)
-                let tvsUsecase = TVsPagingUseCase(repository: repository)
-                let viewModel = HomeViewModel(
-                    moviesUsecase: moviesUsecase,
-                    peopleUsecase: peopleUsecase,
-                    tvsUsecase: tvsUsecase
-                )
-                HomeView(viewModel: viewModel) { item in
-                    path.append(item)
+            NavigationStack(path: $navigator.path) {
+                HomeView(viewModel: container.makeHomeViewModel()) { item in
+                    navigator.push(item)
                 }
                 .navigationDestination(for: Route.self) { route in
                     switch route {
                     case .movieDetail(let id):
-                        let client = TMDBClient()
-                        let repository = MovieDetailRepositoryImpl(client: client)
-                        let usecase = MovieDetailUseCaseImpl(repository: repository)
-                        let viewModel = MovieDetailViewModel(id: id, useCase: usecase)
-                        MovieDetailView(
-                            viewModel: viewModel) { item in
-                                path.append(item)
-                            }
+                        MovieDetailView(viewModel: container.makeMovieDetailViewModel(id: id)) { item in
+                            navigator.push(item)
+                        }
                     }
                 }
                 .preferredColorScheme(.dark)
             }
         }
     }
-}
-
-public enum Route: Hashable {
-    case movieDetail(id: Int32)
 }

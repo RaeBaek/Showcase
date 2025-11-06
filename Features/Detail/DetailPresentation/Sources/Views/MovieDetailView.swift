@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVKit
+import NavigationInterface
 import DetailDomain
 
 public struct MovieDetailView: View {
@@ -99,4 +100,3 @@ public struct MovieDetailView: View {
 //        (1...10).map { .init(id: $0, title: "비슷한 영화 \($0)", posterURL: nil) }
 //    }
 //}
-
