@@ -29,7 +29,7 @@ public final class PeopleDetailUseCaseImpl: PeopleDetailUseCase {
     public func fetchCredits(id: Int32) async throws -> [KnownForItem] {
         let input = DetailInput(id: id, language: "ko-KR")
         let credits = try await self.reposiotry.fetchCredits(input)
-        return credits
+        return (credits.cast + credits.crew).toKnownForItems()
     }
 
 }

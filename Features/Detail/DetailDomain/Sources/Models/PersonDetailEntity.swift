@@ -31,7 +31,7 @@ public struct KnownForItem: Identifiable, Hashable {
     public let id: Int
     public let title: String
     public let posterPath: String?
-    public let yearText: String?
+    public let year: String?
     public let media: Media
 }
 

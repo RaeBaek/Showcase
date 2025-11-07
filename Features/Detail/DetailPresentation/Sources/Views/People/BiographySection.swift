@@ -13,8 +13,8 @@ struct BiographySection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Biography")
-                .font(.title3.bold())
+            SectionHeader(title: "일대기")
+            
             Text(text.isEmpty ? "No biography" : text)
                 .font(.callout)
                 .foregroundStyle(.secondary)

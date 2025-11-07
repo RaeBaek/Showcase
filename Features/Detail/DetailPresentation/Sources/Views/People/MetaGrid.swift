@@ -13,8 +13,8 @@ struct MetaGrid: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Info")
-                .font(.title3.bold())
+            SectionHeader(title: "인물 정보")
+            
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                 MetaItem(icon: "calendar", title: "Born", value: person.birthday ?? "-")
                 if let deathday = person.deathday {

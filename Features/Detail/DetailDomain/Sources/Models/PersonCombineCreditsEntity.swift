@@ -29,7 +29,7 @@ public struct PersonCreditEntity {
     let overview: String
     let popularity: Double
     let posterPath: String?
-    let character: String
+    let character: String?
     let voteAverage: Double?
     let voteCount: Int?
     let creditID: String
@@ -61,7 +61,7 @@ public struct PersonCreditEntity {
         overview: String,
         popularity: Double,
         posterPath: String?,
-        character: String,
+        character: String?,
         voteAverage: Double?,
         voteCount: Int?,
         creditID: String,
@@ -106,6 +106,64 @@ public struct PersonCreditEntity {
         self.originCountry = originCountry
         self.episodeCount = episodeCount
         self.firstCreditAirDate = firstCreditAirDate
+    }
+}
+
+extension PersonCreditEntity {
+    public func toKnownForItem() -> KnownForItem? {
+        // media
+        let media = Media(raw: mediaType.rawValue)
+        // title normalization
+        let titleText: String? = {
+            switch mediaType {
+            case .movie:
+                return title ?? originalTitle
+            case .tv:
+                return name ?? originalName
+            }
+        }()
+        guard let titleText, let media else { return nil }
+
+        // year nomarlization
+        let dateStr: String? = (mediaType == .movie) ? releaseDate : firstAirDate
+        let yearText: String? = dateStr.flatMap { string in
+            let comps = string.split(separator: "-")
+            return comps.first.map { String($0) }
+        }
+
+        // image: 포스터 없으면 백드롭
+        let poster = posterPath ?? backdropPath
+
+        return KnownForItem(
+            id: id,
+            title: titleText,
+            posterPath: poster,
+            year: yearText,
+            media: media
+        )
+    }
+}
+
+extension Array where Element == PersonCreditEntity {
+    public func toKnownForItems() -> [KnownForItem] {
+        // 매핑
+        let mapped = self.compactMap { $0.toKnownForItem() }
+        // 중복 제거
+        var seen = Set<Int>()
+        var unique: [KnownForItem] = []
+        for item in mapped {
+            if seen.insert(item.id).inserted {
+                unique.append(item)
+            }
+        }
+
+        func yearInt(_ year: String?) -> Int {
+            Int(year ?? "") ?? -1
+        }
+
+        return unique.sorted {
+            return yearInt($0.year) > yearInt($1.year)
+        }
     }
 }
 

@@ -34,7 +34,7 @@ struct PersonCreditDTO: Decodable {
     let overview: String
     let popularity: Double
     let posterPath: String?
-    let character: String
+    let character: String?
     let voteAverage: Double?
     let voteCount: Int?
     let creditID: String

@@ -27,10 +27,12 @@ public final class PeopleDetailViewModel: ObservableObject {
             state = .loading
             do {
                 async let fetchDetail = self.usecase.fetchDetail(id: id)
+                async let fetchCredits = self.usecase.fetchCredits(id: id)
 
-                let (detail) = try await fetchDetail
+                let (detail, credits) = try await (fetchDetail, fetchCredits)
 
                 self.detail = detail
+                self.knownFors = credits
 
                 state = .loaded
                 print("PersonDetailViewModel State changed to:", state)
