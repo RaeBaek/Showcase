@@ -22,7 +22,7 @@ public struct HomeView: View {
     }
 
     public var body: some View {
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 24) {
                 SectionView<PopularMovieEntity>(
                     title: "🎬 Movies",
@@ -39,7 +39,7 @@ public struct HomeView: View {
                 ) { item in
                     Task { await viewModel.onPeopleAppear(item) }
                 } onItemTap: { item in
-//                    onNavigate(.movieDetail(id: Int32(item.id)))
+                    onNavigate(.personDetail(id: Int32(item.id)))
                 }
 
                 SectionView<PopularTVEntity>(

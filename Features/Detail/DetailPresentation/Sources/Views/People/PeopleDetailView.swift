@@ -29,8 +29,29 @@ public struct PeopleDetailView: View {
                 .foregroundStyle(.secondary)
                 .padding(.top, 80)
             case .loaded:
+//                if let detail = viewModel.detail,
+//                   let knownFors = viewModel.knownFors,
+//                   let biography = detail.biography {
+//                    ScrollView(.vertical, showsIndicators: false) {
+//                        VStack(alignment: .leading, spacing: 24) {
+//                            HeroHeader(person: detail)
+//                            MetaGrid(person: detail)
+//                            BiographySection(text: biography, showFull: $showFullBio)
+//
+//                            if !knownFors.isEmpty {
+//                                KnownForSection(items: knownFors) { item in
+//                                    // TODO: route로 상세 화면 push (Movie or TV Detail)
+//                                }
+//                            }
+//                            Spacer(minLength: 40)
+//                        }
+//                        .padding(.horizontal, 16)
+//                        .padding(.top, 8)
+//                    }
+//                    .ignoresSafeArea(edges: .top)
+//                    .navigationTitle("")
+//                }
                 if let detail = viewModel.detail,
-                   let knownFors = viewModel.knownFors,
                    let biography = detail.biography {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 24) {
@@ -38,17 +59,17 @@ public struct PeopleDetailView: View {
                             MetaGrid(person: detail)
                             BiographySection(text: biography, showFull: $showFullBio)
 
-                            if !knownFors.isEmpty {
-                                KnownForSection(items: knownFors) { item in
-                                    // TODO: route로 상세 화면 push (Movie or TV Detail)
-                                }
-                            }
+//                            if !knownFors.isEmpty {
+//                                KnownForSection(items: knownFors) { item in
+//                                    // TODO: route로 상세 화면 push (Movie or TV Detail)
+//                                }
+//                            }
                             Spacer(minLength: 40)
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 8)
                     }
-                    .ignoresSafeArea(edges: .top)
+//                    .ignoresSafeArea(edges: .top)
                     .navigationTitle("")
                 }
             }

@@ -11,20 +11,20 @@ import DetailDomain
 import Kingfisher
 
 struct HeroHeader: View {
-    let person: PersonEntity
+    let person: PersonDetailEntity
 
     var body: some View {
         HStack(alignment: .center, spacing: 16) {
-            KFImage(URL(string: "https://www.naver.com"))
+            KFImage(person.profileURL)
                 .placeholder {
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: 12)
                         .fill(.gray.opacity(0.2))
-                        .frame(width: 120, height: 160)
+                        .frame(width: 120, height: 180)
                 }
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 120, height: 160)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .frame(width: 120, height: 180)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .overlay(alignment: .bottomLeading) {
                     if person.popularity > 0 {
                         Label(String(format: "%.1f", person.popularity), systemImage: "star.fill")
@@ -38,9 +38,11 @@ struct HeroHeader: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(person.name)
                     .font(.system(size: 28, weight: .bold))
-                Text(person.knownForDepartment)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                if let dept = person.knownForDepartment {
+                    Text(dept)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
             Spacer()
         }

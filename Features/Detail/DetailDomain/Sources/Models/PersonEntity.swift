@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PersonEntity {
+public struct PersonEntity: Identifiable {
     let adult: Bool
     let alsoKnownAs: [String]
     let biography: String
@@ -15,7 +15,7 @@ public struct PersonEntity {
     public let deathday: String?
     let gender: Int
     public let homepage: String?
-    let id: Int
+    public let id: Int32
     let imdbID: String?
     public let knownForDepartment: String
     public let name: String
@@ -31,7 +31,7 @@ public struct PersonEntity {
         deathday: String?,
         gender: Int,
         homepage: String?,
-        id: Int,
+        id: Int32,
         imdbID: String?,
         knownForDepartment: String,
         name: String,
@@ -56,7 +56,7 @@ public struct PersonEntity {
     }
 }
 
-extension PersonEntity {
+public extension PersonEntity {
     var toPersonDetailEntity: PersonDetailEntity {
         PersonDetailEntity(
             id: id,

@@ -30,6 +30,10 @@ final class DIContainer {
     private func makeMovieDetailRepository() -> MovieDetailRepositoryImpl {
         return MovieDetailRepositoryImpl(client: httpClient)
     }
+
+    private func makePeopleDetailRepository() -> PeopleDetailRepositoryImpl {
+        return PeopleDetailRepositoryImpl(client: httpClient)
+    }
 }
 
 extension DIContainer {
@@ -49,6 +53,15 @@ extension DIContainer {
         return MovieDetailViewModel(
             id: id,
             useCase: MovieDetailUseCaseImpl(repository: repository)
+        )
+    }
+
+    @MainActor
+    func makePeopleDetailViewModel(id: Int32) -> PeopleDetailViewModel {
+        let repository = makePeopleDetailRepository()
+        return PeopleDetailViewModel(
+            id: id,
+            usecase: PeopleDetailUseCaseImpl(reposiotry: repository)
         )
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import DetailDomain
 
 struct MetaGrid: View {
-    let person: PersonEntity
+    let person: PersonDetailEntity
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

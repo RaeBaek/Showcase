@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct PersonDetailEntity: Identifiable, Hashable{
-    public let id: Int
+public struct PersonDetailEntity: Identifiable, Hashable {
+    public let id: Int32
     public let name: String
     public let profilePath: String?
     public let knownForDepartment: String?
@@ -20,12 +20,26 @@ struct PersonDetailEntity: Identifiable, Hashable{
     public let biography: String?
 }
 
+extension PersonDetailEntity {
+    public var profileURL: URL? {
+        guard let profilePath else { return nil }
+        return URL(string: "https://image.tmdb.org/t/p/w780\(profilePath)")
+    }
+}
+
 public struct KnownForItem: Identifiable, Hashable {
     public let id: Int
     public let title: String
     public let posterPath: String?
     public let yearText: String?
     public let media: Media
+}
+
+extension KnownForItem {
+    public var posterURL: URL? {
+        guard let posterPath else { return nil }
+        return URL(string: "https://image.tmdb.org/t/p/w780\(posterPath)")
+    }
 }
 
 public enum Media {

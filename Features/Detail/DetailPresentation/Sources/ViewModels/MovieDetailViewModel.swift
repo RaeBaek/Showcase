@@ -29,10 +29,10 @@ public final class MovieDetailViewModel: ObservableObject {
         Task {
             state = .loading
             do {
-                async let fetchDetail = useCase.fetchDetail(id: id)
+                async let fetchDetail = self.useCase.fetchDetail(id: id)
                 async let fetchCredits = useCase.fetchCredits(id: id)
-                async let fetchVideos = useCase.fetchVideos(id: id)
-                async let fetchSimilar = useCase.fetchSimilar(id: id)
+                async let fetchVideos = self.useCase.fetchVideos(id: id)
+                async let fetchSimilar = self.useCase.fetchSimilar(id: id)
 
                 let (detail, credits, videos, similar) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilar)
 
@@ -42,9 +42,9 @@ public final class MovieDetailViewModel: ObservableObject {
                 self.similar = similar
 
                 state = .loaded
-                print("State changed to:", state)
+                print("MovieDetailViewModel State changed to:", state)
             } catch {
-                state = .failed(error.localizedDescription)
+                state = .failed("MovieDetailViewModel: \(error.localizedDescription)")
             }
         }
     }

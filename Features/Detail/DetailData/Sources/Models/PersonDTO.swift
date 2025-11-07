@@ -16,7 +16,7 @@ struct PersonDTO: Codable {
     let deathday: String?
     let gender: Int
     let homepage: String?
-    let id: Int
+    let id: Int32
     let imdbID: String?
     let knownForDepartment: String
     let name: String
