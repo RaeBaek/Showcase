@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct TVInfoEntity: Identifiable {
+public struct TVDetailInfoEntity: Identifiable {
     public let id: Int32
     public let name: String
-    public let originalName: String
+    public let originalName: String?
     public let tagline: String?
 
     public let posterPath: String?

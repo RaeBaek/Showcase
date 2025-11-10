@@ -11,6 +11,7 @@ import Foundation
 public enum Route: Hashable {
     case movieDetail(id: Int32)
     case personDetail(id: Int32)
+    case tvDetail(id: Int32)
 }
 
 public protocol Navigator {

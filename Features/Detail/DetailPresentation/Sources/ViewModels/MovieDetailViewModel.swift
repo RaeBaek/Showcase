@@ -11,10 +11,10 @@ import DetailDomain
 @MainActor
 public final class MovieDetailViewModel: ObservableObject {
     @Published var state: LoadState = .idle
-    @Published var detail: MovieDetailInfoEntity?
-    @Published var credits: [CreditPersonEntity] = []
+    @Published var adapter: MovieHeaderAdapter?
+    @Published var credits: [CreditInfoEntity] = []
     @Published var videos: [VideoItemEntity] = []
-    @Published var similar: [SimilarMovieItemEntity] = []
+    @Published var similars: [SimilarItemEntity] = []
     @Published var showFullOverview = false
 
     private let id: Int32
@@ -32,14 +32,15 @@ public final class MovieDetailViewModel: ObservableObject {
                 async let fetchDetail = self.useCase.fetchDetail(id: id)
                 async let fetchCredits = useCase.fetchCredits(id: id)
                 async let fetchVideos = self.useCase.fetchVideos(id: id)
-                async let fetchSimilar = self.useCase.fetchSimilar(id: id)
+                async let fetchSimilars = self.useCase.fetchSimilar(id: id)
 
-                let (detail, credits, videos, similar) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilar)
+                let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
+                let adapter = MovieHeaderAdapter(info: detail)
 
-                self.detail = detail
+                self.adapter = adapter
                 self.credits = credits
                 self.videos = videos
-                self.similar = similar
+                self.similars = similars
 
                 state = .loaded
                 print("MovieDetailViewModel State changed to:", state)

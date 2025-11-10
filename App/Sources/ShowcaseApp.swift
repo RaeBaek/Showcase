@@ -33,7 +33,10 @@ struct ShowcaseApp: App {
                     case .personDetail(let id):
                         PeopleDetailView(viewModel: container.makePeopleDetailViewModel(id: id)) { item in
                             navigator.push(item)
-
+                        }
+                    case .tvDetail(let id):
+                        TVDetailView(viewModel: container.makeTVDetailViewModel(id: id)) { item in
+                            navigator.push(item)
                         }
                     }
                 }

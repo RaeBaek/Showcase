@@ -25,8 +25,8 @@ public final class MovieDetailRepositoryImpl: MovieDetailRepository {
         return dto.toEntity
     }
 
-    public func fetchCredits(_ input: DetailInput) async throws -> MovieCreditsEntity {
-        let dto: MovieCreditsDTO = try await self.client.request(
+    public func fetchCredits(_ input: DetailInput) async throws -> CreditsEntity {
+        let dto: CreditsDTO = try await self.client.request(
             "/movie/\(input.id)/credits",
             query: [URLQueryItem(name: "language", value: input.language)]
         )
@@ -41,8 +41,8 @@ public final class MovieDetailRepositoryImpl: MovieDetailRepository {
         return dto.toEntity
     }
 
-    public func fetchSimilars(_ input: DetailInput) async throws -> SimilarMovieEntity {
-        let dto: SimilarMovieDTO = try await self.client.request(
+    public func fetchSimilars(_ input: DetailInput) async throws -> SimilarEntity {
+        let dto: SimilarDTO = try await self.client.request(
             "movie/\(input.id)/similar",
             query: [
                 URLQueryItem(name: "language", value: input.language),

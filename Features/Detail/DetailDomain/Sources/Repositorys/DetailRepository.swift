@@ -14,9 +14,9 @@ public protocol DetailRepository<Entity>: AnyObject {
 
 public protocol MovieDetailRepository: DetailRepository where Entity == MovieDetailEntity {
     func fetchDetail(_ input: DetailInput) async throws -> MovieDetailEntity
-    func fetchCredits(_ input: DetailInput) async throws -> MovieCreditsEntity
+    func fetchCredits(_ input: DetailInput) async throws -> CreditsEntity
     func fetchVideos(_ input: DetailInput) async throws -> VideoEntity
-    func fetchSimilars(_ input: DetailInput) async throws -> SimilarMovieEntity
+    func fetchSimilars(_ input: DetailInput) async throws -> SimilarEntity
 }
 
 public protocol PeopleDetailRepository: DetailRepository where Entity == PersonEntity {
@@ -26,6 +26,6 @@ public protocol PeopleDetailRepository: DetailRepository where Entity == PersonE
 
 public protocol TVDetailRepository: DetailRepository where Entity == TVDetailEntity {
     func fetchDetail(_ input: DetailInput) async throws -> TVDetailEntity
-//    func fetchCredits(_ input: DetailInput) async throws
-//    func fetchSimilars(_ input: DetailInput) async throws
+    func fetchCredits(_ input: DetailInput) async throws -> CreditsEntity
+    func fetchSimilars(_ input: DetailInput) async throws -> SimilarEntity
 }

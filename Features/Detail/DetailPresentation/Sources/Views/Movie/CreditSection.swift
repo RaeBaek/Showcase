@@ -10,7 +10,7 @@ import DetailDomain
 import Kingfisher
 
 struct CreditSection: View {
-    let credits: [CreditPersonEntity]
+    let credits: [CreditInfoEntity]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {

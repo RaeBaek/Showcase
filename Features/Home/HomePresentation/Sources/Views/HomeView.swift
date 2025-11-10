@@ -48,7 +48,7 @@ public struct HomeView: View {
                 ) { item in
                     Task { await viewModel.onTVAppear(item) }
                 } onItemTap: { item in
-//                    onNavigate(.movieDetail(id: Int32(item.id)))
+                    onNavigate(.tvDetail(id: Int32(item.id)))
                 }
             }
             .padding(16)

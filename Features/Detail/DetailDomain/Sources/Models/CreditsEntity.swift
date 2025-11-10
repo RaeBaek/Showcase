@@ -7,15 +7,15 @@
 
 import Foundation
 
-public struct MovieCreditsEntity {
+public struct CreditsEntity {
     let id: Int
-    let cast: [MovieCastEntity]
-    let crew: [MovieCrewEntity]
+    let cast: [CastEntity]
+    let crew: [CrewEntity]
 
     public init(
         id: Int,
-        cast: [MovieCastEntity],
-        crew: [MovieCrewEntity]
+        cast: [CastEntity],
+        crew: [CrewEntity]
     ) {
         self.id = id
         self.cast = cast
@@ -23,7 +23,7 @@ public struct MovieCreditsEntity {
     }
 }
 
-public struct MovieCastEntity {
+public struct CastEntity {
     let adult: Bool
     let gender: Int?
     let id: Int
@@ -66,7 +66,7 @@ public struct MovieCastEntity {
     }
 }
 
-public struct MovieCrewEntity {
+public struct CrewEntity {
     let adult: Bool
     let gender: Int?
     let id: Int
@@ -110,16 +110,16 @@ protocol ProfileURLConvertible {
     var profileURL: URL? { get }
 }
 
-extension MovieCastEntity: ProfileURLConvertible {
+extension CastEntity: ProfileURLConvertible {
     var profileURL: URL? {
         guard let profilePath else { return nil }
         return URL(string: "https://image.tmdb.org/t/p/h632\(profilePath)")
     }
 }
 
-extension MovieCastEntity {
-    var toCredit: CreditPersonEntity {
-        CreditPersonEntity(
+extension CastEntity {
+    var toCredit: CreditInfoEntity {
+        CreditInfoEntity(
             id: id,
             name: name,
             role: character,
@@ -128,16 +128,16 @@ extension MovieCastEntity {
     }
 }
 
-extension MovieCrewEntity: ProfileURLConvertible {
+extension CrewEntity: ProfileURLConvertible {
     var profileURL: URL? {
         guard let profilePath else { return nil }
         return URL(string: "https://image.tmdb.org/t/p/h632\(profilePath)")
     }
 }
 
-extension MovieCrewEntity {
-    var toCredit: CreditPersonEntity {
-        CreditPersonEntity(
+extension CrewEntity {
+    var toCredit: CreditInfoEntity {
+        CreditInfoEntity(
             id: id,
             name: name,
             role: job,

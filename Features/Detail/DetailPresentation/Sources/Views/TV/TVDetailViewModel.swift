@@ -8,28 +8,43 @@
 import Foundation
 import DetailDomain
 
-final class TVDetailViewModel: ObservableObject {
+@MainActor
+public final class TVDetailViewModel: ObservableObject {
     @Published var state: LoadState = .idle
     @Published var tvState = TVState()
 
     struct TVState {
-        var detail: TVDetailEntity?
-        var cast: [MovieCastEntity] = []
-        var similarShows: [TVSummaryEntity] = []
-        var isLoading = false
-        var error: String?
+        var adater: TVHeaderAdapter?
+        var credits: [CreditInfoEntity] = []
+        var similars: [SimilarItemEntity] = []
+        var showFullOverview = false
     }
 
     private let id: Int32
+    private let useCase: TVDetailUseCase
 
-    init(id: Int32) {
+    public init(id: Int32, useCase: TVDetailUseCase) {
         self.id = id
+        self.useCase = useCase
     }
 
     public func load() {
         Task {
+            state = .loading
             do {
+                async let fetchDetail = self.useCase.fetchDetail(id: id)
+                async let fetchCredits = self.useCase.fetchCredits(id: id)
+                async let fetchSimilars = self.useCase.fetchSimilars(id: id)
 
+                let (detail, credits, similars) = try await (fetchDetail, fetchCredits, fetchSimilars)
+                let adapter = TVHeaderAdapter(info: detail)
+
+                self.tvState.adater = adapter
+                self.tvState.credits = credits
+                self.tvState.similars = similars
+
+                state = .loaded
+                print("TVDetailViewModel State changed to:", state)
             } catch {
                 state = .failed("TVDetailViewModel: \(error.localizedDescription)")
             }

@@ -27,7 +27,7 @@ public struct TVDetailEntity: Identifiable {
     let numberOfSeasons: Int
     let originCountry: [String]?
     let originalLanguage: String
-    let originalName: String
+    let originalName: String?
     let overview: String
     let popularity: Double
     let posterPath: String?
@@ -111,8 +111,8 @@ public struct TVDetailEntity: Identifiable {
 }
 
 extension TVDetailEntity {
-    var toInfo: TVInfoEntity {
-        TVInfoEntity(
+    var toInfo: TVDetailInfoEntity {
+        TVDetailInfoEntity(
             id: id,
             name: name,
             originalName: originalName,

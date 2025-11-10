@@ -8,15 +8,15 @@
 import Foundation
 import DetailDomain
 
-struct MovieCreditsDTO: Decodable {
+struct CreditsDTO: Decodable {
     let id: Int
-    let cast: [MovieCastDTO]
-    let crew: [MovieCrewDTO]
+    let cast: [CastDTO]
+    let crew: [CrewDTO]
 }
 
-extension MovieCreditsDTO {
-    var toEntity: MovieCreditsEntity {
-        MovieCreditsEntity(
+extension CreditsDTO {
+    var toEntity: CreditsEntity {
+        CreditsEntity(
             id: id,
             cast: cast.map { $0.toEntity },
             crew: crew.map { $0.toEntity }
@@ -24,7 +24,7 @@ extension MovieCreditsDTO {
     }
 }
 
-struct MovieCastDTO: Decodable {
+struct CastDTO: Decodable {
     let adult: Bool
     let gender: Int?
     let id: Int
@@ -48,9 +48,9 @@ struct MovieCastDTO: Decodable {
     }
 }
 
-extension MovieCastDTO {
-    var toEntity: MovieCastEntity {
-        MovieCastEntity(
+extension CastDTO {
+    var toEntity: CastEntity {
+        CastEntity(
             adult: adult,
             gender: gender,
             id: id,
@@ -67,7 +67,7 @@ extension MovieCastDTO {
     }
 }
 
-struct MovieCrewDTO: Decodable {
+struct CrewDTO: Decodable {
     let adult: Bool
     let gender: Int?
     let id: Int
@@ -89,9 +89,9 @@ struct MovieCrewDTO: Decodable {
     }
 }
 
-extension MovieCrewDTO {
-    var toEntity: MovieCrewEntity {
-        MovieCrewEntity(
+extension CrewDTO {
+    var toEntity: CrewEntity {
+        CrewEntity(
             adult: adult,
             gender: gender,
             id: id,

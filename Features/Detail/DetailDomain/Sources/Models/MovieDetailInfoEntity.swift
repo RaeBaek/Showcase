@@ -115,6 +115,7 @@ extension MovieDetailEntity {
             overview: overview,
             releaseDate: releaseDate,
             voteAverage: voteAverage,
+            voteCount: voteCount,
             genres: genres,
             runtime: runtime,
             backdropURL: backdropURL,
@@ -191,6 +192,7 @@ public struct MovieDetailInfoEntity: Identifiable {
     public let overview: String
     public let releaseDate: String?
     public let voteAverage: Double
+    public let voteCount: Int
     public let genres: [GenreEntity]
     public let runtime: Int?
     public let backdropURL: URL?
@@ -203,6 +205,7 @@ public struct MovieDetailInfoEntity: Identifiable {
         overview: String,
         releaseDate: String?,
         voteAverage: Double,
+        voteCount: Int,
         genres: [GenreEntity],
         runtime: Int?,
         backdropURL: URL?,
@@ -214,6 +217,7 @@ public struct MovieDetailInfoEntity: Identifiable {
         self.overview = overview
         self.releaseDate = releaseDate
         self.voteAverage = voteAverage
+        self.voteCount = voteCount
         self.genres = genres
         self.runtime = runtime
         self.backdropURL = backdropURL
@@ -221,10 +225,10 @@ public struct MovieDetailInfoEntity: Identifiable {
     }
 }
 
-public struct CreditPersonEntity: Identifiable {
+public struct CreditInfoEntity: Identifiable {
     public let id: Int
     public let name: String
-    public let role: String?           // character or job
+    public let role: String?
     public let profileURL: URL?
 
     public init(id: Int, name: String, role: String?, profileURL: URL?) {
@@ -261,12 +265,12 @@ public extension VideoItemEntity {
     }
 }
 
-public struct SimilarMovieItemEntity: Identifiable {
+public struct SimilarItemEntity: Identifiable {
     public let id: Int
-    public let title: String
+    public let title: String?
     public let posterURL: URL?
 
-    public init(id: Int, title: String, posterURL: URL?) {
+    public init(id: Int, title: String?, posterURL: URL?) {
         self.id = id
         self.title = title
         self.posterURL = posterURL

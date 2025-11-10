@@ -10,8 +10,8 @@ import DetailDomain
 import Kingfisher
 
 struct SimilarSection: View {
-    let list: [SimilarMovieItemEntity]
-    let onItemTap: ((SimilarMovieItemEntity) -> Void)?
+    let list: [SimilarItemEntity]
+    let onItemTap: ((SimilarItemEntity) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -37,7 +37,7 @@ struct SimilarSection: View {
                                     .background(Color.black.opacity(0.08))
                             }
 
-                            Text(item.title)
+                            Text(item.title ?? "")
                                 .font(.caption)
                                 .lineLimit(2)
                                 .frame(width: 120, alignment: .leading)

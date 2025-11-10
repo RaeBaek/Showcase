@@ -9,9 +9,9 @@ import Foundation
 
 public protocol MovieDetailUseCase {
     func fetchDetail(id: Int32) async throws -> MovieDetailInfoEntity
-    func fetchCredits(id: Int32) async throws -> [CreditPersonEntity]
+    func fetchCredits(id: Int32) async throws -> [CreditInfoEntity]
     func fetchVideos(id: Int32) async throws -> [VideoItemEntity]
-    func fetchSimilar(id: Int32) async throws -> [SimilarMovieItemEntity]
+    func fetchSimilar(id: Int32) async throws -> [SimilarItemEntity]
 }
 
 public final class MovieDetailUseCaseImpl: MovieDetailUseCase {
@@ -28,10 +28,10 @@ public final class MovieDetailUseCaseImpl: MovieDetailUseCase {
         return detail.toDetail
     }
 
-    public func fetchCredits(id: Int32) async throws -> [CreditPersonEntity] {
+    public func fetchCredits(id: Int32) async throws -> [CreditInfoEntity] {
         let input = DetailInput(id: id, language: "ko-KR")
         let credits = try await self.repository.fetchCredits(input)
-        return credits.cast.map { $0.toCredit }
+        return credits.cast.map { $0.toCredit } + credits.crew.map { $0.toCredit }
     }
 
     public func fetchVideos(id: Int32) async throws -> [VideoItemEntity] {
@@ -40,7 +40,7 @@ public final class MovieDetailUseCaseImpl: MovieDetailUseCase {
         return videos.results.map { $0.toVideoItemEntity }
     }
 
-    public func fetchSimilar(id: Int32) async throws -> [SimilarMovieItemEntity] {
+    public func fetchSimilar(id: Int32) async throws -> [SimilarItemEntity] {
         let input = DetailInput(id: id, language: "ko-KR")
         let similars = try await self.repository.fetchSimilars(input)
         return similars.results.map { $0.toSimilarMovieItemEntity }
