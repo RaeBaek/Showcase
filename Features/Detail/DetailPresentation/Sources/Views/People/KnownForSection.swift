@@ -41,14 +41,14 @@ struct KnownForSection: View {
                                 .frame(width: 120, alignment: .leading)
 
                             HStack(spacing: 4) {
+                                Text(item.media == .movie ? "Movie" : "TV")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
                                 if let year = item.year {
                                     Text(year)
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                 }
-                                Text(item.media == .movie ? "Movie" : "TV")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
                             }
                         }
                     }

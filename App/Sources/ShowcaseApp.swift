@@ -31,7 +31,10 @@ struct ShowcaseApp: App {
                             navigator.push(item)
                         }
                     case .personDetail(let id):
-                        PeopleDetailView(viewModel: container.makePeopleDetailViewModel(id: id))
+                        PeopleDetailView(viewModel: container.makePeopleDetailViewModel(id: id)) { item in
+                            navigator.push(item)
+
+                        }
                     }
                 }
                 .preferredColorScheme(.dark)

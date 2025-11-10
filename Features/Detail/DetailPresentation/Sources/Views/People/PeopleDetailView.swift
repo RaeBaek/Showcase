@@ -7,12 +7,21 @@
 
 import SwiftUI
 
+import NavigationInterface
+import DetailDomain
+
 public struct PeopleDetailView: View {
     @ObservedObject private var viewModel: PeopleDetailViewModel
     @State private var showFullBio = false
 
-    public init(viewModel: PeopleDetailViewModel) {
+    private let onNavigate: (Route) -> Void
+
+    public init(
+        viewModel: PeopleDetailViewModel,
+        onNavigate: @escaping (Route) -> Void
+    ) {
         self.viewModel = viewModel
+        self.onNavigate = onNavigate
     }
 
     public var body: some View {
@@ -40,7 +49,13 @@ public struct PeopleDetailView: View {
 
                             if !knownFors.isEmpty {
                                 KnownForSection(items: knownFors) { item in
-                                    // TODO: route로 상세 화면 push (Movie or TV Detail)
+                                    switch item.media {
+                                    case .movie:
+                                        onNavigate(.movieDetail(id:  Int32(item.id)))
+                                    case .tv:
+                                        return
+//                                        onNavigate(.movieDetail(id: Int32(item.id))) // tvDetail 구현 후 수정 필요
+                                    }
                                 }
                             }
                             Spacer(minLength: 40)
@@ -48,7 +63,6 @@ public struct PeopleDetailView: View {
                         .padding(.horizontal, 16)
                         .padding(.top, 8)
                     }
-//                    .ignoresSafeArea(edges: .top)
                     .navigationTitle("")
                 }
             }
@@ -56,5 +70,3 @@ public struct PeopleDetailView: View {
         .background(Color.black.ignoresSafeArea())
     }
 }
-
-// 3651176
