@@ -24,6 +24,8 @@ public protocol PeopleDetailRepository: DetailRepository where Entity == PersonE
     func fetchCredits(_ input: DetailInput) async throws -> PersonCombineCreditsEntity
 }
 
-public protocol TVDetailRepository: DetailRepository {
-    func fetchDetail(_ input: DetailInput) async throws
+public protocol TVDetailRepository: DetailRepository where Entity == TVDetailEntity {
+    func fetchDetail(_ input: DetailInput) async throws -> TVDetailEntity
+//    func fetchCredits(_ input: DetailInput) async throws
+//    func fetchSimilars(_ input: DetailInput) async throws
 }

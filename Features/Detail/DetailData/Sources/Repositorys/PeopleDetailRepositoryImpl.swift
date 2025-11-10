@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 import NetworkInterface
 import DetailDomain
 
