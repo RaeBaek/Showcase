@@ -10,7 +10,7 @@ import Foundation
 // Core/NavigationInterface/Route.swift
 public enum Route: Hashable {
     case movieDetail(id: Int32)
-    // case personDetail(id: Int32) ...
+    case personDetail(id: Int32)
 }
 
 public protocol Navigator {

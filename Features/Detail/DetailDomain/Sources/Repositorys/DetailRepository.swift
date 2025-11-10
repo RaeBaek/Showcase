@@ -14,13 +14,14 @@ public protocol DetailRepository<Entity>: AnyObject {
 
 public protocol MovieDetailRepository: DetailRepository where Entity == MovieDetailEntity {
     func fetchDetail(_ input: DetailInput) async throws -> MovieDetailEntity
-    func fetchCredits(_ input: DetailInput) async throws -> CreditsEntity
+    func fetchCredits(_ input: DetailInput) async throws -> MovieCreditsEntity
     func fetchVideos(_ input: DetailInput) async throws -> VideoEntity
     func fetchSimilars(_ input: DetailInput) async throws -> SimilarMovieEntity
 }
 
-public protocol PeopleDetailRepository: DetailRepository {
-    func fetchDetail(_ input: DetailInput) async throws
+public protocol PeopleDetailRepository: DetailRepository where Entity == PersonEntity {
+    func fetchDetail(_ input: DetailInput) async throws -> PersonEntity
+    func fetchCredits(_ input: DetailInput) async throws -> PersonCombineCreditsEntity
 }
 
 public protocol TVDetailRepository: DetailRepository {

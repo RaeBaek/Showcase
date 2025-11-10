@@ -39,9 +39,13 @@ struct HeaderBackdrop: View {
                                 width: targetWidth * UIScreen.main.scale,
                                 height: targetHeight * UIScreen.main.scale
                             ),
-                            mode: .aspectFill // ✅ 높이 350에 맞게 확대 + 크롭
+                            mode: .aspectFill
                         )
                     )
+                    .placeholder {
+                        Rectangle().fill(.gray.opacity(0.3))
+                            .overlay(Image(systemName: "film").imageScale(.large))
+                    }
                     .onSuccess { result in
                         let sz = result.image.size
                         if sz.width > 0 { ratio = sz.width / sz.height }
@@ -49,11 +53,14 @@ struct HeaderBackdrop: View {
                     .cacheOriginalImage()
                     .fade(duration: 0.2)
                     .resizable()
-                    .aspectRatio(ratio, contentMode: .fill)  // ✅ 비율 유지 + 채우기(확대)
+                    .aspectRatio(ratio, contentMode: .fill)
                     .frame(width: targetWidth, height: targetHeight)
                     .clipped()
+            } else {
+                Rectangle().fill(.gray.opacity(0.3))
+                    .overlay(Image(systemName: "film").imageScale(.large))
+                    .frame(width: targetWidth, height: targetHeight)
             }
-
             // 그라디언트 오버레이
             LinearGradient(
                 colors: [.clear, .black.opacity(0.85)],
