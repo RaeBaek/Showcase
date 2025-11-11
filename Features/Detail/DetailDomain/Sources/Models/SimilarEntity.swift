@@ -7,29 +7,42 @@
 
 import Foundation
 
-public struct SimilarMovieEntity {
+public struct SimilarEntity {
     let page: Int
-    let results: [SimilarMovieResultEntity]
+    let results: [SimilarResultEntity]
+    let totalPages: Int
+    let totalResults: Int
 
-    public init(page: Int, results: [SimilarMovieResultEntity]) {
+    public init(
+        page: Int,
+        results: [SimilarResultEntity],
+        totalPages: Int,
+        totalResults: Int
+    ) {
         self.page = page
         self.results = results
+        self.totalPages = totalPages
+        self.totalResults = totalResults
     }
 }
 
-public struct SimilarMovieResultEntity {
+public struct SimilarResultEntity {
     let adult: Bool
     let backdropPath: String?
     let genreIDs: [Int]
     let id: Int
+    let originalCountry: String?
     let originalLanguage: String
-    let originalTitle: String
+    let originalTitle: String?
+    let originalName: String?
     let overview: String
     let popularity: Double
     let posterPath: String?
     let releaseDate: String?
-    let title: String
-    let video: Bool
+    let firstAirDate: String?
+    let name: String?
+    let title: String?
+    let video: Bool?
     let voteAverage: Double
     let voteCount: Int
 
@@ -38,14 +51,18 @@ public struct SimilarMovieResultEntity {
         backdropPath: String?,
         genreIDs: [Int],
         id: Int,
+        originalCountry: String?,
         originalLanguage: String,
-        originalTitle: String,
+        originalTitle: String?,
+        originalName: String?,
         overview: String,
         popularity: Double,
         posterPath: String?,
         releaseDate: String?,
-        title: String,
-        video: Bool,
+        firstAirDate: String?,
+        name: String?,
+        title: String?,
+        video: Bool?,
         voteAverage: Double,
         voteCount: Int
     ) {
@@ -53,12 +70,16 @@ public struct SimilarMovieResultEntity {
         self.backdropPath = backdropPath
         self.genreIDs = genreIDs
         self.id = id
+        self.originalCountry = originalCountry
         self.originalLanguage = originalLanguage
         self.originalTitle = originalTitle
+        self.originalName = originalName
         self.overview = overview
         self.popularity = popularity
         self.posterPath = posterPath
         self.releaseDate = releaseDate
+        self.firstAirDate = firstAirDate
+        self.name = name
         self.title = title
         self.video = video
         self.voteAverage = voteAverage
@@ -66,18 +87,18 @@ public struct SimilarMovieResultEntity {
     }
 }
 
-extension SimilarMovieResultEntity {
+extension SimilarResultEntity {
     var posterURL: URL? {
         guard let posterPath else { return nil }
         return URL(string: "https://image.tmdb.org/t/p/w780/\(posterPath)")
     }
 }
 
-extension SimilarMovieResultEntity {
-    var toSimilarMovieItemEntity: SimilarMovieItemEntity {
-        SimilarMovieItemEntity(
+extension SimilarResultEntity {
+    var toSimilarMovieItemEntity: SimilarItemEntity {
+        SimilarItemEntity(
             id: id,
-            title: title,
+            title: title ?? name,
             posterURL: posterURL
         )
     }

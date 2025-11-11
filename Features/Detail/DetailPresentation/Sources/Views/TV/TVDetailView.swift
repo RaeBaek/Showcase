@@ -1,22 +1,23 @@
 //
-//  MovieDetailView.swift
+//  TVDetailView.swift
 //  DetailPresentation
 //
 //  Created by 백래훈 on 11/1/25.
 //
 
 import SwiftUI
+
 import DesignSystem
 import NavigationInterface
 import DetailDomain
 
-public struct MovieDetailView: View {
-    @StateObject private var viewModel: MovieDetailViewModel
+public struct TVDetailView: View {
+    @StateObject private var viewModel: TVDetailViewModel
 
     private let onNavigate: (Route) -> Void
 
     public init(
-        viewModel: MovieDetailViewModel,
+        viewModel: TVDetailViewModel,
         onNavigate: @escaping (Route) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -39,26 +40,23 @@ public struct MovieDetailView: View {
                 .foregroundStyle(.secondary)
                 .padding(.top, 80)
             case .loaded:
-                if let adapter = viewModel.adapter {
+                if let adapter = viewModel.tvState.adater {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading) {
                             HeaderBackdrop(model: adapter)
                             ActionBar()
                             OverviewSection(
                                 text: adapter.overviewText,
-                                expanded: $viewModel.showFullOverview
+                                expanded: $viewModel.tvState.showFullOverview
                             )
-                            if !viewModel.credits.isEmpty {
-                                CreditSection(credits: viewModel.credits) { credit in
+                            if !viewModel.tvState.credits.isEmpty {
+                                CreditSection(credits: viewModel.tvState.credits) { credit in
                                     onNavigate(.personDetail(id: Int32(credit.id)))
                                 }
                             }
-                            if !viewModel.videos.isEmpty {
-                                VideoSection(videos: viewModel.videos)
-                            }
-                            if !viewModel.similars.isEmpty {
-                                SimilarSection(list: viewModel.similars) { item in
-                                    onNavigate(.movieDetail(id: Int32(item.id)))
+                            if !viewModel.tvState.similars.isEmpty {
+                                SimilarSection(list: viewModel.tvState.similars) { item in
+                                    onNavigate(.tvDetail(id: Int32(item.id)))
                                 }
                             }
                             Spacer(minLength: 40)

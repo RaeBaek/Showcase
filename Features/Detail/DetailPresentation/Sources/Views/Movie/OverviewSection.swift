@@ -26,6 +26,7 @@ struct OverviewSection: View {
                     expanded.toggle()
                 }
                 .font(.footnote.weight(.semibold))
+                .tint(.white)
             }
         }
         .padding(.horizontal, 16)

@@ -48,14 +48,16 @@ public struct HomeView: View {
                 ) { item in
                     Task { await viewModel.onTVAppear(item) }
                 } onItemTap: { item in
-//                    onNavigate(.movieDetail(id: Int32(item.id)))
+                    onNavigate(.tvDetail(id: Int32(item.id)))
                 }
             }
             .padding(16)
         }
         .navigationTitle("Showcase")
         .task {
-            await viewModel.firstLoad()
+            if viewModel.movies.isEmpty && viewModel.people.isEmpty && viewModel.tvs.isEmpty {
+                await viewModel.firstLoad()
+            }
         }
         .alert("에러", isPresented: .constant(viewModel.errorMessage != nil)) {
             Button("닫기") {

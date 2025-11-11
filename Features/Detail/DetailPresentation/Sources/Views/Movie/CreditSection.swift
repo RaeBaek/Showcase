@@ -10,7 +10,8 @@ import DetailDomain
 import Kingfisher
 
 struct CreditSection: View {
-    let credits: [CreditPersonEntity]
+    let credits: [CreditInfoEntity]
+    let onItemTap: ((CreditInfoEntity) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -45,6 +46,9 @@ struct CreditSection: View {
                             }
                         }
                         .frame(width: 90)
+                        .onTapGesture {
+                            onItemTap?(credit)
+                        }
                     }
                 }
             }

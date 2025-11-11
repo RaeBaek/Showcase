@@ -9,20 +9,8 @@ import SwiftUI
 import DetailDomain
 import Kingfisher
 
-struct HeaderBackdrop: View {
-    let detail: MovieDetailInfoEntity
-
-    var metaText: String {
-        let year = detail.releaseDate?.prefix(4) ?? ""
-        var arr: [String] = []
-        if !year.isEmpty { arr.append(String(year)) }
-        if let r = detail.runtime { arr.append("\(r)분") }
-        return arr.joined(separator: " · ")
-    }
-
-    var genres: String {
-        return detail.genres.map { $0.name }.prefix(3).joined(separator: " · ")
-    }
+struct HeaderBackdrop<Model: HeaderBackdropPresentable>: View {
+    let model: Model
 
     let targetWidth  = UIScreen.main.bounds.width
     let targetHeight: CGFloat = 350
@@ -31,7 +19,7 @@ struct HeaderBackdrop: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            if let url = detail.backdropURL {
+            if let url = model.backdropURL {
                 KFImage(url)
                     .setProcessor(
                         ResizingImageProcessor(
@@ -72,26 +60,25 @@ struct HeaderBackdrop: View {
             .offset(y: 0)
 
             HStack(alignment: .bottom, spacing: 12) {
-                PosterView(url: detail.posterURL)
+                PosterView(url: model.posterURL)
                     .offset(y: 0)
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(detail.title)
+                    Text(model.titleText)
                         .font(.title2.weight(.bold))
                         .lineLimit(2)
 
-                    if let original = detail.originalTitle, original != detail.title {
+                    if let original = model.originalTitleText {
                         Text(original)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
 
                     HStack(alignment: .top, spacing: 8) {
-                        Image(systemName: "star.fill").font(.caption)
-                        Text(String(format: "%.1f", detail.voteAverage))
+                        Text(model.ratingText)
                         VStack(alignment: .leading) {
-                            Text(metaText)
-                            Text(genres)
+                            Text(model.metaText)
+                            Text(model.genresText)
                         }
                     }
                     .font(.footnote)
@@ -116,6 +103,5 @@ private struct PosterView: View {
         }
         .frame(width: 110, height: 160)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        //        .shadow(radius: 6, y: 3)
     }
 }

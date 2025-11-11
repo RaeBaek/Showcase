@@ -1,14 +1,15 @@
 //
-//  TvDetailDTO.swift
+//  TVDetailDTO.swift
 //  DetailData
 //
 //  Created by 백래훈 on 10/31/25.
 //
 
 import Foundation
+import DetailDomain
 
 // MARK: - TVDetailDTO
-struct TvDetailDTO: Decodable, Hashable {
+struct TVDetailDTO: Decodable, Hashable {
     let adult: Bool
     let backdropPath: String?
     let createdBy: [CreatorDTO]
@@ -16,7 +17,7 @@ struct TvDetailDTO: Decodable, Hashable {
     let firstAirDate: String?
     let genres: [GenreDTO]
     let homepage: String?
-    let id: Int
+    let id: Int32
     let inProduction: Bool
     let languages: [String]?
     let lastAirDate: String?
@@ -78,6 +79,45 @@ struct TvDetailDTO: Decodable, Hashable {
     }
 }
 
+extension TVDetailDTO {
+    var toEntity: TVDetailEntity {
+        TVDetailEntity(
+            adult: adult,
+            backdropPath: backdropPath,
+            createdBy: createdBy.map { $0.toEntity },
+            episodeRunTime: episodeRunTime,
+            firstAirDate: firstAirDate,
+            genres: genres.map { $0.toEntity },
+            homepage: homepage,
+            id: id,
+            inProduction: inProduction,
+            languages: languages,
+            lastAirDate: lastAirDate,
+            lastEpisodeToAir: lastEpisodeToAir?.toEntity,
+            name: name,
+            nextEpisodeToAir: nextEpisodeToAir?.toEntity,
+            networks: networks.map { $0.toEntity },
+            numberOfEpisodes: numberOfEpisodes,
+            numberOfSeasons: numberOfSeasons,
+            originCountry: originCountry,
+            originalLanguage: originalLanguage,
+            originalName: originalName,
+            overview: overview,
+            popularity: popularity,
+            posterPath: posterPath,
+            productionCompanies: productionCompanies.map { $0.toEntity },
+            productionCountries: productionCountries.map { $0.toEntity },
+            seasons: seasons.map { $0.toEntity },
+            spokenLanguages: spokenLanguages.map { $0.toEntity },
+            status: status,
+            tagline: tagline,
+            type: type,
+            voteAverage: voteAverage,
+            voteCount: voteCount
+        )
+    }
+}
+
 // MARK: - Creator
 struct CreatorDTO: Decodable, Hashable {
     let id: Int
@@ -92,6 +132,18 @@ struct CreatorDTO: Decodable, Hashable {
         case name
         case gender
         case profilePath = "profile_path"
+    }
+}
+
+extension CreatorDTO {
+    var toEntity: CreatorEntity {
+        CreatorEntity(
+            id: id,
+            creditID: creditID,
+            name: name,
+            gender: gender,
+            profilePath: profilePath
+        )
     }
 }
 
@@ -126,6 +178,25 @@ struct EpisodeDTO: Decodable, Hashable {
     }
 }
 
+extension EpisodeDTO {
+    var toEntity: EpisodeEntity {
+        EpisodeEntity(
+            id: id,
+            name: name,
+            overview: overview,
+            voteAverage: voteAverage,
+            voteCount: voteCount,
+            airDate: airDate,
+            episodeNumber: episodeNumber,
+            productionCode: productionCode,
+            runtime: runtime,
+            seasonNumber: seasonNumber,
+            showID: showID,
+            stillPath: stillPath
+        )
+    }
+}
+
 // MARK: - Network
 struct NetworkDTO: Decodable, Hashable {
     let id: Int
@@ -138,6 +209,17 @@ struct NetworkDTO: Decodable, Hashable {
         case logoPath = "logo_path"
         case name
         case originCountry = "origin_country"
+    }
+}
+
+extension NetworkDTO {
+    var toEntity: NetworkEntity {
+        NetworkEntity(
+            id: id,
+            logoPath: logoPath,
+            name: name,
+            originCountry: originCountry
+        )
     }
 }
 
@@ -161,5 +243,20 @@ struct SeasonDTO: Decodable, Hashable {
         case posterPath = "poster_path"
         case seasonNumber = "season_number"
         case voteAverage = "vote_average"
+    }
+}
+
+extension SeasonDTO {
+    var toEntity: SeasonEntity {
+        SeasonEntity(
+            airDate: airDate,
+            episodeCount: episodeCount,
+            id: id,
+            name: name,
+            overview: overview,
+            posterPath: posterPath,
+            seasonNumber: seasonNumber,
+            voteAverage: voteAverage
+        )
     }
 }
