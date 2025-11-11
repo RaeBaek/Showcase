@@ -7,11 +7,12 @@
 
 import SwiftUI
 
+import DesignSystem
 import NavigationInterface
 import DetailDomain
 
 public struct TVDetailView: View {
-    @ObservedObject private var viewModel: TVDetailViewModel
+    @StateObject private var viewModel: TVDetailViewModel
 
     private let onNavigate: (Route) -> Void
 
@@ -19,7 +20,7 @@ public struct TVDetailView: View {
         viewModel: TVDetailViewModel,
         onNavigate: @escaping (Route) -> Void
     ) {
-        self.viewModel = viewModel
+        _viewModel = StateObject(wrappedValue: viewModel)
         self.onNavigate = onNavigate
     }
 
@@ -31,36 +32,40 @@ public struct TVDetailView: View {
                     .onAppear { viewModel.load() }
             case .failed(let message):
                 VStack(spacing: 12) {
-                    Text("로딩 실패")
-                        .font(.headline)
+                    Image(systemName: "wifi.exclamationmark")
                     Text(message)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
                     Button("다시 시도") { viewModel.load() }
                 }
+                .foregroundStyle(.secondary)
                 .padding(.top, 80)
             case .loaded:
                 if let adapter = viewModel.tvState.adater {
-                    ScrollView {
-                        VStack(spacing: 24) {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(alignment: .leading) {
                             HeaderBackdrop(model: adapter)
                             ActionBar()
-                            OverviewSection(text: adapter.overviewText, expanded: $viewModel.tvState.showFullOverview)
-                        }
-                        if !viewModel.tvState.credits.isEmpty {
-                            CreditSection(credits: viewModel.tvState.credits) { credit in
-                                onNavigate(.personDetail(id: Int32(credit.id)))
+                            OverviewSection(
+                                text: adapter.overviewText,
+                                expanded: $viewModel.tvState.showFullOverview
+                            )
+                            if !viewModel.tvState.credits.isEmpty {
+                                CreditSection(credits: viewModel.tvState.credits) { credit in
+                                    onNavigate(.personDetail(id: Int32(credit.id)))
+                                }
                             }
-                        }
-                        if !viewModel.tvState.similars.isEmpty {
-                            SimilarSection(list: viewModel.tvState.similars) { item in
-                                onNavigate(.tvDetail(id: Int32(item.id)))
+                            if !viewModel.tvState.similars.isEmpty {
+                                SimilarSection(list: viewModel.tvState.similars) { item in
+                                    onNavigate(.tvDetail(id: Int32(item.id)))
+                                }
                             }
+                            Spacer(minLength: 40)
                         }
                     }
                     .ignoresSafeArea(edges: .top)
                 }
             }
         }
+        .customBackToolbar()
     }
 }

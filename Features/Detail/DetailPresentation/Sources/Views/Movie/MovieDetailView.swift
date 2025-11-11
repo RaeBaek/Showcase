@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
-import AVKit
+import DesignSystem
 import NavigationInterface
 import DetailDomain
 
 public struct MovieDetailView: View {
     @StateObject private var viewModel: MovieDetailViewModel
+
     private let onNavigate: (Route) -> Void
 
     public init(
@@ -30,13 +31,12 @@ public struct MovieDetailView: View {
                     .onAppear { viewModel.load() }
             case .failed(let message):
                 VStack(spacing: 12) {
-                    Text("로딩 실패")
-                        .font(.headline)
+                    Image(systemName: "wifi.exclamationmark")
                     Text(message)
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
                     Button("다시 시도") { viewModel.load() }
                 }
+                .foregroundStyle(.secondary)
                 .padding(.top, 80)
             case .loaded:
                 if let adapter = viewModel.adapter {
@@ -68,5 +68,6 @@ public struct MovieDetailView: View {
                 }
             }
         }
+        .customBackToolbar()
     }
 }

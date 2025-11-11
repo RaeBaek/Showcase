@@ -13,6 +13,7 @@ public final class PeopleDetailViewModel: ObservableObject {
     @Published var state: LoadState = .idle
     @Published private(set) var detail: PersonDetailEntity?
     @Published private(set) var knownFors: [KnownForItem]?
+    @Published var showFullBio = false
 
     private let id: Int32
     private let usecase: PeopleDetailUseCase

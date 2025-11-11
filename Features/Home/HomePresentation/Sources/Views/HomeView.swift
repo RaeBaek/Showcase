@@ -55,7 +55,9 @@ public struct HomeView: View {
         }
         .navigationTitle("Showcase")
         .task {
-            await viewModel.firstLoad()
+            if viewModel.movies.isEmpty && viewModel.people.isEmpty && viewModel.tvs.isEmpty {
+                await viewModel.firstLoad()
+            }
         }
         .alert("에러", isPresented: .constant(viewModel.errorMessage != nil)) {
             Button("닫기") {

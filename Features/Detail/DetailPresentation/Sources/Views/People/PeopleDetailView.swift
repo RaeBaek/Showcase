@@ -7,12 +7,12 @@
 
 import SwiftUI
 
+import DesignSystem
 import NavigationInterface
 import DetailDomain
 
 public struct PeopleDetailView: View {
-    @ObservedObject private var viewModel: PeopleDetailViewModel
-    @State private var showFullBio = false
+    @StateObject private var viewModel: PeopleDetailViewModel
 
     private let onNavigate: (Route) -> Void
 
@@ -20,7 +20,7 @@ public struct PeopleDetailView: View {
         viewModel: PeopleDetailViewModel,
         onNavigate: @escaping (Route) -> Void
     ) {
-        self.viewModel = viewModel
+        _viewModel = StateObject(wrappedValue: viewModel)
         self.onNavigate = onNavigate
     }
 
@@ -34,6 +34,8 @@ public struct PeopleDetailView: View {
                 VStack(spacing: 12) {
                     Image(systemName: "wifi.exclamationmark")
                     Text(message)
+                        .font(.subheadline)
+                    Button("다시 시도") { viewModel.load() }
                 }
                 .foregroundStyle(.secondary)
                 .padding(.top, 80)
@@ -45,7 +47,7 @@ public struct PeopleDetailView: View {
                         VStack(alignment: .leading, spacing: 24) {
                             HeroHeader(person: detail)
                             MetaGrid(person: detail)
-                            BiographySection(text: biography, showFull: $showFullBio)
+                            BiographySection(text: biography, showFull: $viewModel.showFullBio)
 
                             if !knownFors.isEmpty {
                                 KnownForSection(items: knownFors) { item in
@@ -62,10 +64,10 @@ public struct PeopleDetailView: View {
                         .padding(.horizontal, 16)
                         .padding(.top, 8)
                     }
-                    .navigationTitle("")
                 }
             }
         }
+        .customBackToolbar()
         .background(Color.black.ignoresSafeArea())
     }
 }

@@ -15,16 +15,18 @@ struct BiographySection: View {
         VStack(alignment: .leading, spacing: 8) {
             SectionHeader(title: "일대기")
             
-            Text(text.isEmpty ? "No biography" : text)
-                .font(.callout)
+            Text(text.isEmpty ? "일대기 정보가 없습니다." : text)
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
-                .lineLimit(showFull ? nil : 5)
+                .lineLimit(showFull ? nil : 4)
                 .animation(.easeInOut, value: showFull)
-            if text.count > 0 {
+
+            if text.count > 120 {
                 Button(showFull ? "접기" : "더보기") {
                     showFull.toggle()
                 }
-                .font(.footnote.bold())
+                .font(.footnote.weight(.semibold))
+                .tint(.white)
             }
         }
     }

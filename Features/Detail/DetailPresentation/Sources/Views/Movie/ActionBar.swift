@@ -16,11 +16,19 @@ struct ActionBar: View {
                 HStack {
                     Image(systemName: "play.fill")
                     Text("재생")
+                        .font(.subheadline)
                         .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .backgroundStyle(.black)
+                .foregroundStyle(.white)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.white, lineWidth: 1)
+                }
             }
-            .buttonStyle(.borderedProminent)
 
             Button {
                 // 찜
@@ -31,6 +39,7 @@ struct ActionBar: View {
                         .font(.caption2)
                 }
                 .frame(width: 90)
+                .tint(.white)
             }
 
             Button {
@@ -42,6 +51,7 @@ struct ActionBar: View {
                         .font(.caption2)
                 }
                 .frame(width: 60)
+                .tint(.white)
             }
 
             Button {
@@ -53,6 +63,7 @@ struct ActionBar: View {
                         .font(.caption2)
                 }
                 .frame(width: 60)
+                .tint(.white)
             }
         }
         .padding(.horizontal, 16)
