@@ -79,7 +79,7 @@ Showcase
 ```
 
 ### 레이어 규칙
-- Presentation → Domain → Data (단방향)
+- Presentation → Domain ← Data (단방향)
 - 모든 Feature는 Core(예: NetworkInterface/Live)와 DesignSystem에 의존
 - App은 Feature들의 Presentation만 의존하고, DI로 결합
 
