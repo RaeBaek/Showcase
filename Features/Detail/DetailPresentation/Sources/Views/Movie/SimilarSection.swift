@@ -35,6 +35,10 @@ struct SimilarSection: View {
                                     .frame(width: 120, height: 180)
                                     .clipped()
                                     .background(Color.black.opacity(0.08))
+                            } else {
+                                Rectangle().fill(.gray.opacity(0.3))
+                                    .overlay(Image(systemName: "film").imageScale(.medium))
+                                    .frame(width: 120, height: 180)
                             }
                             Text(item.title ?? "")
                                 .font(.caption)
