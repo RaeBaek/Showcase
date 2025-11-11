@@ -53,8 +53,7 @@ public struct PeopleDetailView: View {
                                     case .movie:
                                         onNavigate(.movieDetail(id:  Int32(item.id)))
                                     case .tv:
-                                        return
-//                                        onNavigate(.movieDetail(id: Int32(item.id))) // tvDetail 구현 후 수정 필요
+                                        onNavigate(.tvDetail(id: Int32(item.id)))
                                     }
                                 }
                             }

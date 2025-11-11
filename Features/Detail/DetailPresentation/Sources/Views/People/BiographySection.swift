@@ -21,7 +21,7 @@ struct BiographySection: View {
                 .lineLimit(showFull ? nil : 5)
                 .animation(.easeInOut, value: showFull)
             if text.count > 0 {
-                Button(showFull ? "show less" : "Read more") {
+                Button(showFull ? "접기" : "더보기") {
                     showFull.toggle()
                 }
                 .font(.footnote.bold())

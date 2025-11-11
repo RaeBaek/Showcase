@@ -18,7 +18,7 @@ struct SimilarSection: View {
             SectionHeader(title: "비슷한 작품")
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
+                LazyHStack(spacing: 12) {
                     ForEach(list) { item in
                         VStack(alignment: .leading, spacing: 6) {
                             if let posterUrl = item.posterURL {
@@ -36,7 +36,6 @@ struct SimilarSection: View {
                                     .clipped()
                                     .background(Color.black.opacity(0.08))
                             }
-
                             Text(item.title ?? "")
                                 .font(.caption)
                                 .lineLimit(2)

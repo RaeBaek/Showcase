@@ -48,11 +48,13 @@ public struct TVDetailView: View {
                             OverviewSection(text: adapter.overviewText, expanded: $viewModel.tvState.showFullOverview)
                         }
                         if !viewModel.tvState.credits.isEmpty {
-                            CreditSection(credits: viewModel.tvState.credits)
+                            CreditSection(credits: viewModel.tvState.credits) { credit in
+                                onNavigate(.personDetail(id: Int32(credit.id)))
+                            }
                         }
                         if !viewModel.tvState.similars.isEmpty {
                             SimilarSection(list: viewModel.tvState.similars) { item in
-                                onNavigate(.movieDetail(id: Int32(item.id)))
+                                onNavigate(.tvDetail(id: Int32(item.id)))
                             }
                         }
                     }

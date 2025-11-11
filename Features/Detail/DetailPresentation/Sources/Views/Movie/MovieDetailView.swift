@@ -49,7 +49,9 @@ public struct MovieDetailView: View {
                                 expanded: $viewModel.showFullOverview
                             )
                             if !viewModel.credits.isEmpty {
-                                CreditSection(credits: viewModel.credits)
+                                CreditSection(credits: viewModel.credits) { credit in
+                                    onNavigate(.personDetail(id: Int32(credit.id)))
+                                }
                             }
                             if !viewModel.videos.isEmpty {
                                 VideoSection(videos: viewModel.videos)
