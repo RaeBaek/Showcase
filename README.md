@@ -86,7 +86,8 @@ Showcase
 ### Tuist 구성 파일
 - Workspace.swift
   - 워크스페이스와 포함 프로젝트를 선언
-```
+
+```swift
 import ProjectDescription
 
 let workspace = Workspace(
@@ -99,9 +100,11 @@ let workspace = Workspace(
     ]
 )
 ```
+
 - 각 모듈의 Project.swift
   - 타깃(Production/Tests), 번들 ID, 의존성, 리소스, 설정을 코드로 관리
-```
+
+```swift
 import ProjectDescription
 
 let project = Project(
