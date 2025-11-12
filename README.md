@@ -14,9 +14,11 @@
 
 ## 🚀 MVP 주요 화면
 
-| 홈화면 | 영화 상세 화면 | 인물 상세 화면 | TV 상세 화면 |
+| 홈화면 | 영화 상세화면 | 인물 상세화면 | TV 상세화면 |
 |:--:|:--:|:--:|:--:|
-| <img src="https://github.com/user-attachments/assets/65e70057-45ca-4286-b7c4-5ecfafe5acf5" width="250"/> | <img src="https://github.com/user-attachments/assets/5776c3f0-4e51-42da-89e3-a70a0d77db00" width="250"/> | <img src="https://github.com/user-attachments/assets/ecce6c16-b2ee-4186-a344-6ccb2ec8c26d" width="250"/> | <img src="https://github.com/user-attachments/assets/a6f2f448-1a81-4d87-af74-1fadd7e6d5d2" width="250"/> |
+| <img src="https://github.com/user-attachments/assets/65e70057-45ca-4286-b7c4-5ecfafe5acf5" width="220"/> | <img src="https://github.com/user-attachments/assets/5776c3f0-4e51-42da-89e3-a70a0d77db00" width="220"/> | <img src="https://github.com/user-attachments/assets/ecce6c16-b2ee-4186-a344-6ccb2ec8c26d" width="220"/> | <img src="https://github.com/user-attachments/assets/a6f2f448-1a81-4d87-af74-1fadd7e6d5d2" width="220"/> |
+| **홈화면 → 영화 상세화면** | **홈화면 → 인물 상세화면** | **홈화면 → TV 상세화면** | **영화 상세화면 → 예고편(YouTube)** |
+| <img src="https://github.com/user-attachments/assets/ff414825-47cf-4466-95ef-9df7fd0a197b" width="220"/> | <img src="https://github.com/user-attachments/assets/a11a93d1-ac99-4938-9a0a-c464ba881915" width="220"/> | <img src="https://github.com/user-attachments/assets/1e8c4c15-81b7-426e-953b-78d857b5b50c" width="220"/> | <img src="https://github.com/user-attachments/assets/293711ec-95c9-4e24-ab75-2ea7d069b219" width="220"/> |
 
 ---
 
@@ -28,7 +30,7 @@
     - MovieDetailView / PeopleDetailView / TVDetailView
 - 🧭 **Navigation 구조 통합**
   - Home → Detail → Sub-detail (인물 정보/비슷한 작품)까지 라우팅 연속 지원
-  - Route case 괸리 (movieDetail, personDetail, tvDetail)
+  - Route case 관리 (movieDetail, personDetail, tvDetail)
 - 🎨 **공용 DesignSystem**
   - `CustomBackToolbar`, `LoadingSkeleton`, `HeaderBackdrop`, `ActionBar`, `OverviewSecion`, `CreditSection`, `VideoSecion`, `SimilarSecion` 일원화
 - ⚙️ **클린 아키텍처 / 모듈화**
