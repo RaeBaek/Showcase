@@ -1,7 +1,6 @@
 # 🎬 Showcase
 
-#### TMDB API 기반 영화·TV·인물 탐색 앱
-#### SwiftUI + Combine + Tuist 기반의 Clean Architecture 프로젝트
+> **TMDB API 기반 영화·TV·인물 탐색 앱**</br>**SwiftUI + Combine + Tuist 기반의 Clean Architecture 프로젝트**
 
 ---
 
@@ -25,12 +24,13 @@
 
 - 🎞️ **영화 / TV / 인물 탐색**
   - 홈 화면 (TMDB API를 활용한 인기 콘텐츠 조회)
-  - 상세 화면 (Movie, People, Tv)
+  - 상세 화면 (Movie, People, TV)
     - MovieDetailView / PeopleDetailView / TVDetailView
 - 🧭 **Navigation 구조 통합**
-  - Home → Detail → Sub-detail (인물/유사작품)까지 라우팅 연속 지원
+  - Home → Detail → Sub-detail (인물 정보/비슷한 작품)까지 라우팅 연속 지원
+  - Route case 괸리 (movieDetail, personDetail, tvDetail)
 - 🎨 **공용 DesignSystem**
-  - `CustomBackToolbar`, `ActionBar`, `CreditSection` `HeaderBackdrop`, `LoadingSkeleton`, `OverviewSecion`, `SimilarSecion`, `VideoSecion` 일원화
+  - `CustomBackToolbar`, `LoadingSkeleton`, `HeaderBackdrop`, `ActionBar`, `OverviewSecion`, `CreditSection`, `VideoSecion`, `SimilarSecion` 일원화
 - ⚙️ **클린 아키텍처 / 모듈화**
   - Domain / Data / Presentation 레이어로 분리
   - Tuist를 이용한 App/Core/Features/DesignSystem 독립 관리
@@ -44,6 +44,58 @@
   - `Features`는 `Core`와 `DesignSystem`에 의존
   - `Tests`는 생성된 모듈을 의존
   - `HomePresentation`, `DetailPresentaion`은 외부 의존성 `Kingfisher`을 의존
+
+---
+
+## 🔄 네트워크/캐싱/에러 처리
+- 네트워크
+  - URLSession + 전용 HTTPClient/Endpoint
+- 이미지 캐시
+  - AsyncImage, Kingfisher (DesignSystem 내부에서만 사용)
+- 에러 정책
+  - .networkError → 캐시 유지 시도, 재시도 버튼 노출
+  - .decodingError → 사용자 친화 텍스트 + 로그 남김
+
+---
+
+## 🧱 Configs & 환경 변수 (Info.plist 연동)
+- TMDB Key·Access Token·Base URL 등을 Configs/*.xcconfig에서 관리하고, Info.plist에 노출 키만 안전하게 주입해 런타임 접근
+
+```
+Folder, File Structure
+
+App/
+Core/
+Features/
+DesignSystem/
+Configs/
+├─ Debug-Dev.xcconfig
+└─ Release-Prod.xcconfig
+```
+
+```swift
+Config/*.xcconfig
+
+APP_ENV=PROD
+TMDB_API_KEY=1A2B3C4D
+TMDB_READ_ACCESS_TOKEN=1A2B3C4D
+TMDB_BASE_URL_STRING=api.themoviedb.org/3
+```
+
+```xml
+info.plist
+
+<plist version="1.0">
+<dict>
+  <key>TMDB_API_KEY</key>
+	<string>$(TMDB_API_KEY)</string>
+	<key>TMDB_BASE_URL_STRING</key>
+	<string>$(TMDB_BASE_URL_STRING)</string>
+	<key>TMDB_READ_ACCESS_TOKEN</key>
+	<string>$(TMDB_READ_ACCESS_TOKEN)</string>
+</dict>
+</plist>
+```
 
 ---
 
@@ -164,9 +216,20 @@ let project = Project(
     ]
 )
 ```
+
 ---
 
 ## 💡 테스트 전략
-- 각 레이어/모듈에 대응 테스트 타깃을 둡니다. (예: HomeDataTests, HomeDomainTests, HomePresentationTests)
-- 네트워크는 NetworkInterface의 프로토콜을 Mock으로 대체해 단위 테스트를 수행
-- 주요 시나리오: UseCase 입출력, Repository 변환( DTO → Entity ), ViewModel 상태 전이
+### 개요
+- Showcase는 XCTest를 기반으로 각 모듈의 독립 테스트를 수행합니다.
+- 단위(Unit) → 통합(Integration) → UI 수준(Stub/Mock)의 **3단계 계층**으로 구성됩니다.
+- 각 Feature는 Data / Domain / Presentation 모듈 단위로 별도 테스트 타깃을 가집니다.
+  - 예: HomeDataTests, HomeDomainTests, HomePresentationTests
+
+| 계층 | 대상 | 검증 포인트 | 주요 기술 |
+|:--:|:--:|:--:|:--:|
+| **Data Layer** | RepositoryImpl, DTO → Entity 변환 | API 응답 디코딩</br>모델 매핑 정확성 | XCTest, MockHTTPClient, JSONDecoder |
+| **Domain Layer** | UseCase | 입력/출력 시나리오 검증</br>Repository 호출 흐름 | XCTest, Dependency Injection |
+| **Presentaion Layer** | ViewModel | 상태 전이(.idle → .loading → .success(.loaded)/.failure)</br>이벤트 트리거</br>Combine 스트림 유지| XCTest, Combine, XCTestExpectation |
+
+---
