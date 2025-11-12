@@ -36,7 +36,7 @@ public final class TVDetailRepositoryImpl: TVDetailRepository {
 
     public func fetchSimilars(_ input: DetailInput) async throws -> SimilarEntity {
         let dto: SimilarDTO = try await client.request(
-            "tv/\(input.id)/similar",
+            "/tv/\(input.id)/similar",
             query: [
                 URLQueryItem(name: "language", value: input.language),
                 URLQueryItem(name: "page", value: "\(input.page)")
