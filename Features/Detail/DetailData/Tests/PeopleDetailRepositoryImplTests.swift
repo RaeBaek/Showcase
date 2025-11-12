@@ -106,6 +106,7 @@ final class PeopleDetailRepositoryImplTests: XCTestCase {
         }
     }
 
+    /// 임의의 httpError 에러 발생
     func test_fetchCredits_httpError_isPropagated() async throws {
         // given
         client.error = URLError(.badServerResponse)
