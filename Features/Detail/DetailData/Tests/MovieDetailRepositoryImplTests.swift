@@ -52,6 +52,7 @@ final class MovieDetailRepositoryImplTests: XCTestCase {
         // when / then
         do {
             let _ = try await sut.fetchDetail(input)
+            XCTFail("expected error")
         } catch let error {
             XCTAssertNotNil(client.captured.first?.path)
             XCTAssertNotEqual(client.captured.first?.path, "/movie/550")
@@ -71,6 +72,7 @@ final class MovieDetailRepositoryImplTests: XCTestCase {
         // when / then
         do {
             let _ = try await sut.fetchDetail(input)
+            XCTFail("expected error")
         } catch let error {
             XCTAssertNotNil(client.captured.first?.path)
             XCTAssertNotEqual(client.captured.first?.path, "/movie/540")
