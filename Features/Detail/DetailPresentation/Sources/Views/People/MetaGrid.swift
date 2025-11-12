@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+
+import DesignSystem
 import DetailDomain
 
 struct MetaGrid: View {

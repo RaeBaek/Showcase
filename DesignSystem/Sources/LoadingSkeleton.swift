@@ -7,8 +7,11 @@
 
 import SwiftUI
 
-struct LoadingSkeleton: View {
-    var body: some View {
+public struct LoadingSkeleton: View {
+
+    public init() { }
+
+    public var body: some View {
         ScrollView {
             VStack(spacing: 12) {
                 Rectangle().fill(.gray.opacity(0.25)).frame(height: 260)

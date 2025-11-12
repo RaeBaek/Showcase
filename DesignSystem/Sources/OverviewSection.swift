@@ -7,11 +7,17 @@
 
 import SwiftUI
 
-struct OverviewSection: View {
+public struct OverviewSection: View {
+    
     let text: String
     @Binding var expanded: Bool
 
-    var body: some View {
+    public init(text: String, expanded: Binding<Bool>) {
+        self.text = text
+        _expanded = expanded
+    }
+
+    public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionHeader(title: "개요")
 

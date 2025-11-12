@@ -7,9 +7,15 @@
 
 import SwiftUI
 
-struct SectionHeader: View {
+public struct SectionHeader: View {
+    
     let title: String
-    var body: some View {
+
+    public init(title: String) {
+        self.title = title
+    }
+
+    public var body: some View {
         HStack {
             Text(title)
                 .font(.headline)

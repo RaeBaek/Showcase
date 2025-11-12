@@ -7,8 +7,11 @@
 
 import SwiftUI
 
-struct ActionBar: View {
-    var body: some View {
+public struct ActionBar: View {
+
+    public init() { }
+    
+    public var body: some View {
         HStack(spacing: 12) {
             Button {
                 // 재생

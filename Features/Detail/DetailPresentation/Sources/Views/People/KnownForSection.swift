@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+
+import DesignSystem
 import DetailDomain
 import Kingfisher
 

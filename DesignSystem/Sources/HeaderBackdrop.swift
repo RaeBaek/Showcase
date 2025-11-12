@@ -6,18 +6,23 @@
 //
 
 import SwiftUI
+
 import DetailDomain
 import Kingfisher
 
-struct HeaderBackdrop<Model: HeaderBackdropPresentable>: View {
-    let model: Model
+public struct HeaderBackdrop<Model: HeaderBackdropPresentable>: View {
 
+    let model: Model
     let targetWidth  = UIScreen.main.bounds.width
     let targetHeight: CGFloat = 350
 
     @State private var ratio: CGFloat = 9.0/16.0 // 임시 비율
 
-    var body: some View {
+    public init(model: Model) {
+        self.model = model
+    }
+
+    public var body: some View {
         ZStack(alignment: .bottomLeading) {
             if let url = model.backdropURL {
                 KFImage(url)

@@ -9,11 +9,17 @@ import SwiftUI
 import DetailDomain
 import Kingfisher
 
-struct SimilarSection: View {
+public struct SimilarSection: View {
+    
     let list: [SimilarItemEntity]
     let onItemTap: ((SimilarItemEntity) -> Void)?
 
-    var body: some View {
+    public init(list: [SimilarItemEntity], onItemTap: ((SimilarItemEntity) -> Void)?) {
+        self.list = list
+        self.onItemTap = onItemTap
+    }
+
+    public var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(title: "비슷한 작품")
 

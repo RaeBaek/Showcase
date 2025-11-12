@@ -9,10 +9,15 @@ import SwiftUI
 import DetailDomain
 import Kingfisher
 
-struct VideoSection: View {
+public struct VideoSection: View {
+    
     let videos: [VideoItemEntity]
 
-    var body: some View {
+    public init(videos: [VideoItemEntity]) {
+        self.videos = videos
+    }
+
+    public var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(title: "영상")
 

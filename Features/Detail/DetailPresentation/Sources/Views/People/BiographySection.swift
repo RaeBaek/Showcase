@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import DesignSystem
+
 struct BiographySection: View {
     let text: String
     @Binding var showFull: Bool

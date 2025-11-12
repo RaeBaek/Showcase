@@ -6,14 +6,21 @@
 //
 
 import SwiftUI
+
 import DetailDomain
 import Kingfisher
 
-struct CreditSection: View {
+public struct CreditSection: View {
+
     let credits: [CreditInfoEntity]
     let onItemTap: ((CreditInfoEntity) -> Void)?
 
-    var body: some View {
+    public init(credits: [CreditInfoEntity], onItemTap: ((CreditInfoEntity) -> Void)?) {
+        self.credits = credits
+        self.onItemTap = onItemTap
+    }
+
+    public var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(title: "출연/제작")
 
