@@ -54,6 +54,9 @@ public struct TVDetailView: View {
                                     onNavigate(.personDetail(id: Int32(credit.id)))
                                 }
                             }
+                            if !viewModel.tvState.videos.isEmpty {
+                                VideoSection(videos: viewModel.tvState.videos)
+                            }
                             if !viewModel.tvState.similars.isEmpty {
                                 SimilarSection(list: viewModel.tvState.similars) { item in
                                     onNavigate(.tvDetail(id: Int32(item.id)))

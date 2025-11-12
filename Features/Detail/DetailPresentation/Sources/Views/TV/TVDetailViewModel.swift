@@ -16,6 +16,7 @@ public final class TVDetailViewModel: ObservableObject {
     struct TVState {
         var adater: TVHeaderAdapter?
         var credits: [CreditInfoEntity] = []
+        var videos: [VideoItemEntity] = []
         var similars: [SimilarItemEntity] = []
         var showFullOverview = false
     }
@@ -34,13 +35,15 @@ public final class TVDetailViewModel: ObservableObject {
             do {
                 async let fetchDetail = self.useCase.fetchDetail(id: id)
                 async let fetchCredits = self.useCase.fetchCredits(id: id)
+                async let fetchVideos = self.useCase.fetchVideos(id: id)
                 async let fetchSimilars = self.useCase.fetchSimilars(id: id)
 
-                let (detail, credits, similars) = try await (fetchDetail, fetchCredits, fetchSimilars)
+                let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
                 let adapter = TVHeaderAdapter(info: detail)
 
                 self.tvState.adater = adapter
                 self.tvState.credits = credits
+                self.tvState.videos = videos
                 self.tvState.similars = similars
 
                 state = .loaded

@@ -27,5 +27,6 @@ public protocol PeopleDetailRepository: DetailRepository where Entity == PersonE
 public protocol TVDetailRepository: DetailRepository where Entity == TVDetailEntity {
     func fetchDetail(_ input: DetailInput) async throws -> TVDetailEntity
     func fetchCredits(_ input: DetailInput) async throws -> CreditsEntity
+    func fetchVideos(_ input: DetailInput) async throws -> VideoEntity
     func fetchSimilars(_ input: DetailInput) async throws -> SimilarEntity
 }
