@@ -7,6 +7,8 @@
 
 import SwiftUI
 import AVKit
+
+import DesignSystem
 import StreamingDomain
 
 public final class HLSDemoViewModel: ObservableObject {
@@ -36,22 +38,22 @@ public struct HLSDemoPage: View {
     }
 
     public var body: some View {
-        List(viewModel.streams, id: \.id) { stream in
-            Button {
-                viewModel.selectStream(stream)
-            } label: {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(stream.title)
-                        .font(.headline)
-                    if let desc = stream.description {
-                        Text(desc)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+        ScrollView(.vertical, showsIndicators: false) {
+            LazyVStack(spacing: 24) {
+                ForEach(viewModel.streams, id: \.id) { stream in
+                    Button {
+                        viewModel.selectStream(stream)
+                    } label: {
+                        HLSDemoRow(stream: stream)
                     }
+                    .buttonStyle(.plain)
                 }
             }
+            .padding(.vertical, 16)
+            .customBackToolbar()
         }
-        .navigationTitle("HLS Demo")
+        .padding(16)
+        .navigationTitle("HTTP Live Streaming")
         .onAppear { viewModel.onAppear() }
         .sheet(item: $viewModel.selectedSteam) { stream in
             HLSPlayerView(url: stream.url)

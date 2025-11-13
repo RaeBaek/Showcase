@@ -14,12 +14,6 @@ public final class HLSStreamRepositoryImpl: FetchHLSStreamUseCase {
     public func execute() -> [HLSStream] {
         return [
             .init(
-                id: "apple-basic-gear1",
-                title: "Apple Basic Stream",
-                description: "Single bitrate stream (gear1)",
-                url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/gear1/prog_index.m3u8")!
-            ),
-            .init(
                 id: "apple-basic-variants",
                 title: "Apple Basic Stream",
                 description: "Master Playlist with multiple variants",
@@ -30,6 +24,12 @@ public final class HLSStreamRepositoryImpl: FetchHLSStreamUseCase {
                 title: "Apple Advanced Stream",
                 description: "TS stream with multiple variants",
                 url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")!
+            ),
+            .init(
+                id: "apple-basic-gear1",
+                title: "Apple Basic Stream",
+                description: "Single bitrate stream (gear1)",
+                url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/gear1/prog_index.m3u8")!
             ),
             .init(
                 id: "tears-of-steel",

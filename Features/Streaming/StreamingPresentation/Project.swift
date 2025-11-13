@@ -29,6 +29,7 @@ let project = Project(
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
             dependencies: [
+                .project(target: "DesignSystem", path: "../../../DesignSystem"),
                 .project(target: "StreamingDomain", path: "../StreamingDomain")
             ]
         ),
