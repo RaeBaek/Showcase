@@ -15,6 +15,10 @@ import DetailData
 import DetailDomain
 import DetailPresentation
 
+import StreamingData
+import StreamingDomain
+import StreamingPresentation
+
 final class DIContainer {
     let httpClient: TMDBClient
 
@@ -37,6 +41,10 @@ final class DIContainer {
 
     private func makeTVDetailRepository() -> TVDetailRepositoryImpl {
         return TVDetailRepositoryImpl(client: httpClient)
+    }
+
+    private func makeStreamingRepository() -> HLSStreamRepositoryImpl {
+        return HLSStreamRepositoryImpl()
     }
 }
 
@@ -76,5 +84,10 @@ extension DIContainer {
             id: id,
             useCase: TVDetailUseCaseImpl(repository: repository)
         )
+    }
+
+    func makeHLSDemoViewModel() -> HLSDemoViewModel {
+        let repository = makeStreamingRepository()
+        return HLSDemoViewModel(fetchStreamsUseCase: repository)
     }
 }
