@@ -29,6 +29,7 @@ let project = Project(
             bundleId: "com.raehoon.Showcase.app",
             deploymentTargets: .iOS("17.0"),
             infoPlist: .extendingDefault(with: [
+                "CFBundleDisplayName": "Showcase",
                 "UILaunchScreen": [
                     "UIColorName": "",
                     "UIImageName": "",
