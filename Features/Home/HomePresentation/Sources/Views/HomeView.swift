@@ -54,6 +54,17 @@ public struct HomeView: View {
             .padding(16)
         }
         .navigationTitle("Showcase")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    onNavigate(.hlsDemo)
+                } label: {
+                    Image(systemName: "dot.radiowaves.left.and.right") // 라이브 느낌 아이콘
+                        .imageScale(.large)
+                }
+                .tint(.white)
+            }
+        }
         .task {
             if viewModel.movies.isEmpty && viewModel.people.isEmpty && viewModel.tvs.isEmpty {
                 await viewModel.firstLoad()

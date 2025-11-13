@@ -7,16 +7,23 @@
 
 import SwiftUI
 
+import AVFAudio
+
 import NavigationInterface
 import NetworkLive
 
 import HomePresentation
 import DetailPresentation
+import StreamingPresentation
 
 @main
 struct ShowcaseApp: App {
     @StateObject private var navigator = AppNavigator()
     private let container = DIContainer(httpClient: TMDBClient())
+
+    init() {
+        configureAudioSession()
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -38,10 +45,23 @@ struct ShowcaseApp: App {
                         TVDetailView(viewModel: container.makeTVDetailViewModel(id: id)) { item in
                             navigator.push(item)
                         }
+                    case .hlsDemo:
+                        HLSDemoPage(viewModel: container.makeHLSDemoViewModel())
                     }
                 }
                 .preferredColorScheme(.dark)
             }
+        }
+    }
+
+    private func configureAudioSession() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            // 무음 모드여도 재생 가능
+            try session.setCategory(.playback, mode: .moviePlayback, options: [])
+            try session.setActive(true)
+        } catch {
+            print("⚠️ AVAudioSession 설정 실패: \(error)")
         }
     }
 }
