@@ -9,16 +9,17 @@
 - Showcase는 영화, TV 시리즈, 배우 정보를 통합적으로 탐색할 수 있는 iOS 앱입니다.  
 - TMDB(The Movie Database) API를 활용해 최신 콘텐츠를 제공합니다.
 - Clean Architecture 기반 및 Tuist를 활용한 멀티 모듈화 구조로 설계되어 유지보수성과 확장성이 높은 구조를 목표로 합니다.
+- 추가적으로, HLS(HTTP Live Streaming) 미디어 스트림 재생 기능을 통해 AVPlayer 기반 스트리밍 데모도 제공합니다.
 
 ---
 
 ## 🚀 MVP 주요 화면
 
-| 홈화면 | 영화 상세화면 | 인물 상세화면 | TV 상세화면 |
-|:--:|:--:|:--:|:--:|
-| <img src="https://github.com/user-attachments/assets/65e70057-45ca-4286-b7c4-5ecfafe5acf5" width="220"/> | <img src="https://github.com/user-attachments/assets/5776c3f0-4e51-42da-89e3-a70a0d77db00" width="220"/> | <img src="https://github.com/user-attachments/assets/ecce6c16-b2ee-4186-a344-6ccb2ec8c26d" width="220"/> | <img src="https://github.com/user-attachments/assets/a6f2f448-1a81-4d87-af74-1fadd7e6d5d2" width="220"/> |
-| **홈화면 → 영화 상세화면** | **홈화면 → 인물 상세화면** | **홈화면 → TV 상세화면** | **영화 상세화면 → 예고편(YouTube)** |
-| <img src="https://github.com/user-attachments/assets/ff414825-47cf-4466-95ef-9df7fd0a197b" width="220"/> | <img src="https://github.com/user-attachments/assets/a11a93d1-ac99-4938-9a0a-c464ba881915" width="220"/> | <img src="https://github.com/user-attachments/assets/1e8c4c15-81b7-426e-953b-78d857b5b50c" width="220"/> | <img src="https://github.com/user-attachments/assets/293711ec-95c9-4e24-ab75-2ea7d069b219" width="220"/> |
+| 홈 화면 | 영화 상세화면 | 인물 상세화면 | TV 상세화면 | HLS 리스트 화면 |
+|:--:|:--:|:--:|:--:|:--:|
+| <img src="https://github.com/user-attachments/assets/65e70057-45ca-4286-b7c4-5ecfafe5acf5" width="220"/> | <img src="https://github.com/user-attachments/assets/5776c3f0-4e51-42da-89e3-a70a0d77db00" width="220"/> | <img src="https://github.com/user-attachments/assets/ecce6c16-b2ee-4186-a344-6ccb2ec8c26d" width="220"/> | <img src="https://github.com/user-attachments/assets/a6f2f448-1a81-4d87-af74-1fadd7e6d5d2" width="220"/> | <img src="https://github.com/user-attachments/assets/5b918e45-8214-4819-bf60-6a65ca6c23f9" width="220"/> |
+| **홈 화면 → 영화 상세화면** | **홈 화면 → 인물 상세화면** | **홈 화면 → TV 상세화면** | **영화 상세화면 → 예고편(YouTube) 재생** | **HLS 리스트 화면 → HLS 스트림 재생** |
+| <img src="https://github.com/user-attachments/assets/ff414825-47cf-4466-95ef-9df7fd0a197b" width="220"/> | <img src="https://github.com/user-attachments/assets/a11a93d1-ac99-4938-9a0a-c464ba881915" width="220"/> | <img src="https://github.com/user-attachments/assets/1e8c4c15-81b7-426e-953b-78d857b5b50c" width="220"/> | <img src="https://github.com/user-attachments/assets/293711ec-95c9-4e24-ab75-2ea7d069b219" width="220"/> | <img src="https://github.com/user-attachments/assets/02f078b6-03e7-40b9-b046-c0ae2b2d0039" width="220"/> |
 
 ---
 
@@ -28,6 +29,11 @@
   - 홈 화면 (TMDB API를 활용한 인기 콘텐츠 조회)
   - 상세 화면 (Movie, People, TV)
     - MovieDetailView / PeopleDetailView / TVDetailView
+- 🎥 **HLS 미디어 스트림 재생 데모**
+  - HLS(HTTP Live Streaming) 기반 영상 목록 제공
+  - `.m3u8` manifest 로드 → 세그먼트 스트리밍 → AVPlayer 재생 과정 구현
+  - 썸네일 생성(가능한 URL 대상)
+  - 네트워크 상태 변화에 따른 스트림 해상도 적응(Auto Bitrate Switching 관찰 가능)
 - 🧭 **Navigation 구조 통합**
   - Home → Detail → Sub-detail (인물 정보/비슷한 작품)까지 라우팅 연속 지원
   - Route case 관리 (movieDetail, personDetail, tvDetail)
@@ -119,6 +125,10 @@ Showcase
 │   ├── NetworkLive/                   : URLSession 기반 구현체
 │   └── NavigaionInterface/            : 화면전환 프로토콜/열거형
 ├── Features
+│   ├── Streaming                      : Streaming(Data/Domain/Presentation)
+│   │   ├── StreamingData/
+│   │   ├── StreamingDomain/
+│   │   └── StreamingPresentation/
 │   ├── Home                           : Home(Data/Domain/Presentation)
 │   │   ├── HomeData/
 │   │   ├── HomeDomain/
@@ -127,7 +137,7 @@ Showcase
 │       ├── DetailData/
 │       ├── DetailDomain/
 │       └── DetailPresentation/
-└── DesignSystem/                    : 공용 UI (CustomBackToolbar, ActionBar, CreditSection 등)
+└── DesignSystem/                     : 공용 UI (CustomBackToolbar, ActionBar, CreditSection 등)
 ├── Configs/
 └── Tuist/
 ```
