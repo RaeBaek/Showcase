@@ -29,6 +29,7 @@ let project = Project(
             bundleId: "com.raehoon.Showcase.app",
             deploymentTargets: .iOS("17.0"),
             infoPlist: .extendingDefault(with: [
+                "CFBundleDisplayName": "Showcase",
                 "UILaunchScreen": [
                     "UIColorName": "",
                     "UIImageName": "",
@@ -48,7 +49,10 @@ let project = Project(
                 .project(target: "HomePresentation", path: "../Features/Home/HomePresentation"),
                 .project(target: "DetailData", path: "../Features/Detail/DetailData"),
                 .project(target: "DetailDomain", path: "../Features/Detail/DetailDomain"),
-                .project(target: "DetailPresentation", path: "../Features/Detail/DetailPresentation")
+                .project(target: "DetailPresentation", path: "../Features/Detail/DetailPresentation"),
+                .project(target: "StreamingData", path: "../Features/Streaming/StreamingData"),
+                .project(target: "StreamingDomain", path: "../Features/Streaming/StreamingDomain"),
+                .project(target: "StreamingPresentation", path: "../Features/Streaming/StreamingPresentation")
             ]
         ),
         // Unit Tests
