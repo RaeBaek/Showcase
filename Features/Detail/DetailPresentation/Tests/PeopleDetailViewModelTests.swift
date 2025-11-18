@@ -99,6 +99,7 @@ final class PeopleDetailViewModelTests: XCTestCase {
         }
     }
 
+    /// 일대기 토글 동작 테스트
     func test_toggleBiographyExpanded_togglesFlag() async {
         // 기본값 false
         XCTAssertFalse(viewModel.peopleDetailState.showFullBio)

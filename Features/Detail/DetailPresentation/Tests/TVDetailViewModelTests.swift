@@ -1,8 +1,8 @@
 //
-//  MovieDetailViewModelTests.swift
+//  TVDetailViewModelTests.swift
 //  DetailPresentationTests
 //
-//  Created by 백래훈 on 11/12/25.
+//  Created by 백래훈 on 11/18/25.
 //
 
 import XCTest
@@ -10,23 +10,23 @@ import XCTest
 @testable import DetailPresentation
 
 @MainActor
-final class MovieDetailViewModelTests: XCTestCase {
+final class TVDetailViewModelTests: XCTestCase {
 
-    private var useCase: MockMovieDetailUseCase!
-    private var viewModel: MovieDetailViewModel!
+    private var useCase: MockTVDetailUseCase!
+    private var viewModel: TVDetailViewModel!
 
     override func setUp() async throws {
         try await super.setUp()
-        useCase = MockMovieDetailUseCase()
+        useCase = MockTVDetailUseCase()
 
-        let id: Int32 = 456
+        let id: Int32 = 789
 
-        useCase.stubDetail = makeMovieDetailInfoEntity(id: id)
+        useCase.stubDetail = makeTVDetailInfoEntity(id: id)
         useCase.stubCredits = makeCreditInfoEntitys()
         useCase.stubVideos = makeVideoItemEntitys()
-        useCase.stubSimilar = makeSimilarItemEntitys()
+        useCase.stubSimilars = makeSimilarItemEntitys()
 
-        viewModel = MovieDetailViewModel(id: id, useCase: useCase)
+        viewModel = TVDetailViewModel(id: id, useCase: useCase)
     }
 
     override func tearDown() async throws {
@@ -38,13 +38,13 @@ final class MovieDetailViewModelTests: XCTestCase {
     /// 성공 케이스
     func test_load_success_updatesStateAndProperties() async {
         // given
-        XCTAssertEqual(viewModel.movieDetailState.state, .idle)
+        XCTAssertEqual(viewModel.tvDetailState.state, .idle)
 
         let exp = expectation(description: "loaded state")
 
-        // @Published movieDetailState 변경 스트림 구독
-        let cancellable = viewModel.$movieDetailState
-            .dropFirst() // .idle -> 다음부터
+        // @Publised tvDetailState 변경 스트림 구독
+        let cancellable = viewModel.$tvDetailState
+            .dropFirst()
             .sink { state in
                 if case .loaded = state.state {
                     exp.fulfill()
@@ -54,7 +54,6 @@ final class MovieDetailViewModelTests: XCTestCase {
         // when
         viewModel.load()
 
-//        await wait(for: [exp], timeout: 1.0)
         await fulfillment(of: [exp], timeout: 1.0)
         cancellable.cancel()
 
@@ -62,16 +61,16 @@ final class MovieDetailViewModelTests: XCTestCase {
         XCTAssertEqual(useCase.fetchDetailCallCount, 1)
         XCTAssertEqual(useCase.fetchCreditsCallCount, 1)
         XCTAssertEqual(useCase.fetchVideosCallCount, 1)
-        XCTAssertEqual(useCase.fetchSimilarCallCount, 1)
+        XCTAssertEqual(useCase.fetchSimilarsCallCount, 1)
 
         // then: 상태 값 검증
-        let state = viewModel.movieDetailState
+        let state = viewModel.tvDetailState
         if case .loaded = state.state {
             // state 내부 값들이 모두 채워졌는지
-            XCTAssertNotNil(state.adapter)
+            XCTAssertNotNil(state.adater)
             XCTAssertEqual(state.credits.count, useCase.stubCredits.count)
             XCTAssertEqual(state.videos.count, useCase.stubVideos.count)
-            XCTAssertEqual(state.similars.count, useCase.stubSimilar.count)
+            XCTAssertEqual(state.similars.count, useCase.stubSimilars.count)
         } else {
             XCTFail("Expected state to be .loaded, got \(state.state)")
         }
@@ -80,13 +79,12 @@ final class MovieDetailViewModelTests: XCTestCase {
     /// 실패 케이스
     func test_load_failure_setsFailedState() async {
         // given
-        let error = URLError(.cannotLoadFromNetwork)
+        let error = URLError(.notConnectedToInternet)
         useCase.error = error
 
         let exp = expectation(description: "failed state")
 
-        let cancellable = viewModel.$movieDetailState
-            .dropFirst()
+        let cancellable = viewModel.$tvDetailState
             .sink { state in
                 if case .failed = state.state {
                     exp.fulfill()
@@ -100,41 +98,52 @@ final class MovieDetailViewModelTests: XCTestCase {
         cancellable.cancel()
 
         // then
-        let state = viewModel.movieDetailState
+        let state = viewModel.tvDetailState
         switch state.state {
         case .failed(let message):
-            XCTAssertTrue(message.contains("오류 -2000"))
+            XCTAssertTrue(message.contains("오류 -1009"))
         default:
             XCTFail("Expected .failed, got \(state.state)")
         }
     }
 
     /// 개요 토글 동작 테스트
-    func test_toggleOverviewExpanded_togglesFlag() async {
+    func test_toggleOverviewExpanded_toggleFlag() async {
         // 기본값 false
-        XCTAssertFalse(viewModel.movieDetailState.showFullOverview)
+        XCTAssertFalse(viewModel.tvDetailState.showFullOverview)
 
         viewModel.toggleOverviewExpanded()
-        XCTAssertTrue(viewModel.movieDetailState.showFullOverview)
+        XCTAssertTrue(viewModel.tvDetailState.showFullOverview)
 
         viewModel.toggleOverviewExpanded()
-        XCTAssertFalse(viewModel.movieDetailState.showFullOverview)
+        XCTAssertFalse(viewModel.tvDetailState.showFullOverview)
     }
 }
 
-private func makeMovieDetailInfoEntity(id: Int32) -> MovieDetailInfoEntity {
-    return MovieDetailInfoEntity(
+private func makeTVDetailInfoEntity(id: Int32) -> TVDetailInfoEntity {
+    return TVDetailInfoEntity(
         id: id,
-        title: "",
-        originalTitle: nil,
+        name: "",
+        originalName: nil,
+        tagline: nil,
+        posterPath: nil,
+        backdropPath: nil,
+        firstAirDate: nil,
+        lastAirDate: nil,
+        status: "",
+        inProduction: false,
+        numberOfSeasons: 0,
+        numberOfEpisodes: 0,
+        episodeRunTime: nil,
+        createdBy: [],
+        networks: [],
+        homepage: nil,
         overview: "",
-        releaseDate: nil,
-        voteAverage: 0,
-        voteCount: 0,
         genres: [],
-        runtime: nil,
-        backdropURL: nil,
-        posterURL: nil
+        originCountry: nil,
+        originalLanguage: "",
+        voteAverage: 10.1,
+        voteCount: 0
     )
 }
 
@@ -142,14 +151,14 @@ private func makeCreditInfoEntitys() -> [CreditInfoEntity] {
     return [
         CreditInfoEntity(
             id: 1,
-            name: "Actor 1",
-            role: "Cast",
+            name: "",
+            role: nil,
             profileURL: nil
         ),
         CreditInfoEntity(
             id: 2,
-            name: "Actor 2",
-            role: "Cast",
+            name: "",
+            role: nil,
             profileURL: nil
         )
     ]
@@ -158,18 +167,18 @@ private func makeCreditInfoEntitys() -> [CreditInfoEntity] {
 private func makeVideoItemEntitys() -> [VideoItemEntity] {
     return [
         VideoItemEntity(
-            id: "1",
-            name: "Trailer 1",
-            site: "YouTube",
-            key: "abcd",
-            type: "Trailer"
+            id: "3",
+            name: "",
+            site: "",
+            key: "",
+            type: ""
         ),
         VideoItemEntity(
-            id: "2",
-            name: "Teaser",
-            site: "YouTube",
-            key: "efgh",
-            type: "Teaser"
+            id: "4",
+            name: "",
+            site: "",
+            key: "",
+            type: ""
         )
     ]
 }
@@ -177,13 +186,13 @@ private func makeVideoItemEntitys() -> [VideoItemEntity] {
 private func makeSimilarItemEntitys() -> [SimilarItemEntity] {
     return [
         SimilarItemEntity(
-            id: 100,
-            title: "Similar 1",
+            id: 5,
+            title: nil,
             posterURL: nil
         ),
         SimilarItemEntity(
-            id: 101,
-            title: "Similar 2",
+            id: 6,
+            title: nil,
             posterURL: nil
         )
     ]
