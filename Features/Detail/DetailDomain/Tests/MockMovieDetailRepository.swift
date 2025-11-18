@@ -5,7 +5,7 @@
 //  Created by 백래훈 on 11/17/25.
 //
 
-import XCTest
+import Foundation
 @testable import DetailDomain
 
 final class MockMovieDetailRepository: MovieDetailRepository {
@@ -16,7 +16,7 @@ final class MockMovieDetailRepository: MovieDetailRepository {
     private(set) var videosInputs: [DetailInput] = []
     private(set) var similarsInputs: [DetailInput] = []
 
-    // MARK: - Stubbed 결과
+    // MARK: - Stubbed 엔티티
     var stubDetail: MovieDetailEntity!
     var stubCredits: CreditsEntity!
     var stubVideos: VideoEntity!

@@ -26,7 +26,7 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
     }
 
     /// fetchDetail(), DetailInput의 Id와 language가 정상적으로 전달되었는지 테스트
-    func test_fetchDetail_buildsUnputWithGivenId_andKoreanLanguage() async throws {
+    func test_fetchDetail_buildsInputWithGivenId_andKoreanLanguage() async throws {
         // given
         let id: Int32 = 150
         repository.stubDetail = makeMovieDetailEntity(id: id)
@@ -41,7 +41,7 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
     }
 
     /// fetchDetail(), repository에서의 error가 정상적으로 전달되는지 테스트
-    func test_fetchDetail_propagatesErrorFormRepository() async throws {
+    func test_fetchDetail_propagatesErrorFromRepository() async throws {
         // given
         let expectedError = URLError(.timedOut)
         repository.error = expectedError

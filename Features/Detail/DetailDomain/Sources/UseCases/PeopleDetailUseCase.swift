@@ -14,21 +14,21 @@ public protocol PeopleDetailUseCase {
 
 public final class PeopleDetailUseCaseImpl: PeopleDetailUseCase {
 
-    private let reposiotry: any PeopleDetailRepository
+    private let repository: any PeopleDetailRepository
 
-    public init(reposiotry: any PeopleDetailRepository) {
-        self.reposiotry = reposiotry
+    public init(repository: any PeopleDetailRepository) {
+        self.repository = repository
     }
 
     public func fetchDetail(id: Int32) async throws -> PersonDetailEntity {
         let input = DetailInput(id: id, language: "ko-KR")
-        let detail = try await self.reposiotry.fetchDetail(input)
+        let detail = try await self.repository.fetchDetail(input)
         return detail.toPersonDetailEntity
     }
 
     public func fetchCredits(id: Int32) async throws -> [KnownForItem] {
         let input = DetailInput(id: id, language: "ko-KR")
-        let credits = try await self.reposiotry.fetchCredits(input)
+        let credits = try await self.repository.fetchCredits(input)
         return (credits.cast + credits.crew).toKnownForItems()
     }
 
