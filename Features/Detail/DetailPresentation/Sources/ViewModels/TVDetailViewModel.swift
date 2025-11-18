@@ -10,16 +10,7 @@ import DetailDomain
 
 @MainActor
 public final class TVDetailViewModel: ObservableObject {
-    @Published var state: LoadState = .idle
-    @Published var tvState = TVState()
-
-    struct TVState {
-        var adater: TVHeaderAdapter?
-        var credits: [CreditInfoEntity] = []
-        var videos: [VideoItemEntity] = []
-        var similars: [SimilarItemEntity] = []
-        var showFullOverview = false
-    }
+    @Published private(set) var tvDetailState = TVState()
 
     private let id: Int32
     private let useCase: TVDetailUseCase
@@ -31,7 +22,7 @@ public final class TVDetailViewModel: ObservableObject {
 
     public func load() {
         Task {
-            state = .loading
+            self.tvDetailState.state = .loading
             do {
                 async let fetchDetail = self.useCase.fetchDetail(id: id)
                 async let fetchCredits = self.useCase.fetchCredits(id: id)
@@ -41,16 +32,29 @@ public final class TVDetailViewModel: ObservableObject {
                 let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
                 let adapter = TVHeaderAdapter(info: detail)
 
-                self.tvState.adater = adapter
-                self.tvState.credits = credits
-                self.tvState.videos = videos
-                self.tvState.similars = similars
+                self.tvDetailState.adater = adapter
+                self.tvDetailState.credits = credits
+                self.tvDetailState.videos = videos
+                self.tvDetailState.similars = similars
 
-                state = .loaded
-                print("TVDetailViewModel State changed to:", state)
+                self.tvDetailState.state = .loaded
+                print("TVDetailViewModel State changed to:", self.tvDetailState.state)
             } catch {
-                state = .failed("TVDetailViewModel: \(error.localizedDescription)")
+                self.tvDetailState.state = .failed("TVDetailViewModel: \(error.localizedDescription)")
             }
         }
     }
+
+    public func toggleOverviewExpanded() {
+        tvDetailState.showFullOverview.toggle()
+    }
+}
+
+struct TVState {
+    var state: LoadState = .idle
+    var adater: TVHeaderAdapter?
+    var credits: [CreditInfoEntity] = []
+    var videos: [VideoItemEntity] = []
+    var similars: [SimilarItemEntity] = []
+    var showFullOverview = false
 }

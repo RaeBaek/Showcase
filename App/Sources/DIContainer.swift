@@ -73,7 +73,7 @@ extension DIContainer {
         let repository = makePeopleDetailRepository()
         return PeopleDetailViewModel(
             id: id,
-            usecase: PeopleDetailUseCaseImpl(reposiotry: repository)
+            usecase: PeopleDetailUseCaseImpl(repository: repository)
         )
     }
 

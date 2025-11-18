@@ -25,7 +25,7 @@ public struct MovieDetailView: View {
 
     public var body: some View {
         Group {
-            switch viewModel.state {
+            switch viewModel.movieDetailState.state {
             case .idle, .loading:
                 LoadingSkeleton()
                     .onAppear { viewModel.load() }
@@ -39,25 +39,31 @@ public struct MovieDetailView: View {
                 .foregroundStyle(.secondary)
                 .padding(.top, 80)
             case .loaded:
-                if let adapter = viewModel.adapter {
+                if let adapter = viewModel.movieDetailState.adapter {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading) {
                             HeaderBackdrop(model: adapter)
                             ActionBar()
                             OverviewSection(
                                 text: adapter.overviewText,
-                                expanded: $viewModel.showFullOverview
+                                expanded: Binding(
+                                    get: {
+                                        viewModel.movieDetailState.showFullOverview
+                                    },
+                                    set: { _ in
+                                        viewModel.toggleOverviewExpanded()
+                                    })
                             )
-                            if !viewModel.credits.isEmpty {
-                                CreditSection(credits: viewModel.credits) { credit in
+                            if !viewModel.movieDetailState.credits.isEmpty {
+                                CreditSection(credits: viewModel.movieDetailState.credits) { credit in
                                     onNavigate(.personDetail(id: Int32(credit.id)))
                                 }
                             }
-                            if !viewModel.videos.isEmpty {
-                                VideoSection(videos: viewModel.videos)
+                            if !viewModel.movieDetailState.videos.isEmpty {
+                                VideoSection(videos: viewModel.movieDetailState.videos)
                             }
-                            if !viewModel.similars.isEmpty {
-                                SimilarSection(list: viewModel.similars) { item in
+                            if !viewModel.movieDetailState.similars.isEmpty {
+                                SimilarSection(list: viewModel.movieDetailState.similars) { item in
                                     onNavigate(.movieDetail(id: Int32(item.id)))
                                 }
                             }

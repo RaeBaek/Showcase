@@ -26,7 +26,7 @@ public struct PeopleDetailView: View {
 
     public var body: some View {
         Group {
-            switch viewModel.state {
+            switch viewModel.peopleDetailState.state {
             case .idle, .loading:
                 LoadingSkeleton()
                     .onAppear { viewModel.load() }
@@ -40,14 +40,24 @@ public struct PeopleDetailView: View {
                 .foregroundStyle(.secondary)
                 .padding(.top, 80)
             case .loaded:
-                if let detail = viewModel.detail,
-                   let knownFors = viewModel.knownFors,
+                if let detail = viewModel.peopleDetailState.detail,
+                   let knownFors = viewModel.peopleDetailState.knownFors,
                    let biography = detail.biography {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 24) {
                             HeroHeader(person: detail)
                             MetaGrid(person: detail)
-                            BiographySection(text: biography, showFull: $viewModel.showFullBio)
+                            BiographySection(
+                                text: biography,
+                                showFull: Binding(
+                                    get: {
+                                        viewModel.peopleDetailState.showFullBio
+                                    },
+                                    set: { _ in
+                                        viewModel.toggleOverviewExpanded()
+                                    }
+                                )
+                            )
 
                             if !knownFors.isEmpty {
                                 KnownForSection(items: knownFors) { item in

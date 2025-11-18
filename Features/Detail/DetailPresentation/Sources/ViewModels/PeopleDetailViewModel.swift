@@ -10,10 +10,7 @@ import DetailDomain
 
 @MainActor
 public final class PeopleDetailViewModel: ObservableObject {
-    @Published var state: LoadState = .idle
-    @Published private(set) var detail: PersonDetailEntity?
-    @Published private(set) var knownFors: [KnownForItem]?
-    @Published var showFullBio = false
+    @Published private(set) var peopleDetailState = PeopleDetailState()
 
     private let id: Int32
     private let usecase: PeopleDetailUseCase
@@ -25,21 +22,32 @@ public final class PeopleDetailViewModel: ObservableObject {
 
     public func load() {
         Task {
-            state = .loading
+            self.peopleDetailState.state = .loading
             do {
                 async let fetchDetail = self.usecase.fetchDetail(id: id)
                 async let fetchCredits = self.usecase.fetchCredits(id: id)
 
                 let (detail, credits) = try await (fetchDetail, fetchCredits)
 
-                self.detail = detail
-                self.knownFors = credits
+                self.peopleDetailState.detail = detail
+                self.peopleDetailState.knownFors = credits
 
-                state = .loaded
-                print("PersonDetailViewModel State changed to:", state)
+                self.peopleDetailState.state = .loaded
+                print("PersonDetailViewModel State changed to:", self.peopleDetailState.state)
             } catch {
-                state = .failed("PersonDetailViewModel: \(error.localizedDescription)")
+                self.peopleDetailState.state = .failed("PersonDetailViewModel: \(error.localizedDescription)")
             }
         }
     }
+
+    public func toggleOverviewExpanded() {
+        peopleDetailState.showFullBio.toggle()
+    }
+}
+
+struct PeopleDetailState {
+    var state: LoadState = .idle
+    var detail: PersonDetailEntity?
+    var knownFors: [KnownForItem]?
+    var showFullBio = false
 }

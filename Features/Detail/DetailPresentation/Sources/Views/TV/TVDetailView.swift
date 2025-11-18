@@ -26,7 +26,7 @@ public struct TVDetailView: View {
 
     public var body: some View {
         Group {
-            switch viewModel.state {
+            switch viewModel.tvDetailState.state {
             case .idle, .loading:
                 LoadingSkeleton()
                     .onAppear { viewModel.load() }
@@ -40,25 +40,32 @@ public struct TVDetailView: View {
                 .foregroundStyle(.secondary)
                 .padding(.top, 80)
             case .loaded:
-                if let adapter = viewModel.tvState.adater {
+                if let adapter = viewModel.tvDetailState.adater {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack(alignment: .leading) {
                             HeaderBackdrop(model: adapter)
                             ActionBar()
                             OverviewSection(
                                 text: adapter.overviewText,
-                                expanded: $viewModel.tvState.showFullOverview
+                                expanded: Binding(
+                                    get: {
+                                        viewModel.tvDetailState.showFullOverview
+                                    },
+                                    set: { _ in
+                                        viewModel.toggleOverviewExpanded()
+                                    }
+                                )
                             )
-                            if !viewModel.tvState.credits.isEmpty {
-                                CreditSection(credits: viewModel.tvState.credits) { credit in
+                            if !viewModel.tvDetailState.credits.isEmpty {
+                                CreditSection(credits: viewModel.tvDetailState.credits) { credit in
                                     onNavigate(.personDetail(id: Int32(credit.id)))
                                 }
                             }
-                            if !viewModel.tvState.videos.isEmpty {
-                                VideoSection(videos: viewModel.tvState.videos)
+                            if !viewModel.tvDetailState.videos.isEmpty {
+                                VideoSection(videos: viewModel.tvDetailState.videos)
                             }
-                            if !viewModel.tvState.similars.isEmpty {
-                                SimilarSection(list: viewModel.tvState.similars) { item in
+                            if !viewModel.tvDetailState.similars.isEmpty {
+                                SimilarSection(list: viewModel.tvDetailState.similars) { item in
                                     onNavigate(.tvDetail(id: Int32(item.id)))
                                 }
                             }

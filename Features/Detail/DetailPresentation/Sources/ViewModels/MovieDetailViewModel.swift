@@ -10,12 +10,7 @@ import DetailDomain
 
 @MainActor
 public final class MovieDetailViewModel: ObservableObject {
-    @Published var state: LoadState = .idle
-    @Published var adapter: MovieHeaderAdapter?
-    @Published var credits: [CreditInfoEntity] = []
-    @Published var videos: [VideoItemEntity] = []
-    @Published var similars: [SimilarItemEntity] = []
-    @Published var showFullOverview = false
+    @Published private(set) var movieDetailState = MovieDetailState()
 
     private let id: Int32
     private let useCase: MovieDetailUseCase
@@ -25,9 +20,9 @@ public final class MovieDetailViewModel: ObservableObject {
         self.useCase = useCase
     }
 
-    func load() {
+    public func load() {
         Task {
-            state = .loading
+            self.movieDetailState.state = .loading
             do {
                 async let fetchDetail = self.useCase.fetchDetail(id: id)
                 async let fetchCredits = useCase.fetchCredits(id: id)
@@ -37,17 +32,21 @@ public final class MovieDetailViewModel: ObservableObject {
                 let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
                 let adapter = MovieHeaderAdapter(info: detail)
 
-                self.adapter = adapter
-                self.credits = credits
-                self.videos = videos
-                self.similars = similars
+                self.movieDetailState.adapter = adapter
+                self.movieDetailState.credits = credits
+                self.movieDetailState.videos = videos
+                self.movieDetailState.similars = similars
 
-                state = .loaded
-                print("MovieDetailViewModel State changed to:", state)
+                self.movieDetailState.state = .loaded
+                print("MovieDetailViewModel State changed to:", self.movieDetailState.state)
             } catch {
-                state = .failed("MovieDetailViewModel: \(error.localizedDescription)")
+                self.movieDetailState.state = .failed("MovieDetailViewModel: \(error.localizedDescription)")
             }
         }
+    }
+
+    public func toggleOverviewExpanded() {
+        movieDetailState.showFullOverview.toggle()
     }
 }
 
@@ -56,4 +55,13 @@ enum LoadState {
     case loading
     case loaded
     case failed(String)
+}
+
+struct MovieDetailState {
+    var state: LoadState = .idle
+    var adapter: MovieHeaderAdapter?
+    var credits: [CreditInfoEntity] = []
+    var videos: [VideoItemEntity] = []
+    var similars: [SimilarItemEntity] = []
+    var showFullOverview: Bool = false
 }
