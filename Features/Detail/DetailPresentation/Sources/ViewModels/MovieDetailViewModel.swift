@@ -50,7 +50,7 @@ public final class MovieDetailViewModel: ObservableObject {
     }
 }
 
-enum LoadState {
+enum LoadState: Equatable {
     case idle
     case loading
     case loaded
