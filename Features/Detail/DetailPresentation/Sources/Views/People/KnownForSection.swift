@@ -8,7 +8,9 @@
 import SwiftUI
 
 import DesignSystem
+import Localization
 import DetailDomain
+
 import Kingfisher
 
 struct KnownForSection: View {
@@ -17,7 +19,7 @@ struct KnownForSection: View {
 
     var body: some View {
         VStack {
-            SectionHeader(title: "다른 작품")
+            SectionHeader(title: L10n.PeopleDetail.detailOtherPiece)
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 14) {
                     ForEach(items) { item in

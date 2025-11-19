@@ -96,17 +96,3 @@ public struct HeaderBackdrop<Model: HeaderBackdropPresentable>: View {
         }
     }
 }
-
-private struct PosterView: View {
-    let url: URL?
-    var body: some View {
-        AsyncImage(url: url) { img in
-            img.resizable().scaledToFill()
-        } placeholder: {
-            Rectangle().fill(.gray.opacity(0.3))
-                .overlay(Image(systemName: "film").imageScale(.large))
-        }
-        .frame(width: 110, height: 160)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-}

@@ -6,7 +6,10 @@
 //
 
 import SwiftUI
+
+import Localization
 import DetailDomain
+
 import Kingfisher
 
 public struct SimilarSection: View {
@@ -21,7 +24,7 @@ public struct SimilarSection: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "비슷한 작품")
+            SectionHeader(title: L10n.MovieTVDetail.detailSimilarPiece)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {

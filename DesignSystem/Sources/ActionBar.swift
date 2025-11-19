@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import Localization
+
 public struct ActionBar: View {
 
     public init() { }
@@ -18,7 +20,7 @@ public struct ActionBar: View {
             } label: {
                 HStack {
                     Image(systemName: "play.fill")
-                    Text("재생")
+                    Text(L10n.MovieTVDetail.detailPlay)
                         .font(.subheadline)
                         .fontWeight(.semibold)
                 }
@@ -38,7 +40,7 @@ public struct ActionBar: View {
             } label: {
                 VStack(spacing: 3) {
                     Image(systemName: "plus")
-                    Text("내가 찜한 리스트")
+                    Text(L10n.MovieTVDetail.detailMyList)
                         .font(.caption2)
                 }
                 .frame(width: 90)
@@ -50,7 +52,7 @@ public struct ActionBar: View {
             } label: {
                 VStack(spacing: 3) {
                     Image(systemName: "hand.thumbsup")
-                    Text("평가")
+                    Text(L10n.MovieTVDetail.detailEvaluation)
                         .font(.caption2)
                 }
                 .frame(width: 60)
@@ -62,7 +64,7 @@ public struct ActionBar: View {
             } label: {
                 VStack(spacing: 3) {
                     Image(systemName: "paperplane")
-                    Text("공유")
+                    Text(L10n.MovieTVDetail.detailShare)
                         .font(.caption2)
                 }
                 .frame(width: 60)

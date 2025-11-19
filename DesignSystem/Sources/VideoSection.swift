@@ -6,7 +6,10 @@
 //
 
 import SwiftUI
+
+import Localization
 import DetailDomain
+
 import Kingfisher
 
 public struct VideoSection: View {
@@ -19,7 +22,7 @@ public struct VideoSection: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "영상")
+            SectionHeader(title: L10n.MovieTVDetail.detailVideo)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {

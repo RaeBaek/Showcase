@@ -8,6 +8,7 @@
 import SwiftUI
 
 import DesignSystem
+import Localization
 
 struct BiographySection: View {
     let text: String
@@ -15,16 +16,16 @@ struct BiographySection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            SectionHeader(title: "일대기")
-            
-            Text(text.isEmpty ? "일대기 정보가 없습니다." : text)
+            SectionHeader(title: L10n.PeopleDetail.detailBiography)
+
+            Text(text.isEmpty ? L10n.PeopleDetail.detailNoBiography : text)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(showFull ? nil : 4)
                 .animation(.easeInOut, value: showFull)
 
             if text.count > 120 {
-                Button(showFull ? "접기" : "더보기") {
+                Button(showFull ? L10n.Common.commonLess : L10n.Common.commonMore) {
                     showFull.toggle()
                 }
                 .font(.footnote.weight(.semibold))

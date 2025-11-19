@@ -7,7 +7,9 @@
 
 import SwiftUI
 
+import Localization
 import DetailDomain
+
 import Kingfisher
 
 public struct CreditSection: View {
@@ -22,7 +24,7 @@ public struct CreditSection: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "출연/제작")
+            SectionHeader(title: L10n.MovieTVDetail.detailProduction)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {

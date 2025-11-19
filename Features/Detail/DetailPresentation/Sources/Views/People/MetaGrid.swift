@@ -8,6 +8,7 @@
 import SwiftUI
 
 import DesignSystem
+import Localization
 import DetailDomain
 
 struct MetaGrid: View {
@@ -15,21 +16,21 @@ struct MetaGrid: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            SectionHeader(title: "인물 정보")
-            
+            SectionHeader(title: L10n.PeopleDetail.detailInfo)
+
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                MetaItem(icon: "calendar", title: "Born", value: person.birthday ?? "-")
+                MetaItem(icon: "calendar", title: L10n.PeopleDetail.detailBorn, value: person.birthday ?? "-")
                 if let deathday = person.deathday {
-                    MetaItem(icon: "cross", title: "Died", value: deathday)
+                    MetaItem(icon: "cross", title: L10n.PeopleDetail.detailDied, value: deathday)
                 }
-                MetaItem(icon: "mappin.and.ellipse", title: "Birthplace", value: person.placeOfBirth ?? "-")
+                MetaItem(icon: "mappin.and.ellipse", title: L10n.PeopleDetail.detailBirthplace, value: person.placeOfBirth ?? "-")
                 if let site = person.homepage, !site.isEmpty {
                     Link(destination: URL(string: site)!) {
-                        MetaItem(icon: "safari", title: "Website", value: site)
+                        MetaItem(icon: "safari", title: L10n.PeopleDetail.detailWebsite, value: site)
                     }
                     .buttonStyle(.plain)
                 } else {
-                    MetaItem(icon: "safari", title: "Website", value: "-")
+                    MetaItem(icon: "safari", title: L10n.PeopleDetail.detailWebsite, value: "-")
                 }
             }
         }

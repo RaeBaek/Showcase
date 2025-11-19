@@ -31,9 +31,10 @@ public enum L10n {
         public static var detailSimilarPiece: String { L10n.tr("movie_detail_similar_piece") }
     }
 
-    public enum PoepleDetail {
+    public enum PeopleDetail {
         public static var detailInfo: String { L10n.tr("people_detail_info") }
         public static var detailBorn: String { L10n.tr("people_detail_born") }
+        public static var detailDied: String { L10n.tr("people_detail_died") }
         public static var detailBirthplace: String { L10n.tr("people_detail_birthplace") }
         public static var detailWebsite: String { L10n.tr("people_detail_website") }
         public static var detailBiography: String { L10n.tr("people_detail_biography") }
