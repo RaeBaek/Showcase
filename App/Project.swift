@@ -9,6 +9,10 @@ import ProjectDescription
 
 let project = Project(
     name: "App",
+    options: .options(
+        defaultKnownRegions: ["en", "ko"],
+        developmentRegion: "ko"
+    ),
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",

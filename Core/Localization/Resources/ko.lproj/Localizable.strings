@@ -35,3 +35,7 @@
 // MARK: - 에러 화면
 "error_retry" = "다시 시도";
 "network_error" = "네트워크 오류가 발생했습니다.";
+
+// MARK: - 공통
+"common_more" = "더보기";
+"common_less" = "접기";
