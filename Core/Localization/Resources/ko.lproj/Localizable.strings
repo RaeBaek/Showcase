@@ -5,3 +5,33 @@
   Created by 백래훈 on 11/19/25.
   
 */
+
+// MARK: - 홈화면
+"home_title" = "Showcase";
+"home_section_movies" = "영화";
+"home_section_people" = "인물";
+"home_section_tvs" = "TV 시리즈";
+
+// MARK: - 영화/TV 상세 화면
+"movie_detail_play" = "재생";
+"movie_detail_my_list" = "내가 찜한 리스트";
+"movie_detail_evaluation" = "평가";
+"movie_detail_share" = "공유";
+"movie_detail_overview" = "개요";
+"movie_detail_no_overview" = "줄거리 정보가 없습니다.";
+"movie_detail_production" = "출연/제작";
+"movie_detail_video" = "영상";
+"movie_detail_similar_piece" = "비슷한 작품";
+
+// MARK: - 인물 살세 화면
+"people_detail_info" = "인물 정보";
+"people_detail_born" = "생년월일";
+"people_detail_birthplace" = "출생지";
+"people_detail_website" = "웹사이트";
+"people_detail_biography" = "일대기";
+"people_detail_no_biography" = "일대기 정보가 없습니다.";
+"people_detail_other_piece" = "다른 작품";
+
+// MARK: - 에러 화면
+"error_retry" = "다시 시도";
+"network_error" = "네트워크 오류가 발생했습니다.";
