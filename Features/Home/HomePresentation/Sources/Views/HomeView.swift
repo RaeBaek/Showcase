@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+
+import Localization
 import NavigationInterface
 import HomeDomain
 
@@ -25,7 +27,7 @@ public struct HomeView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 24) {
                 SectionView<PopularMovieEntity>(
-                    title: "🎬 Movies",
+                    title: "🎬 \(L10n.Home.sectionMovies)",
                     items: viewModel.movies
                 ) { item in
                     Task { await viewModel.onMovieAppear(item) }
@@ -34,7 +36,7 @@ public struct HomeView: View {
                 }
 
                 SectionView<PopularPeopleEntity>(
-                    title: "🧑‍🤝‍🧑 People",
+                    title: "🧑‍🤝‍🧑 \(L10n.Home.sectionPeople)",
                     items: viewModel.people
                 ) { item in
                     Task { await viewModel.onPeopleAppear(item) }
@@ -43,7 +45,7 @@ public struct HomeView: View {
                 }
 
                 SectionView<PopularTVEntity>(
-                    title: "📺 TVs",
+                    title: "📺 \(L10n.Home.sectionTvs)",
                     items: viewModel.tvs
                 ) { item in
                     Task { await viewModel.onTVAppear(item) }

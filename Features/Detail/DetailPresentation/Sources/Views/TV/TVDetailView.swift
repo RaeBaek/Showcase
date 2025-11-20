@@ -8,6 +8,7 @@
 import SwiftUI
 
 import DesignSystem
+import Localization
 import NavigationInterface
 import DetailDomain
 
@@ -35,7 +36,7 @@ public struct TVDetailView: View {
                     Image(systemName: "wifi.exclamationmark")
                     Text(message)
                         .font(.subheadline)
-                    Button("다시 시도") { viewModel.load() }
+                    Button(L10n.Error.errorRetry) { viewModel.load() }
                 }
                 .foregroundStyle(.secondary)
                 .padding(.top, 80)
