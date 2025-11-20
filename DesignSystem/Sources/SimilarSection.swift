@@ -27,7 +27,7 @@ public struct SimilarSection: View {
             SectionHeader(title: L10n.MovieTVDetail.detailSimilarPiece)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 12) {
+                LazyHStack(alignment: .top, spacing: 12) {
                     ForEach(list) { item in
                         VStack(alignment: .leading, spacing: 6) {
                             if let posterUrl = item.posterURL {
@@ -42,10 +42,11 @@ public struct SimilarSection: View {
                                     }
                                     .scaledToFill()
                                     .frame(width: 120, height: 180)
-                                    .clipped()
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
                                     .background(Color.black.opacity(0.08))
                             } else {
-                                Rectangle().fill(.gray.opacity(0.3))
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(.gray.opacity(0.3))
                                     .overlay(Image(systemName: "film").imageScale(.medium))
                                     .frame(width: 120, height: 180)
                             }

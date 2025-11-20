@@ -21,23 +21,28 @@ struct KnownForSection: View {
         VStack {
             SectionHeader(title: L10n.PeopleDetail.detailOtherPiece)
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 14) {
+                LazyHStack(alignment: .top, spacing: 14) {
                     ForEach(items) { item in
                         VStack(alignment: .leading, spacing: 6) {
                             if let url = item.posterURL {
                                 KFImage(url)
                                     .placeholder {
-                                        RoundedRectangle(cornerRadius: 14)
+                                        RoundedRectangle(cornerRadius: 12)
                                             .fill(.gray.opacity(0.2))
-                                            .frame(width: 120, height: 170)
+                                            .frame(width: 120, height: 180)
                                     }
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
-                                    .frame(width: 120, height: 170)
-                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                    .frame(width: 120, height: 180)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
                                     .onTapGesture {
                                         onSelect(item)
                                     }
+                            } else {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(.gray.opacity(0.3))
+                                    .overlay(Image(systemName: "film").imageScale(.medium))
+                                    .frame(width: 120, height: 180)
                             }
                             Text(item.title)
                                 .font(.footnote)
