@@ -27,9 +27,8 @@ struct KnownForSection: View {
                             if let url = item.posterURL {
                                 KFImage(url)
                                     .placeholder {
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(.gray.opacity(0.2))
-                                            .frame(width: 120, height: 180)
+                                        Color.black.opacity(0.7)
+                                        ProgressView()
                                     }
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)

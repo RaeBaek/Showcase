@@ -43,16 +43,20 @@ public struct CreditSection: View {
                                     .scaledToFill()
                                     .frame(width: 70, height: 70)
                                     .clipShape(Circle())
-
-                                Text(credit.name)
-                                    .font(.footnote)
-                                    .lineLimit(1)
-
-                                Text(credit.role ?? "")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(1)
+                            } else {
+                                Circle()
+                                    .fill(.gray.opacity(0.3))
+                                    .overlay(Image(systemName: "person").imageScale(.medium))
+                                    .frame(width: 70, height: 70)
                             }
+                            Text(credit.name)
+                                .font(.footnote)
+                                .lineLimit(1)
+
+                            Text(credit.role ?? "")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
                         }
                         .frame(width: 90)
                         .onTapGesture {
