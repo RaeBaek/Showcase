@@ -13,10 +13,16 @@ public final class MovieDetailViewModel: ObservableObject {
     @Published private(set) var movieDetailState = MovieDetailState()
 
     private let id: Int32
+    private let language: String
     private let useCase: MovieDetailUseCase
 
-    public init(id: Int32, useCase: MovieDetailUseCase) {
+    public init(
+        id: Int32,
+        language: String,
+        useCase: MovieDetailUseCase
+    ) {
         self.id = id
+        self.language = language
         self.useCase = useCase
     }
 
@@ -24,10 +30,11 @@ public final class MovieDetailViewModel: ObservableObject {
         Task {
             self.movieDetailState.state = .loading
             do {
-                async let fetchDetail = self.useCase.fetchDetail(id: id)
-                async let fetchCredits = useCase.fetchCredits(id: id)
-                async let fetchVideos = self.useCase.fetchVideos(id: id)
-                async let fetchSimilars = self.useCase.fetchSimilar(id: id)
+                let input = DetailInput(id: id, language: language)
+                async let fetchDetail = self.useCase.fetchDetail(input)
+                async let fetchCredits = useCase.fetchCredits(input)
+                async let fetchVideos = self.useCase.fetchVideos(input)
+                async let fetchSimilars = self.useCase.fetchSimilar(input)
 
                 let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
                 let adapter = MovieHeaderAdapter(info: detail)

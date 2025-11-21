@@ -5,6 +5,8 @@
 //  Created by 백래훈 on 11/6/25.
 //
 
+import Localization
+
 import NetworkLive
 
 import HomeData
@@ -20,10 +22,13 @@ import StreamingDomain
 import StreamingPresentation
 
 final class DIContainer {
-    let httpClient: TMDBClient
 
-    init(httpClient: TMDBClient) {
+    let httpClient: TMDBClient
+    let language: String
+
+    init(httpClient: TMDBClient, language: String = L10n.current) {
         self.httpClient = httpClient
+        self.language = language
     }
 
     // Repository
@@ -53,9 +58,9 @@ extension DIContainer {
     func makeHomeViewModel() -> HomeViewModel {
         let repository = makeHomeRepository()
         return HomeViewModel(
-            moviesUsecase: MoviesPagingUseCase(repository: repository),
-            peopleUsecase: PeoplePagingUseCase(repository: repository),
-            tvsUsecase: TVsPagingUseCase(repository: repository)
+            moviesUsecase: MoviesPagingUseCase(repository: repository, language: language),
+            peopleUsecase: PeoplePagingUseCase(repository: repository, language: language),
+            tvsUsecase: TVsPagingUseCase(repository: repository, language: language)
         )
     }
 
@@ -64,6 +69,7 @@ extension DIContainer {
         let repository = makeMovieDetailRepository()
         return MovieDetailViewModel(
             id: id,
+            language: language,
             useCase: MovieDetailUseCaseImpl(repository: repository)
         )
     }
@@ -73,6 +79,7 @@ extension DIContainer {
         let repository = makePeopleDetailRepository()
         return PeopleDetailViewModel(
             id: id,
+            language: language,
             usecase: PeopleDetailUseCaseImpl(repository: repository)
         )
     }
@@ -82,6 +89,7 @@ extension DIContainer {
         let repository = makeTVDetailRepository()
         return TVDetailViewModel(
             id: id,
+            language: language,
             useCase: TVDetailUseCaseImpl(repository: repository)
         )
     }

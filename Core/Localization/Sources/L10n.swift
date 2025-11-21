@@ -8,6 +8,20 @@
 import Foundation
 
 public enum L10n {
+    public static var current: String {
+        let locale = Locale.current.identifier
+
+        if locale.starts(with: "ko") {
+            return "ko-KR"
+        } else if locale.starts(with: "en") {
+            return "en-US"
+        } else if locale.starts(with: "ja") {
+            return "ja-JP"
+        } else {
+            return "ko-KR"
+        }
+    }
+
     public static func tr(_ key: String) -> String {
         NSLocalizedString(key, bundle: .module, comment: "")
     }

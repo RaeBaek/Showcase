@@ -9,10 +9,13 @@ import Foundation
 
 public final class MoviesPagingUseCase: BasePagingUseCase<PopularMovieEntity> {
 
-    public init(repository: HomeRepository) {
-        super.init(fetch: { next in
-            try await repository.moviePopularList(.init(page: next, language: "ko-KR"))
-        })
+    private let language: String
+
+    public init(repository: HomeRepository, language: String) {
+        self.language = language
+        super.init() { input in
+            try await repository.moviePopularList(input)
+        }
     }
 
     public func loadFirstMovies() async throws {
@@ -21,5 +24,9 @@ public final class MoviesPagingUseCase: BasePagingUseCase<PopularMovieEntity> {
 
     public func loadMoreMoviesIfNeeded(currentItem: PopularMovieEntity) async {
         await loadMoreIfNeeded(currentItem: currentItem, threshold: 5)
+    }
+
+    public override func makeParams(page: Int) -> HomeFeedInput {
+        return HomeFeedInput(page: page, language: language)
     }
 }

@@ -46,6 +46,7 @@ let project = Project(
             sources: ["Sources/**"],
             resources: ["Resources/**"],
             dependencies: [
+                .project(target: "Localization", path: "../Core/Localization"),
                 .project(target: "NavigationInterface", path: "../Core/NavigationInterface"),
                 .project(target: "NetworkLive", path: "../Core/NetworkLive"),
                 .project(target: "HomeData", path: "../Features/Home/HomeData"),

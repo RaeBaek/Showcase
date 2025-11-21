@@ -8,7 +8,7 @@
 import ProjectDescription
 
 let project = Project(
-    name: "Model",
+    name: "NetworkModel",
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",
@@ -22,10 +22,10 @@ let project = Project(
     ),
     targets: [
         .target(
-            name: "Model",
+            name: "NetworkModel",
             destinations: .iOS,
             product: .framework,
-            bundleId: "com.raehoon.Showcase.model",
+            bundleId: "com.raehoon.Showcase.networkModel",
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
             dependencies: []

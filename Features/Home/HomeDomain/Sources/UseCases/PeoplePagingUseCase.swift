@@ -9,9 +9,12 @@ import Foundation
 
 public final class PeoplePagingUseCase: BasePagingUseCase<PopularPeopleEntity> {
 
-    public init(repository: HomeRepository) {
-        super.init(fetch: { next in
-            try await repository.peoplePopularList(.init(page: next, language: "ko-KR"))
+    private let language: String
+
+    public init(repository: HomeRepository, language: String) {
+        self.language = language
+        super.init(fetch: { params in
+            try await repository.peoplePopularList(params)
         })
     }
 
@@ -21,5 +24,9 @@ public final class PeoplePagingUseCase: BasePagingUseCase<PopularPeopleEntity> {
 
     public func loadMorePeopleIfNeeded(currentItem: PopularPeopleEntity) async {
         await loadMoreIfNeeded(currentItem: currentItem, threshold: 5)
+    }
+
+    public override func makeParams(page: Int) -> HomeFeedInput {
+        return HomeFeedInput(page: page, language: language)
     }
 }

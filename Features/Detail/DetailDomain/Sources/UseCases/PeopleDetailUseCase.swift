@@ -8,8 +8,8 @@
 import Foundation
 
 public protocol PeopleDetailUseCase {
-    func fetchDetail(id: Int32) async throws -> PersonDetailEntity
-    func fetchCredits(id: Int32) async throws -> [KnownForItem]
+    func fetchDetail(_ input: DetailInput) async throws -> PersonDetailEntity
+    func fetchCredits(_ input: DetailInput) async throws -> [KnownForItem]
 }
 
 public final class PeopleDetailUseCaseImpl: PeopleDetailUseCase {
@@ -20,16 +20,13 @@ public final class PeopleDetailUseCaseImpl: PeopleDetailUseCase {
         self.repository = repository
     }
 
-    public func fetchDetail(id: Int32) async throws -> PersonDetailEntity {
-        let input = DetailInput(id: id, language: "ko-KR")
+    public func fetchDetail(_ input: DetailInput) async throws -> PersonDetailEntity {
         let detail = try await self.repository.fetchDetail(input)
         return detail.toPersonDetailEntity
     }
 
-    public func fetchCredits(id: Int32) async throws -> [KnownForItem] {
-        let input = DetailInput(id: id, language: "ko-KR")
+    public func fetchCredits(_ input: DetailInput) async throws -> [KnownForItem] {
         let credits = try await self.repository.fetchCredits(input)
         return (credits.cast + credits.crew).toKnownForItems()
     }
-
 }
