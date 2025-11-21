@@ -28,7 +28,9 @@ let project = Project(
             bundleId: "com.raehoon.Showcase.design.system",
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
-            dependencies: []
+            dependencies: [
+                .project(target: "DetailDomain", path: "../Features/Detail/DetailDomain")
+            ]
         )
     ]
 )

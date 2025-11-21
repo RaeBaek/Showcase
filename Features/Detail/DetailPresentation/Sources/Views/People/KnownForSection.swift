@@ -18,50 +18,18 @@ struct KnownForSection: View {
     let onSelect: (KnownForItem) -> Void
 
     var body: some View {
-        VStack {
-            SectionHeader(title: L10n.PeopleDetail.detailOtherPiece)
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(alignment: .top, spacing: 14) {
-                    ForEach(items) { item in
-                        VStack(alignment: .leading, spacing: 6) {
-                            if let url = item.posterURL {
-                                KFImage(url)
-                                    .placeholder {
-                                        Color.black.opacity(0.7)
-                                        ProgressView()
-                                    }
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 120, height: 180)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    .onTapGesture {
-                                        onSelect(item)
-                                    }
-                            } else {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(.gray.opacity(0.3))
-                                    .overlay(Image(systemName: "film").imageScale(.medium))
-                                    .frame(width: 120, height: 180)
-                            }
-                            Text(item.title)
-                                .font(.footnote)
-                                .lineLimit(2)
-                                .frame(width: 120, alignment: .leading)
-
-                            HStack(spacing: 4) {
-                                Text(item.media == .movie ? "Movie" : "TV")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                if let year = item.year {
-                                    Text(year)
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                        }
-                    }
+        HorizontalContentSection(title: L10n.PeopleDetail.detailOtherPiece, items: items) { item in
+            onSelect(item)
+        } footer: { item in
+            HStack(spacing: 4) {
+                Text(item.media == .movie ? "Movie" : "TV")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                if let year = item.year {
+                    Text(year)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                 }
-                .padding(.horizontal, 2)
             }
         }
     }

@@ -276,3 +276,13 @@ public struct SimilarItemEntity: Identifiable {
         self.posterURL = posterURL
     }
 }
+
+extension SimilarItemEntity: HorizontalContentDisplayable {
+    public var titleText: String {
+        return title ?? ""
+    }
+    
+    public var infoText: String? {
+        return nil
+    }
+}

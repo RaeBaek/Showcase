@@ -7,9 +7,21 @@
 
 import SwiftUI
 
-public struct PosterView: View {
+public struct AsyncPosterView: View {
 
-    let url: URL?
+    private let url: URL?
+    private let width: CGFloat
+    private let height: CGFloat
+
+    public init(
+        url: URL?,
+        width: CGFloat,
+        height: CGFloat
+    ) {
+        self.url = url
+        self.width = width
+        self.height = height
+    }
 
     public var body: some View {
         AsyncImage(url: url) { img in
@@ -18,7 +30,7 @@ public struct PosterView: View {
             Rectangle().fill(.gray.opacity(0.3))
                 .overlay(Image(systemName: "film").imageScale(.large))
         }
-        .frame(width: 110, height: 160)
+        .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
