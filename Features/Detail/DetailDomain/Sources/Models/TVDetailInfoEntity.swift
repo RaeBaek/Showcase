@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Localization
+
 public struct TVDetailInfoEntity: Identifiable {
     public let id: Int32
     public let name: String
@@ -56,7 +58,7 @@ public struct TVDetailInfoEntity: Identifiable {
     public var runtimeText: String? {
         guard let r = episodeRunTime, !r.isEmpty else { return nil }
         if let min = r.min(), let max = r.max() {
-            return min == max ? "\(min)분" : "\(min)–\(max)분"
+            return min == max ? "\(min)\(L10n.MovieDetail.detailMinute)" : "\(min)–\(max)\(L10n.MovieDetail.detailMinute)"
         }
         return nil
     }
@@ -68,10 +70,6 @@ public struct TVDetailInfoEntity: Identifiable {
     public var creatorsText: String {
         let names = createdBy.map(\.name)
         return names.prefix(3).joined(separator: ", ")
-    }
-
-    public var seasonSummaryText: String {
-        "시즌 \(numberOfSeasons) • 에피소드 \(numberOfEpisodes)"
     }
 
     public var ratingText: String {

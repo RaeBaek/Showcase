@@ -12,18 +12,25 @@
 "home_section_people" = "People";
 "home_section_tvs" = "TV Series";
 
-// MARK: - 영화/TV 상세 화면
-"movie_detail_play" = "Play";
-"movie_detail_my_list" = "My List";
-"movie_detail_evaluation" = "Evaluation";
-"movie_detail_share" = "Share";
-"movie_detail_overview" = "Overview";
-"movie_detail_no_overview" = "No plot information.";
-"movie_detail_production" = "Director/Production";
-"movie_detail_video" = "Video";
-"movie_detail_similar_piece" = "Similar Piece";
+// MARK: - 영화/TV 상세 화면 (공통)
+"detail_play" = "Play";
+"detail_my_list" = "My List";
+"detail_evaluation" = "Evaluation";
+"detail_share" = "Share";
+"detail_overview" = "Overview";
+"detail_no_overview" = "No plot information.";
+"detail_production" = "Director/Production";
+"detail_video" = "Video";
+"detail_similar_piece" = "Similar Piece";
 
-// MARK: - 인물 살세 화면
+// MARK: - 영화 상세 화면
+"movie_detail_minute" = "Min";
+
+// MARK: - TV 상세 화면
+"tv_detail_season" = "Season";
+"tv_detail_episode" = "Episode";
+
+// MARK: - 인물 상세 화면
 "people_detail_info" = "Info";
 "people_detail_born" = "Born";
 "people_detail_died" = "Died";

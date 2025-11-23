@@ -7,6 +7,7 @@
 
 import Foundation
 
+import Localization
 import DetailDomain
 
 public struct MovieHeaderAdapter: HeaderBackdropPresentable {
@@ -31,7 +32,7 @@ public struct MovieHeaderAdapter: HeaderBackdropPresentable {
 
     public var metaText: String {
         let year = info.releaseDate.map { String($0.prefix(4)) }
-        let time = info.runtime.map { "\($0)분" }
+        let time = info.runtime.map { "\($0)\(L10n.MovieDetail.detailMinute)" }
         return [year, time].compactMap { $0 }.joined(separator: " · ")
     }
 
@@ -74,7 +75,7 @@ public struct TVHeaderAdapter: HeaderBackdropPresentable {
 
     public var metaText: String {
         let air = info.airDateRangeText
-        let season = "시즌 \(info.numberOfSeasons) • 에피소드 \(info.numberOfEpisodes)"
+        let season = "\(L10n.TVDetail.detailSeason) \(info.numberOfSeasons) • \(L10n.TVDetail.detailEpisode) \(info.numberOfEpisodes)"
         let runtime = info.runtimeText
         return [air, season, runtime].compactMap { $0 }.joined(separator: " · ")
     }

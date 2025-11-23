@@ -12,18 +12,25 @@
 "home_section_people" = "人物";
 "home_section_tvs" = "TV シリーズ";
 
-// MARK: - 영화/TV 상세 화면
-"movie_detail_play" = "再生";
-"movie_detail_my_list" = "私が選んだリスト";
-"movie_detail_evaluation" = "評価";
-"movie_detail_share" = "共有";
-"movie_detail_overview" = "概要";
-"movie_detail_no_overview" = "あらすじ情報がありません。";
-"movie_detail_production" = "出演/制作";
-"movie_detail_video" = "映像";
-"movie_detail_similar_piece" = "似通った作品";
+// MARK: - 영화/TV 상세 화면 (공통)
+"detail_play" = "再生";
+"detail_my_list" = "私が選んだリスト";
+"detail_evaluation" = "評価";
+"detail_share" = "共有";
+"detail_overview" = "概要";
+"detail_no_overview" = "あらすじ情報がありません。";
+"detail_production" = "出演/制作";
+"detail_video" = "映像";
+"detail_similar_piece" = "似通った作品";
 
-// MARK: - 인물 살세 화면
+// MARK: - 영화 상세 화면
+"movie_detail_minute" = "分";
+
+// MARK: - TV 상세 화면
+"tv_detail_season" = "シーズン.";
+"tv_detail_episode" = "エピソード";
+
+// MARK: - 인물 상세 화면
 "people_detail_info" = "人物情報";
 "people_detail_born" = "出生";
 "people_detail_died" = "死亡";

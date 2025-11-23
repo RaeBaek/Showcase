@@ -34,15 +34,24 @@ public enum L10n {
     }
 
     public enum MovieTVDetail {
-        public static var detailPlay: String { L10n.tr("movie_detail_play") }
-        public static var detailMyList: String { L10n.tr("movie_detail_my_list") }
-        public static var detailEvaluation: String { L10n.tr("movie_detail_evaluation") }
-        public static var detailShare: String { L10n.tr("movie_detail_share") }
-        public static var detailOverview: String { L10n.tr("movie_detail_overview") }
-        public static var detailNoOverview: String { L10n.tr("movie_detail_no_overview") }
-        public static var detailProduction: String { L10n.tr("movie_detail_production") }
-        public static var detailVideo: String { L10n.tr("movie_detail_video") }
-        public static var detailSimilarPiece: String { L10n.tr("movie_detail_similar_piece") }
+        public static var detailPlay: String { L10n.tr("detail_play") }
+        public static var detailMyList: String { L10n.tr("detail_my_list") }
+        public static var detailEvaluation: String { L10n.tr("detail_evaluation") }
+        public static var detailShare: String { L10n.tr("detail_share") }
+        public static var detailOverview: String { L10n.tr("detail_overview") }
+        public static var detailNoOverview: String { L10n.tr("detail_no_overview") }
+        public static var detailProduction: String { L10n.tr("detail_production") }
+        public static var detailVideo: String { L10n.tr("detail_video") }
+        public static var detailSimilarPiece: String { L10n.tr("detail_similar_piece") }
+    }
+
+    public enum MovieDetail {
+        public static var detailMinute: String { L10n.tr("movie_detail_minute") }
+    }
+
+    public enum TVDetail {
+        public static var detailSeason: String { L10n.tr("tv_detail_season") }
+        public static var detailEpisode: String { L10n.tr("tv_detail_episode") }
     }
 
     public enum PeopleDetail {
