@@ -13,10 +13,16 @@ public final class PeopleDetailViewModel: ObservableObject {
     @Published private(set) var peopleDetailState = PeopleDetailState()
 
     private let id: Int32
+    private let language: String
     private let usecase: PeopleDetailUseCase
 
-    public init(id: Int32, usecase: PeopleDetailUseCase) {
+    public init(
+        id: Int32,
+        language: String,
+        usecase: PeopleDetailUseCase
+    ) {
         self.id = id
+        self.language = language
         self.usecase = usecase
     }
 
@@ -24,8 +30,9 @@ public final class PeopleDetailViewModel: ObservableObject {
         Task {
             self.peopleDetailState.state = .loading
             do {
-                async let fetchDetail = self.usecase.fetchDetail(id: id)
-                async let fetchCredits = self.usecase.fetchCredits(id: id)
+                let input = DetailInput(id: id, language: language)
+                async let fetchDetail = self.usecase.fetchDetail(input)
+                async let fetchCredits = self.usecase.fetchCredits(input)
 
                 let (detail, credits) = try await (fetchDetail, fetchCredits)
 

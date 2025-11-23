@@ -37,16 +37,20 @@ struct ShowcaseApp: App {
                         MovieDetailView(viewModel: container.makeMovieDetailViewModel(id: id)) { item in
                             navigator.push(item)
                         }
+                        .background(EnableBackSwipeGesture())
                     case .personDetail(let id):
                         PeopleDetailView(viewModel: container.makePeopleDetailViewModel(id: id)) { item in
                             navigator.push(item)
                         }
+                        .background(EnableBackSwipeGesture())
                     case .tvDetail(let id):
                         TVDetailView(viewModel: container.makeTVDetailViewModel(id: id)) { item in
                             navigator.push(item)
                         }
+                        .background(EnableBackSwipeGesture())
                     case .hlsDemo:
                         HLSDemoPage(viewModel: container.makeHLSDemoViewModel())
+                            .background(EnableBackSwipeGesture())
                     }
                 }
                 .preferredColorScheme(.dark)

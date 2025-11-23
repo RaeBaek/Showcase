@@ -5,12 +5,13 @@
 //  Created by 백래훈 on 10/27/25.
 //
 
-import Foundation
 import Combine
+
+import NetworkModel
 
 @MainActor
 public class BasePagingUseCase<T: Identifiable>: PagingUseCase where T.ID == Int {
-    public typealias Fetch = (Int) async throws -> PopularPage<T>
+    public typealias Fetch = (HomeFeedInput) async throws -> PopularPage<T>
 
     private let fetch: Fetch
 
@@ -52,7 +53,7 @@ public class BasePagingUseCase<T: Identifiable>: PagingUseCase where T.ID == Int
         defer { isLoading = false }
 
         do {
-            let newPage = try await fetch(next)
+            let newPage = try await fetch(makeParams(page: next))
             items = (items + newPage.items).uniqued(by: \.id)
             page = newPage.page
             totalPages = newPage.totalPages
@@ -66,10 +67,14 @@ public class BasePagingUseCase<T: Identifiable>: PagingUseCase where T.ID == Int
         lastRequested = next
         defer { isLoading = false }
 
-        let newPage = try await fetch(next)
+        let newPage = try await fetch(makeParams(page: next))
         items = newPage.items
         page = newPage.page
         totalPages = newPage.totalPages
+    }
+
+    open func makeParams(page: Int) -> HomeFeedInput {
+        fatalError("Subclass must override makeParams")
     }
 }
 

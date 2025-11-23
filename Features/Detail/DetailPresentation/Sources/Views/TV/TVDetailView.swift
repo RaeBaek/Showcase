@@ -66,9 +66,9 @@ public struct TVDetailView: View {
                                 VideoSection(videos: viewModel.tvDetailState.videos)
                             }
                             if !viewModel.tvDetailState.similars.isEmpty {
-                                SimilarSection(list: viewModel.tvDetailState.similars) { item in
+                                HorizontalContentSection(title: L10n.MovieTVDetail.detailSimilarPiece, items: viewModel.tvDetailState.similars) { item in
                                     onNavigate(.tvDetail(id: Int32(item.id)))
-                                }
+                                } footer: { _ in }
                             }
                             Spacer(minLength: 40)
                         }

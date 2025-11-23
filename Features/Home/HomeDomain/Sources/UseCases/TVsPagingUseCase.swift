@@ -9,9 +9,12 @@ import Foundation
 
 public final class TVsPagingUseCase: BasePagingUseCase<PopularTVEntity> {
 
-    public init(repository: HomeRepository) {
-        super.init(fetch: { next in
-            try await repository.tvPopularList(.init(page: next, language: "ko-KR"))
+    private let language: String
+
+    public init(repository: HomeRepository, language: String) {
+        self.language = language
+        super.init(fetch: { input in
+            try await repository.tvPopularList(input)
         })
     }
 
@@ -21,5 +24,9 @@ public final class TVsPagingUseCase: BasePagingUseCase<PopularTVEntity> {
 
     public func loadMoreTvsIfNeeded(currentItem: PopularTVEntity) async {
         await loadMoreIfNeeded(currentItem: currentItem, threshold: 5)
+    }
+
+    public override func makeParams(page: Int) -> HomeFeedInput {
+        return HomeFeedInput(page: page, language: language)
     }
 }

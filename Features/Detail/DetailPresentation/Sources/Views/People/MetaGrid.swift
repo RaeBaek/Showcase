@@ -34,6 +34,7 @@ struct MetaGrid: View {
                 }
             }
         }
+        .padding(.horizontal, 16)
     }
 }
 

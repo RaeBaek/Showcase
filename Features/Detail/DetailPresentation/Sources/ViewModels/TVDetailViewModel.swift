@@ -13,10 +13,16 @@ public final class TVDetailViewModel: ObservableObject {
     @Published private(set) var tvDetailState = TVState()
 
     private let id: Int32
+    private let language: String
     private let useCase: TVDetailUseCase
 
-    public init(id: Int32, useCase: TVDetailUseCase) {
+    public init(
+        id: Int32,
+        language: String,
+        useCase: TVDetailUseCase
+    ) {
         self.id = id
+        self.language = language
         self.useCase = useCase
     }
 
@@ -24,10 +30,11 @@ public final class TVDetailViewModel: ObservableObject {
         Task {
             self.tvDetailState.state = .loading
             do {
-                async let fetchDetail = self.useCase.fetchDetail(id: id)
-                async let fetchCredits = self.useCase.fetchCredits(id: id)
-                async let fetchVideos = self.useCase.fetchVideos(id: id)
-                async let fetchSimilars = self.useCase.fetchSimilars(id: id)
+                let input = DetailInput(id: id, language: language)
+                async let fetchDetail = self.useCase.fetchDetail(input)
+                async let fetchCredits = self.useCase.fetchCredits(input)
+                async let fetchVideos = self.useCase.fetchVideos(input)
+                async let fetchSimilars = self.useCase.fetchSimilars(input)
 
                 let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
                 let adapter = TVHeaderAdapter(info: detail)

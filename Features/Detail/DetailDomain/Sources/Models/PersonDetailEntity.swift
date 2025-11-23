@@ -35,10 +35,18 @@ public struct KnownForItem: Identifiable, Hashable {
     public let media: Media
 }
 
-extension KnownForItem {
+extension KnownForItem: HorizontalContentDisplayable {
     public var posterURL: URL? {
         guard let posterPath else { return nil }
         return URL(string: "https://image.tmdb.org/t/p/w780\(posterPath)")
+    }
+
+    public var titleText: String {
+        return title
+    }
+    
+    public var infoText: String? {
+        nil
     }
 }
 

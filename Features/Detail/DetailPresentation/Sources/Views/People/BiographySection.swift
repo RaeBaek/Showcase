@@ -32,5 +32,6 @@ struct BiographySection: View {
                 .tint(.white)
             }
         }
+        .padding(.horizontal, 16)
     }
 }

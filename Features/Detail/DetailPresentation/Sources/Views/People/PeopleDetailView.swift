@@ -59,7 +59,6 @@ public struct PeopleDetailView: View {
                                     }
                                 )
                             )
-
                             if !knownFors.isEmpty {
                                 KnownForSection(items: knownFors) { item in
                                     switch item.media {
@@ -72,8 +71,6 @@ public struct PeopleDetailView: View {
                             }
                             Spacer(minLength: 40)
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.top, 8)
                     }
                 }
             }

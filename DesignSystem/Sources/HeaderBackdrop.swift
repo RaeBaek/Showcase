@@ -65,7 +65,7 @@ public struct HeaderBackdrop<Model: HeaderBackdropPresentable>: View {
             .offset(y: 0)
 
             HStack(alignment: .bottom, spacing: 12) {
-                PosterView(url: model.posterURL)
+                AsyncPosterView(url: model.posterURL, width: 110, height: 160)
                     .offset(y: 0)
 
                 VStack(alignment: .leading, spacing: 6) {

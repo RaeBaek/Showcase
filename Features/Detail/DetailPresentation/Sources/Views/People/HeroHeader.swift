@@ -46,5 +46,7 @@ struct HeroHeader: View {
             }
             Spacer()
         }
+        .padding(.top, 8)
+        .padding(.horizontal, 16)
     }
 }
