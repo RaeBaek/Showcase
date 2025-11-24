@@ -9,6 +9,7 @@
 - Showcase는 영화, TV 시리즈, 배우 정보를 통합적으로 탐색할 수 있는 iOS 앱입니다.  
 - TMDB(The Movie Database) API를 활용해 최신 콘텐츠를 제공합니다.
 - Clean Architecture 기반 및 Tuist를 활용한 멀티 모듈화 구조로 설계되어 유지보수성과 확장성이 높은 구조를 목표로 합니다.
+- Localization에 맞춰 TMDB API의 `language` 파라미터를 동적으로 설정하여, 한국어/영어/일본어 등 지역 기반으로 콘텐츠 정보를 제공합니다.
 - 추가적으로, HLS(HTTP Live Streaming) 미디어 스트림 재생 기능을 통해 AVPlayer 기반 스트리밍 데모도 제공합니다.
 
 ---
@@ -29,6 +30,9 @@
   - 홈 화면 (TMDB API를 활용한 인기 콘텐츠 조회)
   - 상세 화면 (Movie, People, TV)
     - MovieDetailView / PeopleDetailView / TVDetailView
+- 🌐 **지역 기반 API 언어 자동화(Localization)**
+  - `Locale.current.identifier` 기반 자동 설정
+  - 다국어 환경에서 동일한 구조로 확장 가능한 API 호출 방식
 - 🎥 **HLS 미디어 스트림 재생 데모**
   - HLS(HTTP Live Streaming) 기반 영상 목록 제공
   - `.m3u8` manifest 로드 → 세그먼트 스트리밍 → AVPlayer 재생 과정 구현
@@ -38,6 +42,7 @@
   - Home → Detail → Sub-detail (인물 정보/비슷한 작품)까지 라우팅 연속 지원
   - Route case 관리 (movieDetail, personDetail, tvDetail)
 - 🎨 **공용 DesignSystem**
+  - DetailPage, HomePage, StreamingPage 전반에서 사용하는 UI를 일원화
   - `CustomBackToolbar`, `LoadingSkeleton`, `HeaderBackdrop`, `ActionBar`, `OverviewSecion`, `CreditSection`, `VideoSecion`, `SimilarSecion` 일원화
 - ⚙️ **클린 아키텍처 / 모듈화**
   - Domain / Data / Presentation 레이어로 분리
@@ -109,7 +114,7 @@ info.plist
 
 ## 🧩 Module Architecture
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/08af38ab-7c87-4a21-b8cb-df7e2bdf52e0" width="1000" />
+  <img src="https://github.com/user-attachments/assets/e6d5b329-41d4-4970-9ee7-8f7d93d08852" width="1000" />
 </p>
 
 ---
@@ -121,7 +126,9 @@ Showcase
 ├── Workspace.swift
 ├── App                                : 앱 엔트리, AppNavigator, DIContainer
 ├── Core
-│   ├── NetworkInterface/              : 네트워크 프로토콜/모델
+│   ├── Localization/                  : 지역화
+│   ├── NetworkModel/                  : 네트워크 모델
+│   ├── NetworkInterface/              : 네트워크 프로토콜
 │   ├── NetworkLive/                   : URLSession 기반 구현체
 │   └── NavigaionInterface/            : 화면전환 프로토콜/열거형
 ├── Features
