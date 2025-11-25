@@ -24,6 +24,10 @@ jobs:
           brew tap tuist/tuist
           brew install tuist
 
+      # Install all Tuist dependencies (Plugins, SPM, helpers...)
+      - name: Tuist Install
+        run: tuist install
+
       # 3) Verify Tuist installation
 #      - name: Verify Tuist
 #        run: tuist version
