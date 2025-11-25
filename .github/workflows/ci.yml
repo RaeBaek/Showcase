@@ -1,12 +1,9 @@
 name: iOS CI
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
-      - develop
-      - "test/**"
+    branches: [ main, develop, test/* ]
+  pull_request:
 
 jobs:
   build-test:
@@ -21,52 +18,23 @@ jobs:
           gem install fastlane
 
       - name: Install Tuist
-        run: curl -Ls https://get.tuist.io | bash
-
-      - name: Find Tuist binary
-        id: tuistpath
         run: |
-          TUIST_PATH=$(find $HOME -name tuist -type f | head -n 1)
-          echo "TUIST_PATH=$TUIST_PATH" >> $GITHUB_OUTPUT
+          curl -Ls https://get.tuist.io | bash
+
+      - name: Add Tuist to PATH
+        run: |
+          echo "$HOME/.tuist/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/share/tuist/bin" >> $GITHUB_PATH
+          echo "$HOME/.cache/tuist/bin" >> $GITHUB_PATH
 
       - name: Generate Project
-        run: ${{ steps.tuistpath.outputs.TUIST_PATH }} generate --no-open
+        run: |
+          tuist generate --no-open
 
       - name: Run Tests (Fastlane)
-        run: fastlane test_ci
+        run: |
+          fastlane test_ci
 
       - name: Run Build (Fastlane)
-        run: fastlane build_ci
-
-#jobs:
-#  build-test:
-#    runs-on: macos-14
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      # Ruby 설치 (Bundler + Fastlane)
-#      - name: Install Dependencies
-#        run: |
-#          gem install bundler
-#          gem install fastlane
-#
-#      # Tuist 설치
-#      - name: Install Tuist
-#        run: |
-#          curl -Ls https://get.tuist.io | bash
-#          echo "$HOME/.tuist/bin" >> $GITHUB_PATH
-#          echo "$HOME/.local/share/tuist/bin" >> $GITHUB_PATH
-#          echo "$HOME/.cache/tuist/bin" >> $GITHUB_PATH
-#
-#      # 프로젝트 생성
-#      - name: Generate Project
-#        run: tuist generate --no-open
-#
-#      # Test
-#      - name: Run Tests (Fastlane)
-#        run: fastlane test_ci
-#
-#      # Build
-#      - name: Run Build (Fastlane)
-#        run: fastlane build_ci
+        run: |
+          fastlane build_ci
