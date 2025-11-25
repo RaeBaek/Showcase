@@ -3,7 +3,7 @@ name: iOS CI
 on:
   pull_request:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, test/ ]
 
 jobs:
   build-test:
@@ -19,7 +19,7 @@ jobs:
         run: gem install fastlane
 
       - name: Install Tuist
-        run: curl -Ls https://install.tuist.io | bash
+        run: curl -Ls https://get.tuist.io | bash
 
       - name: Generate project
         run: tuist generate --no-open
