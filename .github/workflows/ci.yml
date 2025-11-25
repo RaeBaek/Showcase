@@ -24,13 +24,13 @@ jobs:
         run: curl -Ls https://get.tuist.io | bash
 
       - name: Find Tuist binary
-        id: tuist
+        id: tuistpath
         run: |
           TUIST_PATH=$(find $HOME -name tuist -type f | head -n 1)
-          echo "tuist_path=$TUIST_PATH" >> $GITHUB_OUTPUT
+          echo "TUIST_PATH=$TUIST_PATH" >> $GITHUB_OUTPUT
 
-      - name: Generate project
-        run: ${{ steps.tuist.outputs.tuist_path }} generate --no-open
+      - name: Generate Project
+        run: ${{ steps.tuistpath.outputs.TUIST_PATH }} generate --no-open
 
       - name: Run Tests (Fastlane)
         run: fastlane test_ci
