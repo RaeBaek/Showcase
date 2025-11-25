@@ -37,5 +37,5 @@ jobs:
         run: fastlane test_ci
 
       # 6) Run build
-        name: Run Build (Fastlane)
+      - name: Run Build (Fastlane)
         run: fastlane build_ci
