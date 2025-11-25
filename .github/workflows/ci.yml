@@ -29,10 +29,6 @@ jobs:
           echo "$HOME/.local/share/tuist/bin" >> $GITHUB_PATH
           echo "$HOME/.cache/tuist/bin" >> $GITHUB_PATH
 
-      # Tuist 동작 확인
-      - name: Verify Tuist
-        run: tuist version
-
       # 프로젝트 생성
       - name: Generate Project
         run: tuist generate --no-open
