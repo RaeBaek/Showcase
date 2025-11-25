@@ -3,41 +3,44 @@ name: iOS CI
 on:
   pull_request:
   push:
-    branches: [ main, develop, test/* ]
+    branches:
+      - main
+      - develop
+      - "test/**"
 
 jobs:
   build-test:
     runs-on: macos-14
 
     steps:
-      # 1. Checkout
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 2. Install Bundler (Ruby dependencies)
-      - name: Install Bundler
-        run: gem install bundler
+      # Ruby 설치 (Bundler + Fastlane)
+      - name: Install Dependencies
+        run: |
+          gem install bundler
+          gem install fastlane
 
-      # 3. Install Fastlane
-      - name: Install Fastlane
-        run: gem install fastlane
-
-      # 5. Tuist 공식 액션 사용
+      # Tuist 설치
       - name: Install Tuist
-        uses: tuist/github-action@v1
+        run: |
+          curl -Ls https://get.tuist.io | bash
+          echo "$HOME/.tuist/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/share/tuist/bin" >> $GITHUB_PATH
+          echo "$HOME/.cache/tuist/bin" >> $GITHUB_PATH
 
-      # 6. Verify Tuist installation
-      - name: Verify Tuist installation
+      # Tuist 동작 확인
+      - name: Verify Tuist
         run: tuist version
 
-      # 7. Generate Xcode project
-      - name: Generate project
+      # 프로젝트 생성
+      - name: Generate Project
         run: tuist generate --no-open
 
-      # 8. Run Tests
+      # Test
       - name: Run Tests (Fastlane)
         run: fastlane test_ci
 
-      # 9. Build App
+      # Build
       - name: Run Build (Fastlane)
         run: fastlane build_ci
