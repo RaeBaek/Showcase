@@ -25,8 +25,8 @@ jobs:
           brew install tuist
 
       # 3) Verify Tuist installation
-      - name: Verify Tuist
-        run: tuist version
+#      - name: Verify Tuist
+#        run: tuist version
 
       # 4) Generate Xcode project via Tuist
       - name: Generate Project
