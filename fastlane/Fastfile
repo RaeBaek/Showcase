@@ -1,0 +1,50 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+############################
+
+# default_platform(:ios)
+
+# platform :ios do
+#   desc "Description of what the lane does"
+#   lane :custom_lane do
+#     # add actions here: https://docs.fastlane.tools/actions
+#   end
+# end
+
+############################
+
+default_platform(:ios)
+
+platform :ios do
+  # 테스트 전용 lane
+  lane :test_ci do
+    run_tests(
+      workspace: "Showcase.xcworkspace",
+      scheme: "Showcase",
+      destination: "platform=iOS Simulator,OS=latest,name=iPhone 15"
+      clean: true
+    )
+  end
+
+  # 빌드 전용 lane
+  lane :build_ci do
+    build_app(
+      workspace: "Showcase.xcworkspace",
+      scheme: "Showcase",
+      clean: true
+    )
+  end
+end

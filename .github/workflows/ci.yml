@@ -1,0 +1,31 @@
+name: iOS CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  build-test:
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Bundler
+        run: gem install bundler
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Install Tuist
+        run: curl -Ls https://install.tuist.io | bash
+
+      - name: Generate project
+        run: tuist generate --no-open
+
+      - name: Run Tests (Fastlane)
+        run: fastlane test_ci
+
+      - name: Run Build (Fastlane)
+        run: fastlane build_ci
