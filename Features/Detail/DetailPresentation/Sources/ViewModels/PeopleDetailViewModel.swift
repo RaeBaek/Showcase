@@ -42,7 +42,8 @@ public final class PeopleDetailViewModel: ObservableObject {
                 self.peopleDetailState.state = .loaded
                 print("PersonDetailViewModel State changed to:", self.peopleDetailState.state)
             } catch {
-                self.peopleDetailState.state = .failed("PersonDetailViewModel: \(error.localizedDescription)")
+                let nsError = error as NSError
+                self.peopleDetailState.state = .failed("PersonDetailViewModel: \(nsError.code)")
             }
         }
     }

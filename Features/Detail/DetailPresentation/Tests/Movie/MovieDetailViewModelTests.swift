@@ -109,7 +109,8 @@ final class MovieDetailViewModelTests: XCTestCase {
         let state = viewModel.movieDetailState
         switch state.state {
         case .failed(let message):
-            XCTAssertTrue(message.contains("오류 -2000"))
+            print("메시지: \(message)")
+            XCTAssertTrue(message.contains("-2000"))
         default:
             XCTFail("Expected .failed, got \(state.state)")
         }

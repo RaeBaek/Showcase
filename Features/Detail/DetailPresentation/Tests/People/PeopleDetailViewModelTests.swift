@@ -99,7 +99,7 @@ final class PeopleDetailViewModelTests: XCTestCase {
         let state = viewModel.peopleDetailState
         switch state.state {
         case .failed(let message):
-            XCTAssertTrue(message.contains("오류 -1011"))
+            XCTAssertTrue(message.contains("-1011"))
         default:
             XCTFail("Expected .failed, got \(state.state)")
         }

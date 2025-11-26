@@ -46,7 +46,8 @@ public final class TVDetailViewModel: ObservableObject {
             self.tvDetailState.state = .loaded
             print("TVDetailViewModel State changed to:", self.tvDetailState.state)
         } catch {
-            self.tvDetailState.state = .failed("TVDetailViewModel: \(error.localizedDescription)")
+            let error = error as NSError
+            self.tvDetailState.state = .failed("TVDetailViewModel: \(error.code)")
         }
     }
 

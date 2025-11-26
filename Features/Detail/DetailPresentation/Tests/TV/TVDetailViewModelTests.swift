@@ -107,7 +107,7 @@ final class TVDetailViewModelTests: XCTestCase {
         let state = viewModel.tvDetailState
         switch state.state {
         case .failed(let message):
-            XCTAssertTrue(message.contains("오류 -1009"))
+            XCTAssertTrue(message.contains("-1009"))
         default:
             XCTFail("Expected .failed, got \(state.state)")
         }
