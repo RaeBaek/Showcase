@@ -29,6 +29,9 @@
 default_platform(:ios)
 
 platform :ios do
+  ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "60"
+  ENV["FASTLANE_XCODEBUILD_SETTINGS_RETRIES"] = "6"
+
   # 테스트 전용 lane
   lane :test_ci do
     run_tests(
