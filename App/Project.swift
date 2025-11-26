@@ -102,19 +102,7 @@ let project = Project(
                 configuration: .debug,
                 options: .options(
                     coverage: true,
-                    codeCoverageTargets: [
-                        "App",
-                        "NetworkLive",
-                        "DetailData",
-                        "DetailDomain",
-                        "DetailPresentation",
-                        "HomeData",
-                        "HomeDomain",
-                        "HomePresentation",
-                        "StreamingData",
-                        "StreamingDomain",
-                        "StreamingPresentation"
-                    ])
+                    codeCoverageTargets: ["App"])
             ),
             runAction: .runAction(configuration: .debug),
             archiveAction: .archiveAction(configuration: .release),
