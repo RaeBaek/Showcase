@@ -39,10 +39,20 @@ platform :ios do
   end
 
   lane :build_ci do
-    build_app(
-      workspace: "Showcase.xcworkspace",
-      scheme: "Showcase-Workspace",
-      clean: true
-    )
+  xcodebuild(
+    workspace: "Showcase.xcworkspace",
+    scheme: "Showcase-Workspace",
+    sdk: "iphonesimulator",
+    configuration: "Debug",
+    clean: true
+  )
   end
+
+  # lane :build_ci do
+  #   build_app(
+  #     workspace: "Showcase.xcworkspace",
+  #     scheme: "Showcase-Workspace",
+  #     clean: true
+  #   )
+  # end
 end
