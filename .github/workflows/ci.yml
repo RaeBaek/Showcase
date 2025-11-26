@@ -55,7 +55,7 @@ jobs:
       - name: Generate Project
         run: tuist generate --no-open
 
-        - name: Debug xcodebuild settings
+      - name: Debug xcodebuild settings
         run: |
             xcodebuild -showBuildSettings -workspace Showcase.xcworkspace -scheme App 2>&1 | tee xcodebuild_settings.log
             if [ $? -ne 0 ]; then
