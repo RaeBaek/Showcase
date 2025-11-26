@@ -29,7 +29,10 @@ final class TVsPagingUseCaseTests: XCTestCase {
             totalPages: 2,
             totalResults: 20
         )
-        let usecase = TVsPagingUseCase(repository: repo)
+        let usecase = TVsPagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         let exp = expectation(description: "first page published")
         var latestCount = -1
@@ -71,7 +74,10 @@ final class TVsPagingUseCaseTests: XCTestCase {
             totalPages: 2,
             totalResults: 20
         )
-        let usecase = TVsPagingUseCase(repository: repo)
+        let usecase = TVsPagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         try await usecase.loadFirstTvs()
         let trigger = usecase.items[usecase.items.count - 3]
@@ -108,7 +114,10 @@ final class TVsPagingUseCaseTests: XCTestCase {
         // given
         let repo = MockRepository()
         repo.tvError = Stub.boom
-        let usecase = TVsPagingUseCase(repository: repo)
+        let usecase = TVsPagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         // when
         do {
@@ -137,7 +146,10 @@ final class TVsPagingUseCaseTests: XCTestCase {
             totalPages: 1,
             totalResults: 10
         )
-        let usecase = TVsPagingUseCase(repository: repo)
+        let usecase = TVsPagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
         try await usecase.loadFirstTvs()
 
         // when

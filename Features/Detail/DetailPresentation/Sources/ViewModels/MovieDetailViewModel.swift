@@ -26,7 +26,7 @@ public final class MovieDetailViewModel: ObservableObject {
         self.useCase = useCase
     }
 
-    public func load() {
+    public func load() async {
         Task {
             self.movieDetailState.state = .loading
             do {
@@ -47,7 +47,8 @@ public final class MovieDetailViewModel: ObservableObject {
                 self.movieDetailState.state = .loaded
                 print("MovieDetailViewModel State changed to:", self.movieDetailState.state)
             } catch {
-                self.movieDetailState.state = .failed("MovieDetailViewModel: \(error.localizedDescription)")
+                let error = error as NSError
+                self.movieDetailState.state = .failed("MovieDetailViewModel: \(error.code)")
             }
         }
     }

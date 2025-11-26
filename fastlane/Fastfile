@@ -29,22 +29,30 @@
 default_platform(:ios)
 
 platform :ios do
-  # 테스트 전용 lane
   lane :test_ci do
     run_tests(
       workspace: "Showcase.xcworkspace",
-      scheme: "Showcase",
-      destination: "platform=iOS Simulator,OS=latest,name=iPhone 15"
+      scheme: "Showcase-Workspace",
+      destination: "platform=iOS Simulator,name=iPhone 16 Pro",
       clean: true
     )
   end
 
-  # 빌드 전용 lane
   lane :build_ci do
-    build_app(
-      workspace: "Showcase.xcworkspace",
-      scheme: "Showcase",
-      clean: true
-    )
+  xcodebuild(
+    workspace: "Showcase.xcworkspace",
+    scheme: "Showcase-Workspace",
+    sdk: "iphonesimulator",
+    configuration: "Debug",
+    clean: true
+  )
   end
+
+  # lane :build_ci do
+  #   build_app(
+  #     workspace: "Showcase.xcworkspace",
+  #     scheme: "Showcase-Workspace",
+  #     clean: true
+  #   )
+  # end
 end

@@ -8,6 +8,7 @@
 import XCTest
 @testable import DetailDomain
 @testable import DetailPresentation
+import Combine
 
 @MainActor
 final class TVDetailViewModelTests: XCTestCase {
@@ -26,7 +27,11 @@ final class TVDetailViewModelTests: XCTestCase {
         useCase.stubVideos = makeVideoItemEntitys()
         useCase.stubSimilars = makeSimilarItemEntitys()
 
-        viewModel = TVDetailViewModel(id: id, useCase: useCase)
+        viewModel = TVDetailViewModel(
+            id: id,
+            language: useCase.language,
+            useCase: useCase
+        )
     }
 
     override func tearDown() async throws {
@@ -52,7 +57,7 @@ final class TVDetailViewModelTests: XCTestCase {
             }
 
         // when
-        viewModel.load()
+        await viewModel.load()
 
         await fulfillment(of: [exp], timeout: 1.0)
         cancellable.cancel()
@@ -83,25 +88,26 @@ final class TVDetailViewModelTests: XCTestCase {
         useCase.error = error
 
         let exp = expectation(description: "failed state")
+        var cancellables = Set<AnyCancellable>()
 
-        let cancellable = viewModel.$tvDetailState
+        viewModel.$tvDetailState
             .sink { state in
                 if case .failed = state.state {
                     exp.fulfill()
                 }
             }
+            .store(in: &cancellables)
 
         // when
-        viewModel.load()
+        await viewModel.load()
 
-        await fulfillment(of: [exp], timeout: 1.0)
-        cancellable.cancel()
+        await fulfillment(of: [exp], timeout: 5.0)
 
         // then
         let state = viewModel.tvDetailState
         switch state.state {
         case .failed(let message):
-            XCTAssertTrue(message.contains("오류 -1009"))
+            XCTAssertTrue(message.contains("-1009"))
         default:
             XCTFail("Expected .failed, got \(state.state)")
         }

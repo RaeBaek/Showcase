@@ -29,7 +29,10 @@ final class MoviesPagingUseCaseTests: XCTestCase {
             totalPages: 2,
             totalResults: 20
         )
-        let usecase = MoviesPagingUseCase(repository: repo)
+        let usecase = MoviesPagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         let exp = expectation(description: "first page published")
         var latestCount = -1
@@ -69,7 +72,10 @@ final class MoviesPagingUseCaseTests: XCTestCase {
             totalPages: 2,
             totalResults: 20
         )
-        let usecase = MoviesPagingUseCase(repository: repo)
+        let usecase = MoviesPagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         try await usecase.loadFirstMovies()
         let trigger = usecase.items[usecase.items.count - 3]
@@ -104,7 +110,10 @@ final class MoviesPagingUseCaseTests: XCTestCase {
         // given
         let repo = MockRepository()
         repo.movieError = Stub.boom
-        let usecase = MoviesPagingUseCase(repository: repo)
+        let usecase = MoviesPagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         // when / then
         do {
@@ -129,7 +138,10 @@ final class MoviesPagingUseCaseTests: XCTestCase {
             totalPages: 1,
             totalResults: 10
         )
-        let usecase = MoviesPagingUseCase(repository: repo)
+        let usecase = MoviesPagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
         try await usecase.loadFirstMovies()
 
         // when

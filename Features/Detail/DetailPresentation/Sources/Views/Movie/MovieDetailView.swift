@@ -30,13 +30,21 @@ public struct MovieDetailView: View {
             switch viewModel.movieDetailState.state {
             case .idle, .loading:
                 LoadingSkeleton()
-                    .onAppear { viewModel.load() }
+                    .onAppear {
+                        Task {
+                            await viewModel.load()
+                        }
+                    }
             case .failed(let message):
                 VStack(spacing: 12) {
                     Image(systemName: "wifi.exclamationmark")
                     Text(message)
                         .font(.subheadline)
-                    Button(L10n.Error.errorRetry) { viewModel.load() }
+                    Button(L10n.Error.errorRetry) {
+                        Task {
+                            await viewModel.load()
+                        }
+                    }
                 }
                 .foregroundStyle(.secondary)
                 .padding(.top, 80)

@@ -26,29 +26,28 @@ public final class TVDetailViewModel: ObservableObject {
         self.useCase = useCase
     }
 
-    public func load() {
-        Task {
-            self.tvDetailState.state = .loading
-            do {
-                let input = DetailInput(id: id, language: language)
-                async let fetchDetail = self.useCase.fetchDetail(input)
-                async let fetchCredits = self.useCase.fetchCredits(input)
-                async let fetchVideos = self.useCase.fetchVideos(input)
-                async let fetchSimilars = self.useCase.fetchSimilars(input)
+    public func load() async {
+        self.tvDetailState.state = .loading
+        do {
+            let input = DetailInput(id: id, language: language)
+            async let fetchDetail = self.useCase.fetchDetail(input)
+            async let fetchCredits = self.useCase.fetchCredits(input)
+            async let fetchVideos = self.useCase.fetchVideos(input)
+            async let fetchSimilars = self.useCase.fetchSimilars(input)
 
-                let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
-                let adapter = TVHeaderAdapter(info: detail)
+            let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
+            let adapter = TVHeaderAdapter(info: detail)
 
-                self.tvDetailState.adater = adapter
-                self.tvDetailState.credits = credits
-                self.tvDetailState.videos = videos
-                self.tvDetailState.similars = similars
+            self.tvDetailState.adater = adapter
+            self.tvDetailState.credits = credits
+            self.tvDetailState.videos = videos
+            self.tvDetailState.similars = similars
 
-                self.tvDetailState.state = .loaded
-                print("TVDetailViewModel State changed to:", self.tvDetailState.state)
-            } catch {
-                self.tvDetailState.state = .failed("TVDetailViewModel: \(error.localizedDescription)")
-            }
+            self.tvDetailState.state = .loaded
+            print("TVDetailViewModel State changed to:", self.tvDetailState.state)
+        } catch {
+            let error = error as NSError
+            self.tvDetailState.state = .failed("TVDetailViewModel: \(error.code)")
         }
     }
 

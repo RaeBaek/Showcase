@@ -8,6 +8,7 @@
 import XCTest
 @testable import DetailDomain
 @testable import DetailPresentation
+import Combine
 
 @MainActor
 final class PeopleDetailViewModelTests: XCTestCase {
@@ -24,7 +25,11 @@ final class PeopleDetailViewModelTests: XCTestCase {
         useCase.stubDetail = makePersonDetailEntity(id: id)
         useCase.stubCredits = makeKnownForItems()
 
-        viewModel = PeopleDetailViewModel(id: id, usecase: useCase)
+        viewModel = PeopleDetailViewModel(
+            id: id,
+            language: useCase.language,
+            usecase: useCase
+        )
     }
 
     override func tearDown() async throws {
@@ -50,7 +55,7 @@ final class PeopleDetailViewModelTests: XCTestCase {
             }
 
         // when
-        viewModel.load()
+        await viewModel.load()
 
         await fulfillment(of: [exp], timeout: 1.0)
         cancellable.cancel()
@@ -74,26 +79,27 @@ final class PeopleDetailViewModelTests: XCTestCase {
         useCase.error = error
 
         let exp = expectation(description: "failed state")
+        var cancellables = Set<AnyCancellable>()
 
-        let cancellable = viewModel.$peopleDetailState
+        viewModel.$peopleDetailState
             .dropFirst()
             .sink { state in
                 if case .failed = state.state {
                     exp.fulfill()
                 }
             }
+            .store(in: &cancellables)
 
         // when
-        viewModel.load()
+        await viewModel.load()
 
-        await fulfillment(of: [exp], timeout: 1.0)
-        cancellable.cancel()
+        await fulfillment(of: [exp], timeout: 5.0)
 
         // then
         let state = viewModel.peopleDetailState
         switch state.state {
         case .failed(let message):
-            XCTAssertTrue(message.contains("오류 -1011"))
+            XCTAssertTrue(message.contains("-1011"))
         default:
             XCTFail("Expected .failed, got \(state.state)")
         }

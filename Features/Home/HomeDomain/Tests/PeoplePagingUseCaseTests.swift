@@ -29,7 +29,10 @@ final class PeoplePagingUseCaseTests: XCTestCase {
             totalPages: 2,
             totalResults: 20
         )
-        let usecase = PeoplePagingUseCase(repository: repo)
+        let usecase = PeoplePagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         let exp = expectation(description: "first page published")
         var latestCount = -1
@@ -70,7 +73,10 @@ final class PeoplePagingUseCaseTests: XCTestCase {
             totalPages: 2,
             totalResults: 20
         )
-        let usecase = PeoplePagingUseCase(repository: repo)
+        let usecase = PeoplePagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         try await usecase.loadFirstPeople()
         let trigger = usecase.items[usecase.items.count - 3]
@@ -107,7 +113,10 @@ final class PeoplePagingUseCaseTests: XCTestCase {
         // given
         let repo = MockRepository()
         repo.peopleError = Stub.boom
-        let usecase = PeoplePagingUseCase(repository: repo)
+        let usecase = PeoplePagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
 
         // when
         do {
@@ -134,7 +143,10 @@ final class PeoplePagingUseCaseTests: XCTestCase {
             totalPages: 1,
             totalResults: 10
         )
-        let usecase = PeoplePagingUseCase(repository: repo)
+        let usecase = PeoplePagingUseCase(
+            repository: repo,
+            language: "ko-KR"
+        )
         try await usecase.loadFirstPeople()
 
         // when

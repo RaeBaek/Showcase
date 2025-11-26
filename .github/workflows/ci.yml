@@ -3,29 +3,89 @@ name: iOS CI
 on:
   pull_request:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, test/** ]
 
 jobs:
   build-test:
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Bundler
-        run: gem install bundler
+      # 1) Install dependencies (Fastlane)
+      - name: Install Dependencies
+        run: |
+          gem install bundler
+          bundle install
 
-      - name: Install Fastlane
-        run: gem install fastlane
+      # 2) Install Tuist via Homebrew (가장 안정적!!)
+      - name: Install Tuist (via Homebrew)
+        run: |
+          brew tap tuist/tuist
+          brew install tuist
 
-      - name: Install Tuist
-        run: curl -Ls https://install.tuist.io | bash
+      # Install all Tuist dependencies (Plugins, SPM, helpers...)
+      - name: Tuist Install
+        run: tuist install
 
-      - name: Generate project
+      # 3) Verify Tuist installation
+#      - name: Verify Tuist
+#        run: tuist version
+
+      # Create xcconfig files from GitHub secrets
+      - name: Create XCConfig files
+        run: |
+            mkdir -p Configs
+
+            cat <<EOF > Configs/Debug-Dev.xcconfig
+            APP_ENV=${{ secrets.DEV_APP_ENV }}
+            TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}
+            TMDB_READ_ACCESS_TOKEN=${{ secrets.TMDB_READ_ACCESS_TOKEN }}
+            TMDB_BASE_URL_STRING=${{ secrets.TMDB_BASE_URL_STRING }}
+            EOF
+
+            cat <<EOF > Configs/Release-Prod.xcconfig
+            APP_ENV=${{ secrets.PROD_APP_ENV }}
+            TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}
+            TMDB_READ_ACCESS_TOKEN=${{ secrets.TMDB_READ_ACCESS_TOKEN }}
+            TMDB_BASE_URL_STRING=${{ secrets.TMDB_BASE_URL_STRING }}
+            EOF
+
+      # 4) Generate Xcode project via Tuist
+      - name: Generate Project
         run: tuist generate --no-open
 
-      - name: Run Tests (Fastlane)
-        run: fastlane test_ci
+#      - name: Debug xcodebuild settings
+#        run: |
+#            xcodebuild -showBuildSettings -workspace Showcase.xcworkspace -scheme App 2>&1 | tee xcodebuild_settings.log
+#            if [ $? -ne 0 ]; then
+#            echo "xcodebuild failed! Check the log file for details."
+#            exit 1
+#            fi
+#
+#      - name: Resolve Swift Packages (Pre-step) 📦
+#        run: xcodebuild -resolvePackageDependencies -workspace Showcase.xcworkspace -scheme App
 
+      # Resolve Swift Packages 단계
+      - name: Resolve Swift Packages (Pre-step) 📦
+        run: xcodebuild -resolvePackageDependencies -workspace Showcase.xcworkspace -scheme Showcase-Workspace -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
+
+      # Debug xcodebuild settings 단계도 수정
+      - name: Debug xcodebuild settings
+        run: |
+            xcodebuild -showBuildSettings -workspace Showcase.xcworkspace -scheme Showcase-Workspace -destination 'platform=iOS Simulator,name=iPhone 16 Pro' 2>&1 | tee xcodebuild_settings.log
+            if [ $? -ne 0 ]; then
+            echo "xcodebuild failed! Check the log file for details."
+            exit 1
+            fi
+
+      # 5) Run tests
+      - name: Run Tests (Fastlane)
+        run: bundle exec fastlane test_ci
+        env:
+          FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 60
+          FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 6
+
+      # 6) Run build
       - name: Run Build (Fastlane)
-        run: fastlane build_ci
+        run: bundle exec fastlane build_ci

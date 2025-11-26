@@ -29,10 +29,11 @@ final class TVDetailUseCaseImplTests: XCTestCase {
     func test_fetchDetail_buildsInputWithGivenId_andKoreanLanguage() async throws {
         // given
         let id: Int32 = 950
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubDetail = makeTVDetailEntity(id: id)
 
         // when
-        _ = try await useCase.fetchDetail(id: id)
+        _ = try await useCase.fetchDetail(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.detailInputs.first)
@@ -48,7 +49,8 @@ final class TVDetailUseCaseImplTests: XCTestCase {
 
         // when / then
         do {
-            _ = try await useCase.fetchDetail(id: 1)
+            let detailInput = DetailInput(id: 1, language: "ko-KR")
+            _ = try await useCase.fetchDetail(detailInput)
             XCTFail("Expected error to be thrown")
         } catch let error {
             XCTAssertTrue(error is URLError)
@@ -59,10 +61,11 @@ final class TVDetailUseCaseImplTests: XCTestCase {
     func test_fetchCredits_buildsInputWithKoreanLanguage_andMapToCredit() async throws {
         // given
         let id: Int32 = 1050
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubCredits = makeCreditsEntity(id: id)
 
         // when
-        let result = try await useCase.fetchCredits(id: id)
+        let result = try await useCase.fetchCredits(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.creditsInputs.first)
@@ -78,10 +81,11 @@ final class TVDetailUseCaseImplTests: XCTestCase {
     func test_fetchVideos_buildsInputWithKoreanLanguage_andMapToVideoItemEntity() async throws {
         // given
         let id: Int32 = 1150
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubVideos = makeVideoEntity(id: id)
 
         // when
-        let result = try await useCase.fetchVideos(id: id)
+        let result = try await useCase.fetchVideos(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.videosInputs.first)
@@ -96,10 +100,11 @@ final class TVDetailUseCaseImplTests: XCTestCase {
     func test_fetchSimilar_buildsInputWithKoreanLanguage_andMapToSimilarMovieItemEntity() async throws {
         // given
         let id: Int32 = 1250
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubSimilars = makeSimilarEntity(id: id)
 
         // when
-        let result = try await useCase.fetchSimilars(id: id)
+        let result = try await useCase.fetchSimilars(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.similarsInputs.first)
