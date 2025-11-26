@@ -33,7 +33,7 @@ platform :ios do
   lane :test_ci do
     run_tests(
       workspace: "Showcase.xcworkspace",
-      scheme: "Showcase",
+      scheme: "App",
       destination: "platform=iOS Simulator,OS=latest,name=iPhone 15",
       clean: true
     )
@@ -43,7 +43,7 @@ platform :ios do
   lane :build_ci do
     build_app(
       workspace: "Showcase.xcworkspace",
-      scheme: "Showcase",
+      scheme: "App",
       clean: true
     )
   end
