@@ -55,16 +55,29 @@ jobs:
       - name: Generate Project
         run: tuist generate --no-open
 
+#      - name: Debug xcodebuild settings
+#        run: |
+#            xcodebuild -showBuildSettings -workspace Showcase.xcworkspace -scheme App 2>&1 | tee xcodebuild_settings.log
+#            if [ $? -ne 0 ]; then
+#            echo "xcodebuild failed! Check the log file for details."
+#            exit 1
+#            fi
+#
+#      - name: Resolve Swift Packages (Pre-step) 📦
+#        run: xcodebuild -resolvePackageDependencies -workspace Showcase.xcworkspace -scheme App
+
+      # Resolve Swift Packages 단계
+      - name: Resolve Swift Packages (Pre-step) 📦
+        run: xcodebuild -resolvePackageDependencies -workspace Showcase.xcworkspace -scheme Showcase-Workspace -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
+
+      # Debug xcodebuild settings 단계도 수정
       - name: Debug xcodebuild settings
         run: |
-            xcodebuild -showBuildSettings -workspace Showcase.xcworkspace -scheme App 2>&1 | tee xcodebuild_settings.log
+            xcodebuild -showBuildSettings -workspace Showcase.xcworkspace -scheme Showcase-Workspace -destination 'platform=iOS Simulator,name=iPhone 16 Pro' 2>&1 | tee xcodebuild_settings.log
             if [ $? -ne 0 ]; then
             echo "xcodebuild failed! Check the log file for details."
             exit 1
             fi
-
-      - name: Resolve Swift Packages (Pre-step) 📦
-        run: xcodebuild -resolvePackageDependencies -workspace Showcase.xcworkspace -scheme App
 
       # 5) Run tests
       - name: Run Tests (Fastlane)
