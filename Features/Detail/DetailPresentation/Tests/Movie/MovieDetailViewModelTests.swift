@@ -26,7 +26,11 @@ final class MovieDetailViewModelTests: XCTestCase {
         useCase.stubVideos = makeVideoItemEntitys()
         useCase.stubSimilar = makeSimilarItemEntitys()
 
-        viewModel = MovieDetailViewModel(id: id, useCase: useCase)
+        viewModel = MovieDetailViewModel(
+            id: id,
+            language: useCase.language,
+            useCase: useCase
+        )
     }
 
     override func tearDown() async throws {

@@ -28,11 +28,11 @@ final class BasePagingUseCaseTests: XCTestCase {
         pages: [Int: PopularPage<DummyEntity>],
         fetchDelayNanos: UInt64 = 0,
         callCounter: Counter
-    ) -> BasePagingUseCase<DummyEntity> {
-        return BasePagingUseCase<DummyEntity>(fetch: { next in
+    ) -> MockPagingUseCase<DummyEntity> {
+        return MockPagingUseCase<DummyEntity>(fetch: { next in
             callCounter.value += 1
             if fetchDelayNanos > 0 { try await Task.sleep(nanoseconds: fetchDelayNanos) }
-            guard let page = pages[next] else { throw URLError(.badServerResponse) }
+            guard let page = pages[next.page] else { throw URLError(.badServerResponse) }
             return page
         })
     }
@@ -186,7 +186,7 @@ final class BasePagingUseCaseTests: XCTestCase {
     func test_errorOnLoadFirst_isPropagated_andStateRolledBack() async throws {
         // given: page 1 throws
         let counter = Counter()
-        let uc = BasePagingUseCase<DummyEntity>(fetch: { _ in
+        let uc = MockPagingUseCase<DummyEntity>(fetch: { _ in
             counter.value += 1
             throw URLError(.timedOut)
         })
@@ -269,6 +269,12 @@ final class BasePagingUseCaseTests: XCTestCase {
         XCTAssertEqual(counter.value, 1)
         XCTAssertEqual(uc.page, 1)
         XCTAssertEqual(uc.items.count, 10)
+    }
+}
+
+private final class MockPagingUseCase<T: Identifiable>: BasePagingUseCase<T> where T.ID == Int {
+    override func makeParams(page: Int) -> HomeFeedInput {
+        return HomeFeedInput(page: page, language: Locale.current.identifier)
     }
 }
 

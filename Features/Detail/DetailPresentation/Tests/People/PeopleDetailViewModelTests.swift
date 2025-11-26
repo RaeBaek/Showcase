@@ -24,7 +24,11 @@ final class PeopleDetailViewModelTests: XCTestCase {
         useCase.stubDetail = makePersonDetailEntity(id: id)
         useCase.stubCredits = makeKnownForItems()
 
-        viewModel = PeopleDetailViewModel(id: id, usecase: useCase)
+        viewModel = PeopleDetailViewModel(
+            id: id,
+            language: useCase.language,
+            usecase: useCase
+        )
     }
 
     override func tearDown() async throws {

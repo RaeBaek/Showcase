@@ -70,5 +70,56 @@ let project = Project(
             sources: ["Tests/**"],
             dependencies: [.target(name: "App")]
         ),
+    ],
+    schemes: [
+        .scheme(
+            name: "App",
+            shared: true,  // CI에서 사용하려면 반드시 true
+            buildAction: .buildAction(targets: ["App"]),
+            testAction: .targets(
+                [
+                    "AppTests",
+                    "NetworkLiveTests",
+                    "MovieDetailRepositoryImplTests",
+                    "PeopleDetailRepositoryImplTests",
+                    "TVDetailRepositoryImplTests",
+                    "MovieDetailUseCaseImplTests",
+                    "PeopleDetailUseCaseImplTests",
+                    "TVDetailUseCaseImplTests",
+                    "MovieDetailViewModelTests",
+                    "PeopleDetailViewModelTests",
+                    "TVDetailViewModelTests",
+                    "HomeRepositoryImplTests",
+                    "BasePagingUseCaseTests",
+                    "MoviesPagingUseCaseTests",
+                    "PeoplePagingUseCaseTests",
+                    "TVsPagingUseCaseTests"
+                    "HomeViewModelTests",
+                    "StreamingDataTests",
+                    "StreamingDomainTests",
+                    "StreamingPresentationTests"
+                ],
+                configuration: .debug,
+                options: .options(
+                    coverage: true,
+                    codeCoverageTargets: [
+                        "App",
+                        "NetworkLive",
+                        "DetailData",
+                        "DetailDomain",
+                        "DetailPresentation",
+                        "HomeData",
+                        "HomeDomain",
+                        "HomePresentation",
+                        "StreamingData",
+                        "StreamingDomain",
+                        "StreamingPresentation"
+                    ])
+            ),
+            runAction: .runAction(configuration: .debug),
+            archiveAction: .archiveAction(configuration: .release),
+            profileAction: .profileAction(configuration: .debug),
+            analyzeAction: .analyzeAction(configuration: .debug)
+        )
     ]
 )
