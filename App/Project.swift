@@ -93,7 +93,7 @@ let project = Project(
                     "BasePagingUseCaseTests",
                     "MoviesPagingUseCaseTests",
                     "PeoplePagingUseCaseTests",
-                    "TVsPagingUseCaseTests"
+                    "TVsPagingUseCaseTests",
                     "HomeViewModelTests",
                     "StreamingDataTests",
                     "StreamingDomainTests",
