@@ -26,7 +26,7 @@ public final class TVDetailViewModel: ObservableObject {
         self.useCase = useCase
     }
 
-    public func load() {
+    public func load() async {
         Task {
             self.tvDetailState.state = .loading
             do {

@@ -57,7 +57,7 @@ final class MovieDetailViewModelTests: XCTestCase {
             }
 
         // when
-        viewModel.load()
+        await viewModel.load()
 
 //        await wait(for: [exp], timeout: 1.0)
         await fulfillment(of: [exp], timeout: 1.0)
@@ -101,7 +101,7 @@ final class MovieDetailViewModelTests: XCTestCase {
             .store(in: &cancellables)
 
         // when
-        viewModel.load()
+        await viewModel.load()
 
         await fulfillment(of: [exp], timeout: 5.0)
 

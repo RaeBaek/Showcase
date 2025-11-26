@@ -57,7 +57,7 @@ final class TVDetailViewModelTests: XCTestCase {
             }
 
         // when
-        viewModel.load()
+        await viewModel.load()
 
         await fulfillment(of: [exp], timeout: 1.0)
         cancellable.cancel()
@@ -99,7 +99,7 @@ final class TVDetailViewModelTests: XCTestCase {
             .store(in: &cancellables)
 
         // when
-        viewModel.load()
+        await viewModel.load()
 
         await fulfillment(of: [exp], timeout: 5.0)
 

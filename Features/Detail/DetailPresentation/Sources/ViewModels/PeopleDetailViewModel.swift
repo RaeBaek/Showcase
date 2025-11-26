@@ -26,7 +26,7 @@ public final class PeopleDetailViewModel: ObservableObject {
         self.usecase = usecase
     }
 
-    public func load() {
+    public func load() async {
         Task {
             self.peopleDetailState.state = .loading
             do {

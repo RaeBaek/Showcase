@@ -26,7 +26,7 @@ public final class MovieDetailViewModel: ObservableObject {
         self.useCase = useCase
     }
 
-    public func load() {
+    public func load() async {
         Task {
             self.movieDetailState.state = .loading
             do {
