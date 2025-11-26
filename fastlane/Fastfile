@@ -29,13 +29,10 @@
 default_platform(:ios)
 
 platform :ios do
-  ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "60"
-  ENV["FASTLANE_XCODEBUILD_SETTINGS_RETRIES"] = "6"
-
   # 테스트 전용 lane
   lane :test_ci do
     run_tests(
-      workspace: "Showcase.xcworkspace",
+      project: "Showcase.xcodeproj",
       scheme: "App",
       destination: "platform=iOS Simulator,name=iPhone 15,OS=17.5",
       clean: true
@@ -45,7 +42,7 @@ platform :ios do
   # 빌드 전용 lane
   lane :build_ci do
     build_app(
-      workspace: "Showcase.xcworkspace",
+      project: "Showcase.xcodeproj",
       scheme: "App",
       clean: true
     )
