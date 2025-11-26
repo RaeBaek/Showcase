@@ -33,7 +33,7 @@ platform :ios do
     run_tests(
       workspace: "Showcase.xcworkspace",
       scheme: "App",
-      destination: "platform=iOS Simulator,name=iPhone 15,OS=17.5",
+      destination: "platform=iOS Simulator,name=iPhone 15",
       clean: true
     )
   end

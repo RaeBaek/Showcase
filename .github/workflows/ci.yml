@@ -63,6 +63,9 @@ jobs:
             exit 1
             fi
 
+      - name: Resolve Swift Packages (Pre-step) 📦
+        run: xcodebuild -resolvePackageDependencies -workspace Showcase.xcworkspace -scheme App
+
       # 5) Run tests
       - name: Run Tests (Fastlane)
         run: bundle exec fastlane test_ci
