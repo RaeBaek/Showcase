@@ -55,6 +55,14 @@ jobs:
       - name: Generate Project
         run: tuist generate --no-open
 
+        - name: Debug xcodebuild settings
+        run: |
+            xcodebuild -showBuildSettings -workspace Showcase.xcworkspace -scheme App 2>&1 | tee xcodebuild_settings.log
+            if [ $? -ne 0 ]; then
+            echo "xcodebuild failed! Check the log file for details."
+            exit 1
+            fi
+
       # 5) Run tests
       - name: Run Tests (Fastlane)
         run: bundle exec fastlane test_ci
