@@ -29,10 +29,11 @@ final class PeopleDetailUseCaseImplTests: XCTestCase {
     func test_fetchDetail_buildInputWithGivenID_andKoreanLanguage() async throws {
         // given
         let id: Int32 = 650
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubPerson = makePersonEntity(id: id)
 
         // when
-        _ = try await useCase.fetchDetail(id: id)
+        _ = try await useCase.fetchDetail(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.detailInputs.first)
@@ -48,7 +49,8 @@ final class PeopleDetailUseCaseImplTests: XCTestCase {
 
         // when / then
         do {
-            _ = try await useCase.fetchDetail(id: 3)
+            let detailInput = DetailInput(id: 3, language: "ko-KR")
+            _ = try await useCase.fetchDetail(detailInput)
             XCTFail("Expected error to be thrown")
         } catch let error {
             XCTAssertTrue(error is URLError)
@@ -59,10 +61,11 @@ final class PeopleDetailUseCaseImplTests: XCTestCase {
     func test_fetchCredits_buildsInputWithKoreanLanguage_andMappingToKnownForItems() async throws {
         // given
         let id: Int32 = 750
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubPersonCombineCredits = makePersonCombineCreditsEntity(id: id)
 
         // when
-        let result = try await useCase.fetchCredits(id: id)
+        let result = try await useCase.fetchCredits(detailInput)
 
         print(result)
 
@@ -85,7 +88,8 @@ final class PeopleDetailUseCaseImplTests: XCTestCase {
 
         // when / then
         do {
-            _ = try await useCase.fetchCredits(id: 5)
+            let detailInput = DetailInput(id: 5, language: "ko-KR")
+            _ = try await useCase.fetchCredits(detailInput)
             XCTFail("Expected error to be thrown")
         } catch let error {
             XCTAssertTrue(error is URLError)

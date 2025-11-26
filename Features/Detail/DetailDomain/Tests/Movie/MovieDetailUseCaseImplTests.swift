@@ -29,10 +29,11 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
     func test_fetchDetail_buildsInputWithGivenId_andKoreanLanguage() async throws {
         // given
         let id: Int32 = 150
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubDetail = makeMovieDetailEntity(id: id)
 
         // when
-        _ = try await useCase.fetchDetail(id: id)
+        _ = try await useCase.fetchDetail(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.detailInputs.first)
@@ -48,7 +49,8 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
 
         // when / then
         do {
-            _ = try await useCase.fetchDetail(id: 1)
+            let detailInput = DetailInput(id: 1, language: "ko-KR")
+            _ = try await useCase.fetchDetail(detailInput)
             XCTFail("Expected error to be thrown")
         } catch let error {
             XCTAssertTrue(error is URLError)
@@ -59,10 +61,11 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
     func test_fetchCredits_bulidsInputWithKoreanLanguage_andFlattensCastAndCrew() async throws {
         // given
         let id: Int32 = 250
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubCredits = makeCreditsEntity(id: id)
 
         // when
-        let result = try await useCase.fetchCredits(id: id)
+        let result = try await useCase.fetchCredits(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.creditsInputs.first)
@@ -78,10 +81,11 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
     func test_fetchVideos_buildsInputWithKoreanLanguage_andMoreResults() async throws {
         // given
         let id: Int32 = 550
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubVideos = makeVideoEntity(id: id)
 
         // when
-        let result = try await useCase.fetchVideos(id: id)
+        let result = try await useCase.fetchVideos(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.videosInputs.first)
@@ -97,10 +101,11 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
     func test_fetchSimilar_buildsInputWithKoreanLanguage_andMapsResults() async throws {
         // given
         let id: Int32 = 650
+        let detailInput = DetailInput(id: id, language: "ko-KR")
         repository.stubSimilars = makeSimilarEntity(id: id)
 
         // when
-        let result = try await useCase.fetchSimilar(id: id)
+        let result = try await useCase.fetchSimilar(detailInput)
 
         // then
         let input = try XCTUnwrap(repository.similarsInputs.first)
