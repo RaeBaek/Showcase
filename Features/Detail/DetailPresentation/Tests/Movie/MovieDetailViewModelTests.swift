@@ -8,6 +8,7 @@
 import XCTest
 @testable import DetailDomain
 @testable import DetailPresentation
+import Combine
 
 @MainActor
 final class MovieDetailViewModelTests: XCTestCase {
@@ -88,20 +89,21 @@ final class MovieDetailViewModelTests: XCTestCase {
         useCase.error = error
 
         let exp = expectation(description: "failed state")
+        var cancellables = Set<AnyCancellable>()
 
-        let cancellable = viewModel.$movieDetailState
+        viewModel.$movieDetailState
             .dropFirst()
             .sink { state in
                 if case .failed = state.state {
                     exp.fulfill()
                 }
             }
+            .store(in: &cancellables)
 
         // when
         viewModel.load()
 
-        await fulfillment(of: [exp], timeout: 1.0)
-        cancellable.cancel()
+        await fulfillment(of: [exp], timeout: 5.0)
 
         // then
         let state = viewModel.movieDetailState

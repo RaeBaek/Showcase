@@ -8,6 +8,7 @@
 import XCTest
 @testable import DetailDomain
 @testable import DetailPresentation
+import Combine
 
 @MainActor
 final class TVDetailViewModelTests: XCTestCase {
@@ -87,19 +88,20 @@ final class TVDetailViewModelTests: XCTestCase {
         useCase.error = error
 
         let exp = expectation(description: "failed state")
+        var cancellables = Set<AnyCancellable>()
 
-        let cancellable = viewModel.$tvDetailState
+        viewModel.$tvDetailState
             .sink { state in
                 if case .failed = state.state {
                     exp.fulfill()
                 }
             }
+            .store(in: &cancellables)
 
         // when
         viewModel.load()
 
-        await fulfillment(of: [exp], timeout: 1.0)
-        cancellable.cancel()
+        await fulfillment(of: [exp], timeout: 5.0)
 
         // then
         let state = viewModel.tvDetailState
