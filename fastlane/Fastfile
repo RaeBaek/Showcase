@@ -34,7 +34,8 @@ platform :ios do
       workspace: "Showcase.xcworkspace",
       scheme: "Showcase-Workspace",
       destination: "platform=iOS Simulator,name=iPhone 16 Pro",
-      clean: true
+      clean: true,
+      code_coverage: true
     )
   end
 
