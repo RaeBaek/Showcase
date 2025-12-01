@@ -62,10 +62,10 @@ let project = Project(
         ),
         // Unit Tests
         .target(
-            name: "ShowcaseTests",
+            name: "AppTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "com.raehoon.ShowcaseTests",
+            bundleId: "com.raehoon.Showcase.tests",
             infoPlist: .default,
             sources: ["Tests/**"],
             dependencies: [.target(name: "App")]
@@ -77,28 +77,7 @@ let project = Project(
             shared: true,  // CI에서 사용하려면 반드시 true
             buildAction: .buildAction(targets: ["App"]),
             testAction: .targets(
-                [
-                    "AppTests",
-                    "NetworkLiveTests",
-                    "MovieDetailRepositoryImplTests",
-                    "PeopleDetailRepositoryImplTests",
-                    "TVDetailRepositoryImplTests",
-                    "MovieDetailUseCaseImplTests",
-                    "PeopleDetailUseCaseImplTests",
-                    "TVDetailUseCaseImplTests",
-                    "MovieDetailViewModelTests",
-                    "PeopleDetailViewModelTests",
-                    "TVDetailViewModelTests",
-                    "HomeRepositoryImplTests",
-                    "BasePagingUseCaseTests",
-                    "MoviesPagingUseCaseTests",
-                    "PeoplePagingUseCaseTests",
-                    "TVsPagingUseCaseTests",
-                    "HomeViewModelTests",
-                    "StreamingDataTests",
-                    "StreamingDomainTests",
-                    "StreamingPresentationTests"
-                ],
+                ["AppTests"],
                 configuration: .debug,
                 options: .options(
                     coverage: true,
