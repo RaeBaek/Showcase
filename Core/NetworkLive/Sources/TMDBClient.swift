@@ -35,11 +35,26 @@ public class TMDBClient: HTTPClient {
         self.baseUrl = url
     }
 
-    public func request<T: Decodable>(_ path: String, query: [URLQueryItem] = []) async throws -> T {
-        var components = URLComponents(url: baseUrl.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
-        components.queryItems = components.queryItems.map { $0 + query } ?? query
+    public func request<T: Decodable>(
+        _ path: String,
+        query: [URLQueryItem] = []
+    ) async throws -> T {
 
-        var request = URLRequest(url: components.url!)
+        // URL 구성 실패
+        guard var components = URLComponents(
+            url: baseUrl.appendingPathComponent(path),
+            resolvingAgainstBaseURL: false
+        ) else {
+            throw NetworkError.invalidURL
+        }
+
+        components.queryItems = (components.queryItems ?? []) + query
+
+        guard let url = components.url else {
+            throw NetworkError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.timeoutInterval = 10
         request.allHTTPHeaderFields = [
@@ -52,13 +67,21 @@ public class TMDBClient: HTTPClient {
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
 
-            guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-                throw URLError(.badServerResponse)
+            guard let http = response as? HTTPURLResponse else {
+                throw NetworkError.invalidResponse
             }
-            return try JSONDecoder().decode(T.self, from: data)
-        } catch let error {
-            print("request 메서드 에러: \(error)")
-            throw error
+
+            guard (200..<300).contains(http.statusCode) else {
+                throw NetworkError.statusCode(http.statusCode)
+            }
+
+            do {
+                return try JSONDecoder().decode(T.self, from: data)
+            } catch {
+                throw NetworkError.decodingError(error)
+            }
+        } catch {
+            throw NetworkError.underlying(error)
         }
     }
 }

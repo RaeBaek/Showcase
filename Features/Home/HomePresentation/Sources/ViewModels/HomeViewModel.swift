@@ -52,8 +52,10 @@ public final class HomeViewModel: ObservableObject {
             try await self.moviesUsecase.loadFirst()
             try await self.peopleUsecase.loadFirst()
             try await self.tvsUsecase.loadFirst()
+        } catch let error as HomeDomainError {
+            self.errorMessage = mapDomainErrorToMessage(error)
         } catch {
-            errorMessage = "데이터를 불러오지 못했어요. 잠시 후 다시 시도해주세요."
+            self.errorMessage = "알 수 없는 오류가 발생했습니다."
         }
     }
 
@@ -67,5 +69,36 @@ public final class HomeViewModel: ObservableObject {
 
     func onTVAppear(_ item: PopularTVEntity) async {
         await tvsUsecase.loadMoreIfNeeded(currentItem: item, threshold: 5)
+    }
+
+    private func mapDomainErrorToMessage(_ error: HomeDomainError) -> String {
+        switch error {
+        case .network:
+            return "인터넷 연결이 불안정합니다. 네트워크 상태를 확인해주세요."
+
+        case .timeout:
+            return "응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요."
+
+        case .unauthorized:
+            return "접근 권한이 없습니다."
+
+        case .forbidden:
+            return "요청이 거부되었어요."
+
+        case .notFound:
+            return "요청한 데이터를 찾을 수 없습니다."
+
+        case .tooManyRequests:
+            return "요청이 너무 많습니다. 잠시 후 다시 시도해주세요."
+
+        case .serverError:
+            return "서버에 문제가 발생했습니다. 잠시 뒤 다시 시도해주세요."
+
+        case .decoding:
+            return "데이터 처리 중 오류가 발생했어요."
+
+        case .unknown:
+            return "알 수 없는 오류가 발생했어요."
+        }
     }
 }
