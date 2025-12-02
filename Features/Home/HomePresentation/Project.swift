@@ -31,6 +31,7 @@ let project = Project(
             dependencies: [
                 .project(target: "Localization", path: "../../../Core/Localization"),
                 .project(target: "NavigationInterface", path: "../../../Core/NavigationInterface"),
+                .project(target: "PresentationInterface", path: "../../../Interface/PresentationInterface"),
                 .project(target: "HomeDomain", path: "../HomeDomain"),
                 .external(name: "Kingfisher", condition: .none)
             ]

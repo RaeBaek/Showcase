@@ -9,8 +9,8 @@ let project = Project(
             "CODE_SIGN_STYLE": "Automatic"
         ],
         configurations: [
-            .debug(name: .debug, xcconfig: "../Configs/Debug-Dev.xcconfig"),
-            .release(name: .release, xcconfig: "../Configs/Release-Prod.xcconfig")
+            .debug(name: .debug, xcconfig: "../../Configs/Debug-Dev.xcconfig"),
+            .release(name: .release, xcconfig: "../../Configs/Release-Prod.xcconfig")
         ]
     ),
     targets: [

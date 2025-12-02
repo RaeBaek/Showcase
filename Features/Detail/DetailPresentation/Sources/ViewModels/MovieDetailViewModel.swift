@@ -6,6 +6,9 @@
 //
 
 import Foundation
+
+import PresentationInterface
+
 import DetailDomain
 
 @MainActor
@@ -27,42 +30,36 @@ public final class MovieDetailViewModel: ObservableObject {
     }
 
     public func load() async {
-        Task {
-            self.movieDetailState.state = .loading
-            do {
-                let input = DetailInput(id: id, language: language)
-                async let fetchDetail = self.useCase.fetchDetail(input)
-                async let fetchCredits = useCase.fetchCredits(input)
-                async let fetchVideos = self.useCase.fetchVideos(input)
-                async let fetchSimilars = self.useCase.fetchSimilar(input)
+        self.movieDetailState.state = .loading
 
-                let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
-                let adapter = MovieHeaderAdapter(info: detail)
+        do {
+            let input = DetailInput(id: id, language: language)
 
-                self.movieDetailState.adapter = adapter
-                self.movieDetailState.credits = credits
-                self.movieDetailState.videos = videos
-                self.movieDetailState.similars = similars
+            async let detailTask = self.useCase.fetchDetail(input)
+            async let creditsTask = self.useCase.fetchCredits(input)
+            async let videosTask = self.useCase.fetchVideos(input)
+            async let similarTask = self.useCase.fetchSimilar(input)
 
-                self.movieDetailState.state = .loaded
-                print("MovieDetailViewModel State changed to:", self.movieDetailState.state)
-            } catch {
-                let error = error as NSError
-                self.movieDetailState.state = .failed("MovieDetailViewModel: \(error.code)")
-            }
+            let (detail, credits, videos, similars) = try await (detailTask, creditsTask, videosTask, similarTask)
+
+            let adapter = MovieHeaderAdapter(info: detail)
+
+            self.movieDetailState.adapter = adapter
+            self.movieDetailState.credits = credits
+            self.movieDetailState.videos = videos
+            self.movieDetailState.similars = similars
+
+            self.movieDetailState.state = .loaded
+        } catch let domainError as DetailDomainError {
+            self.movieDetailState.state = .failed(DomainErrorMessageMapper.message(for: domainError))
+        } catch {
+            self.movieDetailState.state = .failed("알 수 없는 오류가 발생했어요.")
         }
     }
 
     public func toggleOverviewExpanded() {
         movieDetailState.showFullOverview.toggle()
     }
-}
-
-enum LoadState: Equatable {
-    case idle
-    case loading
-    case loaded
-    case failed(String)
 }
 
 struct MovieDetailState {

@@ -1,7 +1,7 @@
 import ProjectDescription
 
 let project = Project(
-    name: "DataInterface",
+    name: "PresentationInterface",
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",
@@ -9,21 +9,20 @@ let project = Project(
             "CODE_SIGN_STYLE": "Automatic"
         ],
         configurations: [
-            .debug(name: .debug, xcconfig: "../Configs/Debug-Dev.xcconfig"),
-            .release(name: .release, xcconfig: "../Configs/Release-Prod.xcconfig")
+            .debug(name: .debug, xcconfig: "../../Configs/Debug-Dev.xcconfig"),
+            .release(name: .release, xcconfig: "../../Configs/Release-Prod.xcconfig")
         ]
     ),
     targets: [
         .target(
-            name: "DataInterface",
+            name: "PresentationInterface",
             destinations: .iOS,
             product: .framework,
-            bundleId: "com.raehoon.Showcase.DataInterface",
+            bundleId: "com.raehoon.Showcase.PresentationInterface",
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
             dependencies: [
-                .project(target: "DomainInterface", path: "../DomainInterface"),
-                .project(target: "NetworkInterface", path: "../Core/NetworkInterface"),
+                .project(target: "DomainInterface", path: "../DomainInterface")
             ]
         )
     ]
