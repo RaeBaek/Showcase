@@ -6,7 +6,10 @@
 //
 
 import Foundation
+
 import NetworkInterface
+import DataInterface
+
 import HomeDomain
 
 public final class HomeRepositoryImpl: HomeRepository {
@@ -58,7 +61,7 @@ public final class HomeRepositoryImpl: HomeRepository {
                 totalResults: dto.totalResults ?? items.count
             )
         } catch let netErr as NetworkError {
-            throw mapNetworkError(netErr)
+            throw NetworkErrorMapper.toDomain(netErr)
         } catch {
             throw HomeDomainError.unknown
         }
@@ -81,7 +84,7 @@ public final class HomeRepositoryImpl: HomeRepository {
                 totalResults: dto.totalResults ?? items.count
             )
         } catch let netErr as NetworkError {
-            throw mapNetworkError(netErr)
+            throw NetworkErrorMapper.toDomain(netErr)
         } catch {
             throw HomeDomainError.unknown
         }
@@ -104,41 +107,9 @@ public final class HomeRepositoryImpl: HomeRepository {
                 totalResults: dto.totalResults ?? items.count
             )
         } catch let netErr as NetworkError {
-            throw mapNetworkError(netErr)
+            throw NetworkErrorMapper.toDomain(netErr)
         } catch {
             throw HomeDomainError.unknown
-        }
-    }
-}
-
-private extension HomeRepositoryImpl {
-    func mapNetworkError(_ error: NetworkError) -> HomeDomainError {
-        switch error {
-        case .invalidURL: return .unknown
-        case .invalidResponse: return .serverError
-
-        case .statusCode(let code):
-            switch code {
-            case 401: return .unauthorized
-            case 403: return .forbidden
-            case 404: return .notFound
-            case 429: return .tooManyRequests
-            default: return .unknown
-            }
-
-        case .timeout: return .timeout
-        case .decodingError: return .decoding
-        case .missingAPIKey: return .unauthorized
-
-        case .underlying(let error):
-            if let urlError = error as? URLError {
-                switch urlError.code {
-                case .notConnectedToInternet: return .network
-                case .timedOut: return .timeout
-                default: return .network
-                }
-            }
-            return .unknown
         }
     }
 }

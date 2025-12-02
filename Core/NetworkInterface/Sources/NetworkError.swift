@@ -12,7 +12,7 @@ public enum NetworkError: Error {
     case invalidResponse
     case statusCode(Int)
     case decodingError(Error)
-    case timeout
     case underlying(Error)
+    case timeout
     case missingAPIKey
 }

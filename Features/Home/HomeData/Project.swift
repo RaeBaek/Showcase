@@ -30,6 +30,7 @@ let project = Project(
             sources: ["Sources/**"],
             dependencies: [
                 .project(target: "NetworkInterface", path: "../../../Core/NetworkInterface"),
+                .project(target: "DataInterface", path: "../../../DataInterface"),
                 .project(target: "HomeDomain", path: "../HomeDomain")
             ]
         ),
