@@ -5,10 +5,12 @@
 //  Created by 백래훈 on 11/12/25.
 //
 
+import Combine
 import XCTest
 @testable import DetailDomain
 @testable import DetailPresentation
-import Combine
+@testable import DomainInterface
+@testable import PresentationInterface
 
 @MainActor
 final class MovieDetailViewModelTests: XCTestCase {
@@ -110,7 +112,7 @@ final class MovieDetailViewModelTests: XCTestCase {
         switch state.state {
         case .failed(let message):
             print("메시지: \(message)")
-            XCTAssertTrue(message.contains("-2000"))
+            XCTAssertEqual(message, DomainErrorMessageMapper.message(for: DetailDomainError.unknown))
         default:
             XCTFail("Expected .failed, got \(state.state)")
         }

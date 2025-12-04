@@ -7,10 +7,10 @@
 
 import XCTest
 
-import NetworkInterface
-
+@testable import NetworkInterface
 @testable import HomeData
 @testable import HomeDomain
+@testable import DomainInterface
 
 final class HomeRepositoryImplTests: XCTestCase {
 
@@ -203,7 +203,7 @@ final class HomeRepositoryImplTests: XCTestCase {
             XCTFail("Expected to throw, but succeeded")
         } catch {
             // success: error propagated
-            XCTAssertTrue(error is StubError)
+            XCTAssertTrue(error is HomeDomainError)
         }
     }
 
@@ -219,7 +219,7 @@ final class HomeRepositoryImplTests: XCTestCase {
             let _ = try await repo.peoplePopularList(.init(page: 1, language: "ko-KR"))
             XCTFail("Expected to throw, but succeeded")
         } catch {
-            XCTAssertTrue(error is DecodingError)
+            XCTAssertTrue(error is HomeDomainError)
             print("Error: \(error)")
         }
     }

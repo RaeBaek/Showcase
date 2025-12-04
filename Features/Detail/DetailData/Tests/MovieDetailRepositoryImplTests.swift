@@ -8,6 +8,7 @@
 import XCTest
 @testable import DetailDomain
 @testable import DetailData
+@testable import DomainInterface
 
 final class MovieDetailRepositoryImplTests: XCTestCase {
 
@@ -59,7 +60,7 @@ final class MovieDetailRepositoryImplTests: XCTestCase {
             XCTAssertEqual(client.captured.first?.query.first?.name, "language")
             XCTAssertEqual(client.captured.first?.query.first?.value, "ko-KR")
             XCTAssertNil(client.typedDTOs["/movie/\(input.id)"])
-            XCTAssert(error is URLError)
+            XCTAssert(error is DetailDomainError)
         }
     }
 
@@ -82,7 +83,7 @@ final class MovieDetailRepositoryImplTests: XCTestCase {
             XCTAssertNotNil(client.typedDTOs["/movie/\(input.id)"])
             XCTAssertFalse(client.typedDTOs["/movie/\(input.id)"] is MovieDetailDTO)
             XCTAssertTrue(client.typedDTOs["/movie/\(input.id)"] is CreditsDTO)
-            XCTAssert(error is DecodingError)
+            XCTAssert(error is DetailDomainError)
         }
     }
 
@@ -153,7 +154,7 @@ final class MovieDetailRepositoryImplTests: XCTestCase {
             let _ = try await sut.fetchDetail(input)
             XCTFail("expected error")
         } catch let error {
-            XCTAssertTrue(error is URLError)
+            XCTAssertTrue(error is DetailDomainError)
             XCTAssertTrue(client.captured.isEmpty)
             XCTAssertTrue(client.typedDTOs.isEmpty)
         }

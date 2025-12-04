@@ -8,6 +8,7 @@
 import XCTest
 @testable import DetailDomain
 @testable import DetailData
+@testable import DomainInterface
 
 final class TVDetailRepositoryImplTests: XCTestCase {
 
@@ -118,7 +119,7 @@ final class TVDetailRepositoryImplTests: XCTestCase {
             XCTAssertEqual(client.captured.first?.query.first?.name, "language")
             XCTAssertEqual(client.captured.first?.query.first?.value, "ko-KR")
             XCTAssertNil(client.typedDTOs["/tv/\(input.id)"])
-            XCTAssert(error is URLError)
+            XCTAssert(error is DetailDomainError)
         }
     }
 
@@ -141,7 +142,7 @@ final class TVDetailRepositoryImplTests: XCTestCase {
             XCTAssertFalse(client.typedDTOs["/tv/\(input.id)/videos"] is CreditsDTO)
             XCTAssertFalse(client.typedDTOs["/tv/\(input.id)/videos"] is VideoDTO)
             XCTAssertTrue(client.typedDTOs["/tv/\(input.id)/videos"] is TVDetailDTO)
-            XCTAssert(error is DecodingError)
+            XCTAssert(error is DetailDomainError)
         }
     }
 
@@ -158,7 +159,7 @@ final class TVDetailRepositoryImplTests: XCTestCase {
             let _ = try await sut.fetchSimilars(input)
             XCTFail("expected error")
         } catch let error {
-            XCTAssertTrue(error is URLError)
+            XCTAssertTrue(error is DetailDomainError)
             XCTAssertTrue(client.captured.isEmpty)
             XCTAssertTrue(client.typedDTOs.isEmpty)
         }
