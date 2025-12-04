@@ -61,7 +61,7 @@ public struct HomeView: View {
                 Button {
                     onNavigate(.hlsDemo)
                 } label: {
-                    Image(systemName: "dot.radiowaves.left.and.right") // 라이브 느낌 아이콘
+                    Image(systemName: "dot.radiowaves.left.and.right")
                         .imageScale(.large)
                 }
                 .tint(.white)

@@ -6,6 +6,9 @@
 //
 
 import Foundation
+
+import PresentationInterface
+
 import DetailDomain
 
 @MainActor
@@ -27,24 +30,24 @@ public final class PeopleDetailViewModel: ObservableObject {
     }
 
     public func load() async {
-        Task {
-            self.peopleDetailState.state = .loading
-            do {
-                let input = DetailInput(id: id, language: language)
-                async let fetchDetail = self.usecase.fetchDetail(input)
-                async let fetchCredits = self.usecase.fetchCredits(input)
+        self.peopleDetailState.state = .loading
 
-                let (detail, credits) = try await (fetchDetail, fetchCredits)
+        do {
+            let input = DetailInput(id: id, language: language)
 
-                self.peopleDetailState.detail = detail
-                self.peopleDetailState.knownFors = credits
+            async let detailTask = self.usecase.fetchDetail(input)
+            async let creditsTask = self.usecase.fetchCredits(input)
 
-                self.peopleDetailState.state = .loaded
-                print("PersonDetailViewModel State changed to:", self.peopleDetailState.state)
-            } catch {
-                let nsError = error as NSError
-                self.peopleDetailState.state = .failed("PersonDetailViewModel: \(nsError.code)")
-            }
+            let (detail, credits) = try await (detailTask, creditsTask)
+
+            self.peopleDetailState.detail = detail
+            self.peopleDetailState.knownFors = credits
+
+            self.peopleDetailState.state = .loaded
+        } catch let domainError as DetailDomainError {
+            self.peopleDetailState.state = .failed(DomainErrorMessageMapper.message(for: domainError))
+        } catch {
+            self.peopleDetailState.state = .failed("알 수 없는 오류가 발생했어요.")
         }
     }
 

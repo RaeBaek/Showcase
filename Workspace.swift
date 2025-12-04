@@ -13,6 +13,7 @@ let workspace = Workspace(
         "App/**",
         "DesignSystem/**",
         "Core/**",
+        "Interface/**",
         "Features/**"
     ]
 )

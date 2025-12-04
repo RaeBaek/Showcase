@@ -15,5 +15,8 @@ public protocol HTTPClient {
     ///   - path: base URL 뒤에 붙을 경로 (예: "movie/popular")
     ///   - query: URL 쿼리 파라미터 (예: language, page 등)
     /// - Returns: 디코딩된 제네릭 타입 T
-    func request<T: Decodable>(_ path: String, query: [URLQueryItem]) async throws -> T
+    func request<T: Decodable>(
+        _ path: String,
+        query: [URLQueryItem]
+    ) async throws -> T
 }

@@ -32,6 +32,7 @@ let project = Project(
                 .project(target: "Localization", path: "../../../Core/Localization"),
                 .project(target: "DesignSystem", path: "../../../DesignSystem"),
                 .project(target: "NavigationInterface", path: "../../../Core/NavigationInterface"),
+                .project(target: "PresentationInterface", path: "../../../Interface/PresentationInterface"),
                 .project(target: "DetailDomain", path: "../DetailDomain"),
                 .external(name: "Kingfisher", condition: .none)
             ]

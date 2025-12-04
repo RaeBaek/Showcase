@@ -6,6 +6,9 @@
 //
 
 import Foundation
+
+import PresentationInterface
+
 import DetailDomain
 
 @MainActor
@@ -28,14 +31,17 @@ public final class TVDetailViewModel: ObservableObject {
 
     public func load() async {
         self.tvDetailState.state = .loading
+
         do {
             let input = DetailInput(id: id, language: language)
-            async let fetchDetail = self.useCase.fetchDetail(input)
-            async let fetchCredits = self.useCase.fetchCredits(input)
-            async let fetchVideos = self.useCase.fetchVideos(input)
-            async let fetchSimilars = self.useCase.fetchSimilars(input)
 
-            let (detail, credits, videos, similars) = try await (fetchDetail, fetchCredits, fetchVideos, fetchSimilars)
+            async let detailTask = self.useCase.fetchDetail(input)
+            async let creditsTask = self.useCase.fetchCredits(input)
+            async let videosTask = self.useCase.fetchVideos(input)
+            async let similarTask = self.useCase.fetchSimilars(input)
+
+            let (detail, credits, videos, similars) = try await (detailTask, creditsTask, videosTask, similarTask)
+
             let adapter = TVHeaderAdapter(info: detail)
 
             self.tvDetailState.adater = adapter
@@ -44,10 +50,10 @@ public final class TVDetailViewModel: ObservableObject {
             self.tvDetailState.similars = similars
 
             self.tvDetailState.state = .loaded
-            print("TVDetailViewModel State changed to:", self.tvDetailState.state)
+        } catch let domainError as DetailDomainError {
+            self.tvDetailState.state = .failed(DomainErrorMessageMapper.message(for: domainError))
         } catch {
-            let error = error as NSError
-            self.tvDetailState.state = .failed("TVDetailViewModel: \(error.code)")
+            self.tvDetailState.state = .failed("알 수 없는 오류가 발생했어요.")
         }
     }
 

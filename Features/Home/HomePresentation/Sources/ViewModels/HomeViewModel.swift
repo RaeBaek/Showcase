@@ -7,6 +7,9 @@
 
 import Foundation
 import Combine
+
+import PresentationInterface
+
 import HomeDomain
 
 @MainActor
@@ -52,8 +55,10 @@ public final class HomeViewModel: ObservableObject {
             try await self.moviesUsecase.loadFirst()
             try await self.peopleUsecase.loadFirst()
             try await self.tvsUsecase.loadFirst()
+        } catch let domainError as HomeDomainError {
+            self.errorMessage = DomainErrorMessageMapper.message(for: domainError)
         } catch {
-            errorMessage = "데이터를 불러오지 못했어요. 잠시 후 다시 시도해주세요."
+            self.errorMessage = "알 수 없는 오류가 발생했습니다."
         }
     }
 

@@ -8,6 +8,7 @@
 import XCTest
 @testable import DetailDomain
 @testable import DetailData
+@testable import DomainInterface
 
 final class PeopleDetailRepositoryImplTests: XCTestCase {
 
@@ -79,7 +80,7 @@ final class PeopleDetailRepositoryImplTests: XCTestCase {
             XCTAssertEqual(client.captured.first?.query.first?.value, "ko-KR")
             XCTAssertNil(client.typedDTOs["/person/\(input.id)"])
             XCTAssertNotNil(client.typedDTOs["/person/346"])
-            XCTAssert(error is URLError)
+            XCTAssert(error is DetailDomainError)
         }
     }
 
@@ -119,7 +120,7 @@ final class PeopleDetailRepositoryImplTests: XCTestCase {
             let _ = try await sut.fetchCredits(iuput)
             XCTFail("expected error")
         } catch let error {
-            XCTAssertTrue(error is URLError)
+            XCTAssertTrue(error is DetailDomainError)
             XCTAssertTrue(client.captured.isEmpty)
             XCTAssertTrue(client.typedDTOs.isEmpty)
         }
