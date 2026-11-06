@@ -23,6 +23,8 @@ jobs:
         run: |
           brew tap tuist/tuist
           brew install tuist
+      - name: Install Tuist via mise
+        uses: jdx/mise-action@v5
 
       # Install all Tuist dependencies (Plugins, SPM, helpers...)
       - name: Tuist Install
