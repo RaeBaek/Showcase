@@ -67,7 +67,7 @@ public struct TVDetailView: View {
                             )
                             if !viewModel.tvDetailState.credits.isEmpty {
                                 CreditSection(credits: viewModel.tvDetailState.credits) { credit in
-                                    onNavigate(.personDetail(id: Int32(credit.id)))
+                                    onNavigate(.personDetail(id: Int32(credit.personID)))
                                 }
                             }
                             if !viewModel.tvDetailState.videos.isEmpty {

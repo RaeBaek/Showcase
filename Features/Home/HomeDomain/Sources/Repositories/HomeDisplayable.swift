@@ -32,6 +32,6 @@ extension PopularPeopleEntity: HomeDisplayable {
 }
 
 extension PopularTVEntity: HomeDisplayable {
-    public var displayTitle: String { self.originalName ?? "" }
+    public var displayTitle: String { self.name ?? self.originalName ?? "" }
     public var imagePath: String? { self.posterPath }
 }

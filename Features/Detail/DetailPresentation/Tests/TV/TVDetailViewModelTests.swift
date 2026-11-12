@@ -159,13 +159,13 @@ private func makeTVDetailInfoEntity(id: Int32) -> TVDetailInfoEntity {
 private func makeCreditInfoEntitys() -> [CreditInfoEntity] {
     return [
         CreditInfoEntity(
-            id: 1,
+            personID: 1,
             name: "",
             role: nil,
             profileURL: nil
         ),
         CreditInfoEntity(
-            id: 2,
+            personID: 2,
             name: "",
             role: nil,
             profileURL: nil

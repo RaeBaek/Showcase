@@ -76,8 +76,11 @@ final class PeopleDetailUseCaseImplTests: XCTestCase {
         XCTAssertEqual(input.language, "ko-KR")
 
         XCTAssertEqual(result.count, 2)
-        XCTAssertEqual(result.first?.id, 1234)
-        XCTAssertEqual(result.last?.id, 2345)
+        XCTAssertEqual(result.first?.contentID, 1234)
+        XCTAssertEqual(result.last?.contentID, 1234)
+        XCTAssertEqual(result.first?.media, .movie)
+        XCTAssertEqual(result.last?.media, .tv)
+        XCTAssertNotEqual(result.first?.id, result.last?.id)
     }
 
     /// fetchCredits(), repository에서의 error가 정상적으로 전달되는지 테스트
@@ -155,7 +158,7 @@ private func makePersonCombineCreditsEntity(id: Int32) -> PersonCombineCreditsEn
                 adult: true,
                 backdropPath: nil,
                 genreIDs: nil,
-                id: 2345,
+                id: 1234,
                 originalLanguage: "",
                 overview: "",
                 popularity: 0,

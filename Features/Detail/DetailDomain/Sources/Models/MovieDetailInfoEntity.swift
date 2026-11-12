@@ -226,13 +226,19 @@ public struct MovieDetailInfoEntity: Identifiable {
 }
 
 public struct CreditInfoEntity: Identifiable {
-    public let id: Int
+    public let id: String
+    public let personID: Int
     public let name: String
     public let role: String?
     public let profileURL: URL?
 
-    public init(id: Int, name: String, role: String?, profileURL: URL?) {
-        self.id = id
+    public init(personID: Int, name: String, role: String?, profileURL: URL?, creditID: String? = nil) {
+        if let creditID, !creditID.isEmpty {
+            self.id = "credit:\(creditID)"
+        } else {
+            self.id = "person:\(personID):\(role ?? "")"
+        }
+        self.personID = personID
         self.name = name
         self.role = role
         self.profileURL = profileURL

@@ -28,7 +28,13 @@ extension PersonDetailEntity {
 }
 
 public struct KnownForItem: Identifiable, Hashable {
-    public let id: Int
+    public struct ID: Hashable {
+        let media: Media
+        let contentID: Int
+    }
+
+    public var id: ID { ID(media: media, contentID: contentID) }
+    public let contentID: Int
     public let title: String
     public let posterPath: String?
     public let year: String?
@@ -50,7 +56,7 @@ extension KnownForItem: HorizontalContentDisplayable {
     }
 }
 
-public enum Media {
+public enum Media: Hashable {
     case movie
     case tv
 }

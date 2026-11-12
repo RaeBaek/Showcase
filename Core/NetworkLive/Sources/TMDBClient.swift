@@ -64,8 +64,9 @@ public class TMDBClient: HTTPClient {
 
         print("request: \(request)")
 
+        let data: Data
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (responseData, response) = try await URLSession.shared.data(for: request)
 
             guard let http = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
@@ -75,13 +76,15 @@ public class TMDBClient: HTTPClient {
                 throw NetworkError.statusCode(http.statusCode)
             }
 
-            do {
-                return try JSONDecoder().decode(T.self, from: data)
-            } catch {
-                throw NetworkError.decodingError(error)
-            }
+            data = responseData
         } catch {
             throw NetworkError.underlying(error)
+        }
+
+        do {
+            return try JSONDecoder().decode(T.self, from: data)
+        } catch {
+            throw NetworkError.decodingError(error)
         }
     }
 }

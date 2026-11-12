@@ -67,8 +67,8 @@ final class PeopleDetailViewModelTests: XCTestCase {
         if case .loaded = state.state {
             XCTAssertNotNil(state.detail)
             XCTAssertEqual(state.knownFors?.count, useCase.stubCredits.count)
-            XCTAssertEqual(state.knownFors?.first?.id, 1)
-            XCTAssertEqual(state.knownFors?.last?.id, 2)
+            XCTAssertEqual(state.knownFors?.first?.contentID, 1)
+            XCTAssertEqual(state.knownFors?.last?.contentID, 2)
         } else {
             XCTFail("Expected state to be .loaded, got \(state.state)")
         }
@@ -139,14 +139,14 @@ private func makePersonDetailEntity(id: Int32) -> PersonDetailEntity {
 private func makeKnownForItems() -> [KnownForItem] {
     return [
         KnownForItem(
-            id: 1,
+            contentID: 1,
             title: "Item 1",
             posterPath: nil,
             year: nil,
             media: .movie
         ),
         KnownForItem(
-            id: 2,
+            contentID: 2,
             title: "Item 2",
             posterPath: nil,
             year: nil,

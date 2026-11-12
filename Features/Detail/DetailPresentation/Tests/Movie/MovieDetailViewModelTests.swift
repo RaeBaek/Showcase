@@ -150,13 +150,13 @@ private func makeMovieDetailInfoEntity(id: Int32) -> MovieDetailInfoEntity {
 private func makeCreditInfoEntitys() -> [CreditInfoEntity] {
     return [
         CreditInfoEntity(
-            id: 1,
+            personID: 1,
             name: "Actor 1",
             role: "Cast",
             profileURL: nil
         ),
         CreditInfoEntity(
-            id: 2,
+            personID: 2,
             name: "Actor 2",
             role: "Cast",
             profileURL: nil

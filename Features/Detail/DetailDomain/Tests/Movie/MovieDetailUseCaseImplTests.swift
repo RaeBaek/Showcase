@@ -73,8 +73,9 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
         XCTAssertEqual(input.language, "ko-KR")
 
         XCTAssertEqual(result.count, 2)
-        XCTAssertEqual(result.first?.id, 350)
-        XCTAssertEqual(result.last?.id, 450)
+        XCTAssertEqual(result.first?.personID, 350)
+        XCTAssertEqual(result.last?.personID, 350)
+        XCTAssertNotEqual(result.first?.id, result.last?.id)
     }
 
     /// fetchVideo(), DetailInput 체크와 result.map { toVideoItemEntity } 동작 확인
@@ -161,19 +162,19 @@ private func makeCreditsEntity(id: Int32) -> CreditsEntity {
             profilePath: "",
             castID: nil,
             character: nil,
-            creditID: "",
+            creditID: "cast-credit",
             order: nil
         )],
         crew: [CrewEntity(
             adult: false,
             gender: nil,
-            id: 450,
+            id: 350,
             knownForDepartment: nil,
             name: "",
             originalName: "",
             popularity: 0,
             profilePath: nil,
-            creditID: "",
+            creditID: "crew-credit",
             department: nil,
             job: nil
         )]
