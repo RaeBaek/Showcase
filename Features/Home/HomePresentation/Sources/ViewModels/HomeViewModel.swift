@@ -23,6 +23,10 @@ public final class HomeViewModel: ObservableObject {
     private let peopleUsecase: any PagingUseCase<PopularPeopleEntity>
     private let tvsUsecase: any PagingUseCase<PopularTVEntity>
 
+    private var didLoadMovies = false
+    private var didLoadPeople = false
+    private var didLoadTVs = false
+    private var isLoadingInitialSections = false
     private var cancellables = Set<AnyCancellable>()
 
     public init(
@@ -51,14 +55,47 @@ public final class HomeViewModel: ObservableObject {
     }
 
     func firstLoad() async {
+        guard !isLoadingInitialSections else { return }
+        isLoadingInitialSections = true
+        defer { isLoadingInitialSections = false }
+
+        var failureMessage: String?
+        if !didLoadMovies {
+            didLoadMovies = await loadInitialSection(errorMessage: &failureMessage) {
+                try await moviesUsecase.loadFirst()
+            }
+        }
+        if !didLoadPeople {
+            didLoadPeople = await loadInitialSection(errorMessage: &failureMessage) {
+                try await peopleUsecase.loadFirst()
+            }
+        }
+        if !didLoadTVs {
+            didLoadTVs = await loadInitialSection(errorMessage: &failureMessage) {
+                try await tvsUsecase.loadFirst()
+            }
+        }
+        if !Task.isCancelled {
+            errorMessage = failureMessage
+        }
+    }
+
+    private func loadInitialSection(
+        errorMessage: inout String?,
+        load: () async throws -> Void
+    ) async -> Bool {
         do {
-            try await self.moviesUsecase.loadFirst()
-            try await self.peopleUsecase.loadFirst()
-            try await self.tvsUsecase.loadFirst()
-        } catch let domainError as HomeDomainError {
-            self.errorMessage = DomainErrorMessageMapper.message(for: domainError)
+            try Task.checkCancellation()
+            try await load()
+            return true
         } catch {
-            self.errorMessage = "알 수 없는 오류가 발생했습니다."
+            guard !Task.isCancelled, errorMessage == nil else { return false }
+            if let domainError = error as? HomeDomainError {
+                errorMessage = DomainErrorMessageMapper.message(for: domainError)
+            } else {
+                errorMessage = "알 수 없는 오류가 발생했습니다."
+            }
+            return false
         }
     }
 

@@ -86,25 +86,19 @@ final class PeopleDetailRepositoryImplTests: XCTestCase {
 
     /// fetchCredits 메서드 및 path, query 일치 디코딩 실패 테스트
     func test_fetchCredits_buildCorrectPathAndQuery_andDecodingError() async throws {
-        // given
         let input = DetailInput(id: 234, language: "en-US")
-        client.typedDTOs["/person/\(input.id)/combined_credits"] = makePersonCombineCredits()
+        client.typedDTOs["/person/234/combined_credits"] = makePersonDTO()
 
-        // when / then
         do {
-            let _ = try await sut.fetchCredits(input)
-        } catch let error {
-            XCTFail("expected error")
-            XCTAssertNotNil(client.captured.first?.path)
-            XCTAssertNotEqual(client.captured.first?.path, "/person/547/combined_credits")
-            XCTAssertEqual(client.captured.first?.path, "/person/234/combined_credits")
-            XCTAssertEqual(client.captured.first?.query.first?.name, "language")
-            XCTAssertEqual(client.captured.first?.query.first?.value, "en-US")
-            XCTAssertNotNil(client.typedDTOs["/person/\(input.id)/combined_credits"])
-            XCTAssertFalse(client.typedDTOs["/person/\(input.id)/combined_credits"] is PersonDTO)
-            XCTAssertTrue(client.typedDTOs["/person/\(input.id)/combined_credits"] is PersonCombineCreditsDTO)
-            XCTAssert(error is DecodingError)
+            _ = try await sut.fetchCredits(input)
+            XCTFail("Expected DetailDomainError.decoding")
+        } catch {
+            XCTAssertEqual(error as? DetailDomainError, .decoding)
         }
+
+        XCTAssertEqual(client.captured.first?.path, "/person/234/combined_credits")
+        XCTAssertEqual(client.captured.first?.query.first?.name, "language")
+        XCTAssertEqual(client.captured.first?.query.first?.value, "en-US")
     }
 
     /// 임의의 httpError 에러 발생

@@ -8,7 +8,10 @@ import PackageDescription
         // Customize the product types for specific package product
         // Default is .staticFramework
         // productTypes: ["Alamofire": .framework,]
-        productTypes: ["Kingfisher": .framework]
+        productTypes: ["Kingfisher": .framework],
+        targetSettings: [
+            "Kingfisher": .settings(base: ["IPHONEOS_DEPLOYMENT_TARGET": "17.0"])
+        ]
     )
 #endif
 

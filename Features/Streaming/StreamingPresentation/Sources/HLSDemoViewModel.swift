@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVFAudio
 import AVKit
 
 import DesignSystem
@@ -66,14 +67,29 @@ public struct HLSDemoPage: View {
 public struct HLSPlayerView: UIViewControllerRepresentable {
     let url: URL
 
+    public final class Coordinator {
+        fileprivate var playbackTask: Task<Void, Never>?
+    }
+
+    public func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
     public func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
-        controller.player = AVPlayer(url: url)
-        controller.player?.play()
+        let player = AVPlayer(url: url)
+        controller.player = player
+        context.coordinator.playbackTask = Task {
+            await player.playStream()
+        }
         return controller
     }
 
     public func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) { }
+
+    public static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: Coordinator) {
+        coordinator.playbackTask?.cancel()
+    }
 }
 
 public struct LightHLSPlayerView: View {
@@ -86,16 +102,34 @@ public struct LightHLSPlayerView: View {
 
     public var body: some View {
         VideoPlayer(player: player)
-            .onAppear {
+            .task {
                 // 한 번만 생성
                 if player == nil {
                     player = AVPlayer(url: url)
                 }
-                player?.play()
+                await player?.playStream()
             }
             .onDisappear {
                 player?.pause()
             }
             .ignoresSafeArea()
+    }
+}
+
+private extension AVPlayer {
+    @MainActor
+    func playStream() async {
+        guard !Task.isCancelled else { return }
+
+        await Task.detached(priority: .userInitiated) {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
+            } catch {
+                print("⚠️ AVAudioSession 설정 실패: \(error)")
+            }
+        }.value
+
+        guard !Task.isCancelled else { return }
+        play()
     }
 }

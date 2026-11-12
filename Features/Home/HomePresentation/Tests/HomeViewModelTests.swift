@@ -91,8 +91,8 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertNil(viewModel.errorMessage)
     }
 
-    /// Movie 섹션 오류 전달 및 에러 메시지 방출 테스트
-    func test_firstLoad_error_setsErrorMessage_andStopFlow() async throws {
+    /// 실패한 섹션만 다시 요청하고 성공한 섹션은 유지하는지 확인
+    func test_firstLoad_retriesOnlyFailedSection() async throws {
         // given: movies에서 에러를 던지도록 설정
         enum Stub: Error { case boom }
 
@@ -127,9 +127,19 @@ final class HomeViewModelTests: XCTestCase {
         // when
         await viewModel.firstLoad()
 
-        // then: 에러 메시지가 설정되고, 최소한 movies는 비어있을 가능성이 높음
         XCTAssertNotNil(viewModel.errorMessage)
-        XCTAssertEqual(viewModel.movies.count, 0)
+        XCTAssertEqual(moviesUC.loadFirstCallCount, 1)
+        XCTAssertEqual(peopleUC.loadFirstCallCount, 1)
+        XCTAssertEqual(tvsUC.loadFirstCallCount, 1)
+
+        moviesUC.onLoadFirst = {}
+        await viewModel.firstLoad()
+        await viewModel.firstLoad()
+
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertEqual(moviesUC.loadFirstCallCount, 2)
+        XCTAssertEqual(peopleUC.loadFirstCallCount, 1)
+        XCTAssertEqual(tvsUC.loadFirstCallCount, 1)
     }
 
     /// Movie 섹션 다음 페이지가 있을 경우 섹션 업데이트 테스트

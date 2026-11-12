@@ -135,7 +135,7 @@ extension PersonCreditEntity {
         let poster = posterPath ?? backdropPath
 
         return KnownForItem(
-            id: id,
+            contentID: id,
             title: titleText,
             posterPath: poster,
             year: yearText,
@@ -149,7 +149,7 @@ extension Array where Element == PersonCreditEntity {
         // 매핑
         let mapped = self.compactMap { $0.toKnownForItem() }
         // 중복 제거
-        var seen = Set<Int>()
+        var seen = Set<KnownForItem.ID>()
         var unique: [KnownForItem] = []
         for item in mapped {
             if seen.insert(item.id).inserted {

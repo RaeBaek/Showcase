@@ -30,7 +30,8 @@ final class MockHTTPClient: HTTPClient {
         }
 
         guard let typed = value as? T else {
-            throw DecodingError.typeMismatch(T.self, DecodingError.Context(codingPath: [], debugDescription: "Failed to decode response for path \(path)"))
+            let context = DecodingError.Context(codingPath: [], debugDescription: "Failed to decode response for path \(path)")
+            throw NetworkError.decodingError(DecodingError.typeMismatch(T.self, context))
         }
 
         return typed

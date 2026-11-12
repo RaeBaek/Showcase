@@ -13,6 +13,7 @@ import HomeDomain
 
 public struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
+    @State private var retryCount = 0
     private let onNavigate: (Route) -> Void
 
     public init(
@@ -27,7 +28,7 @@ public struct HomeView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 24) {
                 SectionView<PopularMovieEntity>(
-                    title: "🎬 \(L10n.Home.sectionMovies)",
+                    title: L10n.Home.sectionMovies,
                     items: viewModel.movies
                 ) { item in
                     Task { await viewModel.onMovieAppear(item) }
@@ -36,7 +37,7 @@ public struct HomeView: View {
                 }
 
                 SectionView<PopularPeopleEntity>(
-                    title: "🧑‍🤝‍🧑 \(L10n.Home.sectionPeople)",
+                    title: L10n.Home.sectionPeople,
                     items: viewModel.people
                 ) { item in
                     Task { await viewModel.onPeopleAppear(item) }
@@ -45,7 +46,7 @@ public struct HomeView: View {
                 }
 
                 SectionView<PopularTVEntity>(
-                    title: "📺 \(L10n.Home.sectionTvs)",
+                    title: L10n.Home.sectionTvs,
                     items: viewModel.tvs
                 ) { item in
                     Task { await viewModel.onTVAppear(item) }
@@ -67,15 +68,17 @@ public struct HomeView: View {
                 .tint(.white)
             }
         }
-        .task {
-            if viewModel.movies.isEmpty && viewModel.people.isEmpty && viewModel.tvs.isEmpty {
-                await viewModel.firstLoad()
-            }
+        .task(id: retryCount) {
+            await viewModel.firstLoad()
         }
-        .alert("에러", isPresented: .constant(viewModel.errorMessage != nil)) {
-            Button("닫기") {
-                viewModel.errorMessage = nil
+        .alert("에러", isPresented: Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.errorMessage = nil } }
+        )) {
+            Button("다시 시도") {
+                retryCount += 1
             }
+            Button("닫기", role: .cancel) { }
         } message: {
             Text(viewModel.errorMessage ?? "")
         }

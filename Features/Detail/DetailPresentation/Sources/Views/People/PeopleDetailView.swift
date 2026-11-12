@@ -71,9 +71,9 @@ public struct PeopleDetailView: View {
                                 KnownForSection(items: knownFors) { item in
                                     switch item.media {
                                     case .movie:
-                                        onNavigate(.movieDetail(id:  Int32(item.id)))
+                                        onNavigate(.movieDetail(id:  Int32(item.contentID)))
                                     case .tv:
-                                        onNavigate(.tvDetail(id: Int32(item.id)))
+                                        onNavigate(.tvDetail(id: Int32(item.contentID)))
                                     }
                                 }
                             }

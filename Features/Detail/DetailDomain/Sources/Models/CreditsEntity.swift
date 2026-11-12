@@ -120,10 +120,11 @@ extension CastEntity: ProfileURLConvertible {
 extension CastEntity {
     var toCredit: CreditInfoEntity {
         CreditInfoEntity(
-            id: id,
+            personID: id,
             name: name,
             role: character,
-            profileURL: profileURL
+            profileURL: profileURL,
+            creditID: creditID
         )
     }
 }
@@ -138,10 +139,11 @@ extension CrewEntity: ProfileURLConvertible {
 extension CrewEntity {
     var toCredit: CreditInfoEntity {
         CreditInfoEntity(
-            id: id,
+            personID: id,
             name: name,
             role: job,
-            profileURL: profileURL
+            profileURL: profileURL,
+            creditID: creditID
         )
     }
 }

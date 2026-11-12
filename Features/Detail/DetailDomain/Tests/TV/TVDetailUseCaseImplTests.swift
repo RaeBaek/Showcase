@@ -73,8 +73,8 @@ final class TVDetailUseCaseImplTests: XCTestCase {
         XCTAssertEqual(input.language, "ko-KR")
 
         XCTAssertEqual(result.count, 2)
-        XCTAssertEqual(result.first?.id, 333)
-        XCTAssertEqual(result.last?.id, 444)
+        XCTAssertEqual(result.first?.personID, 333)
+        XCTAssertEqual(result.last?.personID, 444)
     }
 
     /// fetchVideos(), DetailInput 체크와 results.map { $0.toVideoItemEntity } 동작 확인
