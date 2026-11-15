@@ -116,3 +116,6 @@ SourcePackages/
 
 # Secrets
 Configs/
+# React Native local dependencies
+/ReactNative/node_modules/
+/.xcode.env.local

@@ -18,6 +18,9 @@ import StreamingPresentation
 struct ShowcaseApp: App {
     @StateObject private var navigator = AppNavigator()
     private let container = DIContainer(httpClient: TMDBClient())
+    #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
+    @State private var showsSimilarMoviesPreview = false
+    #endif
 
     var body: some Scene {
         WindowGroup {
@@ -28,7 +31,10 @@ struct ShowcaseApp: App {
                 .navigationDestination(for: Route.self) { route in
                     switch route {
                     case .movieDetail(let id):
-                        MovieDetailView(viewModel: container.makeMovieDetailViewModel(id: id)) { item in
+                        MovieDetailView(
+                            viewModel: container.makeMovieDetailViewModel(id: id),
+                            onShowSimilarMovies: showSimilarMovies
+                        ) { item in
                             navigator.push(item)
                         }
                         .background(EnableBackSwipeGesture())
@@ -48,7 +54,20 @@ struct ShowcaseApp: App {
                     }
                 }
                 .preferredColorScheme(.dark)
+                #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
+                .sheet(isPresented: $showsSimilarMoviesPreview) {
+                    SimilarMoviesReactNativePreview()
+                }
+                #endif
             }
         }
+    }
+
+    private var showSimilarMovies: (() -> Void)? {
+        #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
+        return { showsSimilarMoviesPreview = true }
+        #else
+        return nil
+        #endif
     }
 }

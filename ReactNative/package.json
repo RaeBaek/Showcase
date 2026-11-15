@@ -1,0 +1,21 @@
+{
+  "name": "showcase-react-native",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-native start"
+  },
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "dependencies": {
+    "react": "19.3.0",
+    "react-native": "0.88.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@react-native-community/cli": "20.2.0",
+    "@react-native/babel-preset": "0.88.1",
+    "@react-native/metro-config": "0.88.1"
+  }
+}
