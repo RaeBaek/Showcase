@@ -1,3 +1,10 @@
+//
+//  SimilarMoviesReactNativePreview.swift
+//  Showcase
+//
+//  Created by 백래훈 on 11/15/26.
+//
+
 #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
 import DetailDomain
 import React
