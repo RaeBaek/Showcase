@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 
 type SimilarMovie = {
   id: number;
@@ -13,29 +13,60 @@ type Props = {
 
 export default function SimilarMoviesPreview({movies}: Props) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>React Native</Text>
-      <Text style={styles.summary}>전달받은 작품 {movies.length}개</Text>
-      {movies[0]?.title ? (
-        <Text style={styles.summary}>{movies[0].title}</Text>
-      ) : null}
-    </View>
+    <FlatList
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      contentInsetAdjustmentBehavior="automatic"
+      data={movies}
+      keyExtractor={movie => String(movie.id)}
+      ListHeaderComponent={<Text style={styles.heading}>비슷한 작품</Text>}
+      ListEmptyComponent={<Text style={styles.title}>비슷한 작품이 없어요.</Text>}
+      renderItem={({item}) => (
+        <View style={styles.row}>
+          {item.posterURL ? (
+            <Image
+              source={{uri: item.posterURL}}
+              resizeMode="cover"
+              style={styles.poster}
+            />
+          ) : (
+            <View style={styles.poster} />
+          )}
+          <Text style={styles.title}>{item.title || '제목 없음'}</Text>
+        </View>
+      )}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#161616',
   },
-  title: {
+  content: {
+    padding: 20,
+    gap: 12,
+  },
+  heading: {
     color: '#ffffff',
     fontSize: 22,
+    fontWeight: '700',
   },
-  summary: {
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  poster: {
+    width: 60,
+    height: 90,
+    borderRadius: 6,
+    backgroundColor: '#303030',
+  },
+  title: {
+    flexShrink: 1,
     color: '#ffffff',
-    marginTop: 8,
+    fontSize: 16,
   },
 });
