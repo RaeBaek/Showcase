@@ -11,6 +11,7 @@ import NavigationInterface
 import NetworkLive
 
 import HomePresentation
+import DetailDomain
 import DetailPresentation
 import StreamingPresentation
 
@@ -19,7 +20,7 @@ struct ShowcaseApp: App {
     @StateObject private var navigator = AppNavigator()
     private let container = DIContainer(httpClient: TMDBClient())
     #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
-    @State private var similarMoviesPreviewMode: SimilarMoviesReactNativePreview.Mode?
+    @State private var similarMoviesPreview: SimilarMoviesReactNativePreview.Request?
     #endif
 
     var body: some Scene {
@@ -56,25 +57,25 @@ struct ShowcaseApp: App {
                 }
                 .preferredColorScheme(.dark)
                 #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
-                .sheet(item: $similarMoviesPreviewMode) { mode in
-                    SimilarMoviesReactNativePreview(mode: mode)
+                .sheet(item: $similarMoviesPreview) { request in
+                    SimilarMoviesReactNativePreview(request: request)
                 }
                 #endif
             }
         }
     }
 
-    private var showSimilarMovies: (() -> Void)? {
+    private var showSimilarMovies: (([SimilarItemEntity]) -> Void)? {
         #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
-        return { similarMoviesPreviewMode = .fresh }
+        return { similarMoviesPreview = .init(mode: .fresh, movies: $0) }
         #else
         return nil
         #endif
     }
 
-    private var showSimilarMoviesWithSharedRuntime: (() -> Void)? {
+    private var showSimilarMoviesWithSharedRuntime: (([SimilarItemEntity]) -> Void)? {
         #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
-        return { similarMoviesPreviewMode = .shared }
+        return { similarMoviesPreview = .init(mode: .shared, movies: $0) }
         #else
         return nil
         #endif

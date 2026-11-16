@@ -1,4 +1,5 @@
 #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
+import DetailDomain
 import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
@@ -6,26 +7,30 @@ import SwiftUI
 import UIKit
 
 struct SimilarMoviesReactNativePreview: View {
-    enum Mode: String, Identifiable {
+    enum Mode {
         case fresh
         case shared
-
-        var id: Self { self }
     }
 
-    let mode: Mode
+    struct Request: Identifiable {
+        let id = UUID()
+        let mode: Mode
+        let movies: [SimilarItemEntity]
+    }
+
+    let request: Request
     @State private var runtime: Runtime?
     @State private var connectionFailed = false
     @State private var connectionAttempt = 0
 
-    init(mode: Mode) {
-        self.mode = mode
+    init(request: Request) {
+        self.request = request
     }
 
     var body: some View {
         Group {
             if let runtime {
-                PreviewController(runtime: runtime)
+                PreviewController(runtime: runtime, movies: request.movies)
             } else if connectionFailed {
                 VStack(spacing: 12) {
                     Text("Metro에 연결할 수 없어요. 로컬 네트워크 권한과 Metro 주소를 확인해 주세요.")
@@ -46,7 +51,7 @@ struct SimilarMoviesReactNativePreview: View {
 
     @MainActor
     private func connectToMetro() async {
-        if mode == .shared, let shared = Runtime.shared {
+        if request.mode == .shared, let shared = Runtime.shared {
             runtime = shared
             return
         }
@@ -71,16 +76,16 @@ struct SimilarMoviesReactNativePreview: View {
             return
         }
 
-        let request = URLRequest(url: statusURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 3)
+        let statusRequest = URLRequest(url: statusURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 3)
         // The first request can fail while the local network permission alert is open.
         for attempt in 0..<10 {
             guard !Task.isCancelled else { return }
-            if let (data, response) = try? await URLSession.shared.data(for: request),
+            if let (data, response) = try? await URLSession.shared.data(for: statusRequest),
                (response as? HTTPURLResponse)?.statusCode == 200,
                String(decoding: data, as: UTF8.self) == "packager-status:running" {
                 guard !Task.isCancelled else { return }
                 let connectedRuntime = Runtime(packagerHost: hostAndPort, packagerScheme: scheme)
-                if mode == .shared {
+                if request.mode == .shared {
                     Runtime.shared = connectedRuntime
                 }
                 runtime = connectedRuntime
@@ -97,9 +102,10 @@ struct SimilarMoviesReactNativePreview: View {
 
     private struct PreviewController: UIViewControllerRepresentable {
         let runtime: Runtime
+        let movies: [SimilarItemEntity]
 
         func makeUIViewController(context: Context) -> UIViewController {
-            HostViewController(runtime: runtime)
+            HostViewController(runtime: runtime, movies: movies)
         }
 
         func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
@@ -120,9 +126,11 @@ struct SimilarMoviesReactNativePreview: View {
 
     private final class HostViewController: UIViewController {
         private let runtime: Runtime
+        private let movies: [SimilarItemEntity]
 
-        init(runtime: Runtime) {
+        init(runtime: Runtime, movies: [SimilarItemEntity]) {
             self.runtime = runtime
+            self.movies = movies
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -132,7 +140,17 @@ struct SimilarMoviesReactNativePreview: View {
         }
 
         override func loadView() {
-            view = runtime.factory.rootViewFactory.view(withModuleName: "SimilarMoviesPreview")
+            let movieProperties: [[String: Any]] = movies.map { movie in
+                [
+                    "id": movie.id,
+                    "title": movie.title as Any? ?? NSNull(),
+                    "posterURL": movie.posterURL?.absoluteString as Any? ?? NSNull()
+                ]
+            }
+            view = runtime.factory.rootViewFactory.view(
+                withModuleName: "SimilarMoviesPreview",
+                initialProperties: ["movies": movieProperties]
+            )
         }
     }
 
