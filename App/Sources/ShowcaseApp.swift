@@ -21,6 +21,7 @@ struct ShowcaseApp: App {
     private let container = DIContainer(httpClient: TMDBClient())
     #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
     @State private var similarMoviesPreview: SimilarMoviesReactNativePreview.Request?
+    @State private var selectedSimilarMovieID: Int32?
     #endif
 
     var body: some Scene {
@@ -57,13 +58,31 @@ struct ShowcaseApp: App {
                 }
                 .preferredColorScheme(.dark)
                 #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
-                .sheet(item: $similarMoviesPreview) { request in
+                .sheet(item: $similarMoviesPreview, onDismiss: openSelectedSimilarMovie) { request in
                     SimilarMoviesReactNativePreview(request: request)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .init("ShowcaseSimilarMovieSelected"))) { notification in
+                    guard let request = similarMoviesPreview,
+                          notification.object as? String == request.id.uuidString,
+                          let movieID = notification.userInfo?["movieID"] as? String,
+                          let id = Int32(movieID),
+                          request.movies.contains(where: { $0.id == Int(id) }) else { return }
+
+                    selectedSimilarMovieID = id
+                    similarMoviesPreview = nil
                 }
                 #endif
             }
         }
     }
+
+    #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
+    private func openSelectedSimilarMovie() {
+        guard let id = selectedSimilarMovieID else { return }
+        selectedSimilarMovieID = nil
+        navigator.push(.movieDetail(id: id))
+    }
+    #endif
 
     private var showSimilarMovies: (([SimilarItemEntity]) -> Void)? {
         #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)

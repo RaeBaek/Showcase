@@ -1,5 +1,13 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  NativeModules,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 type SimilarMovie = {
   id: number;
@@ -9,9 +17,10 @@ type SimilarMovie = {
 
 type Props = {
   movies: SimilarMovie[];
+  requestID: string;
 };
 
-export default function SimilarMoviesPreview({movies}: Props) {
+export default function SimilarMoviesPreview({movies, requestID}: Props) {
   return (
     <FlatList
       style={styles.container}
@@ -22,7 +31,15 @@ export default function SimilarMoviesPreview({movies}: Props) {
       ListHeaderComponent={<Text style={styles.heading}>비슷한 작품</Text>}
       ListEmptyComponent={<Text style={styles.title}>비슷한 작품이 없어요.</Text>}
       renderItem={({item}) => (
-        <View style={styles.row}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            NativeModules.SimilarMoviesNavigation.selectMovie(
+              String(item.id),
+              requestID,
+            )
+          }
+          style={styles.row}>
           {item.posterURL ? (
             <Image
               source={{uri: item.posterURL}}
@@ -33,7 +50,7 @@ export default function SimilarMoviesPreview({movies}: Props) {
             <View style={styles.poster} />
           )}
           <Text style={styles.title}>{item.title || '제목 없음'}</Text>
-        </View>
+        </Pressable>
       )}
     />
   );

@@ -30,7 +30,7 @@ struct SimilarMoviesReactNativePreview: View {
     var body: some View {
         Group {
             if let runtime {
-                PreviewController(runtime: runtime, movies: request.movies)
+                PreviewController(runtime: runtime, request: request)
             } else if connectionFailed {
                 VStack(spacing: 12) {
                     Text("Metro에 연결할 수 없어요. 로컬 네트워크 권한과 Metro 주소를 확인해 주세요.")
@@ -102,10 +102,10 @@ struct SimilarMoviesReactNativePreview: View {
 
     private struct PreviewController: UIViewControllerRepresentable {
         let runtime: Runtime
-        let movies: [SimilarItemEntity]
+        let request: Request
 
         func makeUIViewController(context: Context) -> UIViewController {
-            HostViewController(runtime: runtime, movies: movies)
+            HostViewController(runtime: runtime, request: request)
         }
 
         func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
@@ -126,11 +126,11 @@ struct SimilarMoviesReactNativePreview: View {
 
     private final class HostViewController: UIViewController {
         private let runtime: Runtime
-        private let movies: [SimilarItemEntity]
+        private let request: Request
 
-        init(runtime: Runtime, movies: [SimilarItemEntity]) {
+        init(runtime: Runtime, request: Request) {
             self.runtime = runtime
-            self.movies = movies
+            self.request = request
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -140,7 +140,7 @@ struct SimilarMoviesReactNativePreview: View {
         }
 
         override func loadView() {
-            let movieProperties: [[String: Any]] = movies.map { movie in
+            let movieProperties: [[String: Any]] = request.movies.map { movie in
                 [
                     "id": movie.id,
                     "title": movie.title as Any? ?? NSNull(),
@@ -149,7 +149,7 @@ struct SimilarMoviesReactNativePreview: View {
             }
             view = runtime.factory.rootViewFactory.view(
                 withModuleName: "SimilarMoviesPreview",
-                initialProperties: ["movies": movieProperties]
+                initialProperties: ["movies": movieProperties, "requestID": request.id.uuidString]
             )
         }
     }
