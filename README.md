@@ -238,6 +238,50 @@ let project = Project(
 
 ---
 
+## 📱 기존 iOS 앱에 React Native 연동 (Brownfield)
+
+영화 상세의 **비슷한 작품 → 더보기**를 Debug 빌드에서 React Native 화면으로 표시합니다. SwiftUI가 TMDB에서 가져온 작품 데이터를 전달하고, React Native가 목록 표시와 선택을 담당합니다.
+
+### 로컬 실행
+
+사전에 mise, Node.js 22.11.0 이상, CocoaPods를 준비하고, 위의 환경 변수 섹션에 따라 TMDB 설정을 구성합니다. 저장소 루트에서 아래 순서대로 실행합니다.
+
+```bash
+mise install
+npm --prefix ReactNative ci
+mise exec -- tuist install
+mise exec -- tuist generate --no-open
+pod install --deployment
+```
+
+`tuist generate`가 Xcode 프로젝트와 워크스페이스를 다시 생성합니다. 새 네이티브 파일을 추가하거나 Tuist 설정을 수정해 재생성했다면, 그 직후 `pod install --deployment`를 실행해 React Native와 Hermes를 다시 연결합니다.
+
+별도 터미널에서 Metro를 실행한 뒤 `Showcase.xcworkspace`를 열고 `App` Scheme을 Debug로 실행합니다.
+
+```bash
+npm --prefix ReactNative start -- --host 0.0.0.0
+```
+
+**실기기에서 실행할 때**
+
+1. 맥과 iPhone을 같은 Wi-Fi에 연결합니다. iPhone Safari에서 `http://<맥의 Wi-Fi IP>:8081/status`를 열어 `packager-status:running`을 확인합니다.
+2. Xcode의 **Product → Scheme → Edit Scheme… → Run → Arguments → Arguments Passed On Launch**에 `-RCT_jsLocation <맥의 Wi-Fi IP>:8081`을 추가합니다.
+3. Xcode에서 실기기로 실행하고, 로컬 네트워크 접근을 묻는 창이 뜨면 허용합니다. 프로젝트 재생성 후 실행 인자가 초기화되면 다시 추가합니다.
+
+### 화면과 데이터 흐름
+
+1. SwiftUI 영화 상세에서 더보기를 누르면 모달을 열고, 이미 조회한 비슷한 작품의 ID·제목·포스터 URL을 `initialProperties`로 전달합니다.
+2. `ReactNative/SimilarMoviesPreview.tsx`가 작품 목록을 `FlatList`로 표시합니다. `더보기`는 매번 RN 런타임을 새로 만들고, `더보기 (런타임 재사용)`는 같은 런타임으로 새 목록 뷰를 엽니다.
+3. 작품을 선택하면 `SimilarMoviesNavigation` 네이티브 모듈이 작품 ID와 시트 요청 ID를 Swift에 전달합니다. SwiftUI는 현재 시트의 선택인지 확인하고, 시트가 닫힌 뒤 기존 `.movieDetail(id:)` 경로로 이동합니다.
+
+### 실기기 확인
+
+- 두 더보기 버튼에서 비슷한 작품 목록이 열리고 세로로 스크롤됩니다.
+- RN에서 작품을 선택하면 해당 영화 상세가 열리고, 뒤로 가면 원래 영화 상세로 돌아옵니다.
+- 포스터가 없는 작품에는 이미지 자리 표시자가 나타납니다. 빈 목록을 주입한 경우 비슷한 작품 섹션과 두 더보기 버튼이 숨겨집니다.
+
+---
+
 ## 💡 테스트 전략
 ### 개요
 - Showcase는 XCTest를 기반으로 각 모듈의 독립 테스트를 수행합니다.

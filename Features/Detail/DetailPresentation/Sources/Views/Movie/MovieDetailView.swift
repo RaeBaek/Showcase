@@ -15,13 +15,19 @@ import DetailDomain
 public struct MovieDetailView: View {
     @StateObject private var viewModel: MovieDetailViewModel
 
+    private let onShowSimilarMovies: (([SimilarItemEntity]) -> Void)?
+    private let onShowSimilarMoviesWithSharedRuntime: (([SimilarItemEntity]) -> Void)?
     private let onNavigate: (Route) -> Void
 
     public init(
         viewModel: MovieDetailViewModel,
+        onShowSimilarMovies: (([SimilarItemEntity]) -> Void)? = nil,
+        onShowSimilarMoviesWithSharedRuntime: (([SimilarItemEntity]) -> Void)? = nil,
         onNavigate: @escaping (Route) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.onShowSimilarMovies = onShowSimilarMovies
+        self.onShowSimilarMoviesWithSharedRuntime = onShowSimilarMoviesWithSharedRuntime
         self.onNavigate = onNavigate
     }
 
@@ -76,6 +82,22 @@ public struct MovieDetailView: View {
                                 HorizontalContentSection(title: L10n.MovieTVDetail.detailSimilarPiece, items: viewModel.movieDetailState.similars) { item in
                                     onNavigate(.movieDetail(id: Int32(item.id)))
                                 } footer: { _ in }
+                                if let onShowSimilarMovies {
+                                    Button(L10n.Common.commonMore) {
+                                        onShowSimilarMovies(viewModel.movieDetailState.similars)
+                                    }
+                                    .tint(.white)
+                                    .padding(.top, 8)
+                                    .padding(.horizontal, 16)
+                                }
+                                if let onShowSimilarMoviesWithSharedRuntime {
+                                    Button("더보기 (런타임 재사용)") {
+                                        onShowSimilarMoviesWithSharedRuntime(viewModel.movieDetailState.similars)
+                                    }
+                                    .tint(.white)
+                                    .padding(.top, 8)
+                                    .padding(.horizontal, 16)
+                                }
                             }
                             Spacer(minLength: 40)
                         }
