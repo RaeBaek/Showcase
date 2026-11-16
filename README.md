@@ -271,7 +271,7 @@ npm --prefix ReactNative start -- --host 0.0.0.0
 ### 화면과 데이터 흐름
 
 1. SwiftUI 영화 상세에서 더보기를 누르면 모달을 열고, 이미 조회한 비슷한 작품의 ID·제목·포스터 URL을 `initialProperties`로 전달합니다.
-2. `ReactNative/SimilarMoviesPreview.tsx`가 작품 목록을 `FlatList`로 표시합니다. **더보기**는 매번 RN 런타임을 새로 만들고, **더보기 (런타임 재사용)**는 같은 런타임으로 새 목록 뷰를 엽니다.
+2. `ReactNative/SimilarMoviesPreview.tsx`가 작품 목록을 `FlatList`로 표시합니다. `더보기`는 매번 RN 런타임을 새로 만들고, `더보기 (런타임 재사용)`는 같은 런타임으로 새 목록 뷰를 엽니다.
 3. 작품을 선택하면 `SimilarMoviesNavigation` 네이티브 모듈이 작품 ID와 시트 요청 ID를 Swift에 전달합니다. SwiftUI는 현재 시트의 선택인지 확인하고, 시트가 닫힌 뒤 기존 `.movieDetail(id:)` 경로로 이동합니다.
 
 ### 실기기 확인
