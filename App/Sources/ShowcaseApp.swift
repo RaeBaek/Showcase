@@ -19,7 +19,7 @@ struct ShowcaseApp: App {
     @StateObject private var navigator = AppNavigator()
     private let container = DIContainer(httpClient: TMDBClient())
     #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
-    @State private var showsSimilarMoviesPreview = false
+    @State private var similarMoviesPreviewMode: SimilarMoviesReactNativePreview.Mode?
     #endif
 
     var body: some Scene {
@@ -33,7 +33,8 @@ struct ShowcaseApp: App {
                     case .movieDetail(let id):
                         MovieDetailView(
                             viewModel: container.makeMovieDetailViewModel(id: id),
-                            onShowSimilarMovies: showSimilarMovies
+                            onShowSimilarMovies: showSimilarMovies,
+                            onShowSimilarMoviesWithSharedRuntime: showSimilarMoviesWithSharedRuntime
                         ) { item in
                             navigator.push(item)
                         }
@@ -55,8 +56,8 @@ struct ShowcaseApp: App {
                 }
                 .preferredColorScheme(.dark)
                 #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
-                .sheet(isPresented: $showsSimilarMoviesPreview) {
-                    SimilarMoviesReactNativePreview()
+                .sheet(item: $similarMoviesPreviewMode) { mode in
+                    SimilarMoviesReactNativePreview(mode: mode)
                 }
                 #endif
             }
@@ -65,7 +66,15 @@ struct ShowcaseApp: App {
 
     private var showSimilarMovies: (() -> Void)? {
         #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
-        return { showsSimilarMoviesPreview = true }
+        return { similarMoviesPreviewMode = .fresh }
+        #else
+        return nil
+        #endif
+    }
+
+    private var showSimilarMoviesWithSharedRuntime: (() -> Void)? {
+        #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
+        return { similarMoviesPreviewMode = .shared }
         #else
         return nil
         #endif

@@ -5,30 +5,158 @@ import ReactAppDependencyProvider
 import SwiftUI
 import UIKit
 
-struct SimilarMoviesReactNativePreview: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UIViewController {
-        HostViewController()
+struct SimilarMoviesReactNativePreview: View {
+    enum Mode: String, Identifiable {
+        case fresh
+        case shared
+
+        var id: Self { self }
     }
 
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+    let mode: Mode
+    @State private var runtime: Runtime?
+    @State private var connectionFailed = false
+    @State private var connectionAttempt = 0
+
+    init(mode: Mode) {
+        self.mode = mode
+    }
+
+    var body: some View {
+        Group {
+            if let runtime {
+                PreviewController(runtime: runtime)
+            } else if connectionFailed {
+                VStack(spacing: 12) {
+                    Text("Metro에 연결할 수 없어요. 로컬 네트워크 권한과 Metro 주소를 확인해 주세요.")
+                    Button("다시 시도") {
+                        connectionFailed = false
+                        connectionAttempt += 1
+                    }
+                }
+                .padding()
+            } else {
+                ProgressView("Metro 연결 중…")
+            }
+        }
+        .task(id: connectionAttempt) {
+            await connectToMetro()
+        }
+    }
+
+    @MainActor
+    private func connectToMetro() async {
+        if mode == .shared, let shared = Runtime.shared {
+            runtime = shared
+            return
+        }
+
+        let provider = RCTBundleURLProvider.sharedSettings()
+        let bundledHost = Bundle.main.url(forResource: "ip", withExtension: "txt")
+            .flatMap { try? String(contentsOf: $0, encoding: .utf8) }?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let host = [provider.jsLocation, bundledHost].compactMap { $0 }.first { !$0.isEmpty } ?? "localhost"
+        let scheme = provider.packagerScheme
+        guard var endpoint = URLComponents(string: "\(scheme)://\(host)"),
+              endpoint.host != nil else {
+            connectionFailed = true
+            return
+        }
+        let port = endpoint.port ?? 8081
+        let hostAndPort = endpoint.port == nil ? "\(host):\(port)" : host
+        endpoint.port = port
+        endpoint.path = "/status"
+        guard let statusURL = endpoint.url else {
+            connectionFailed = true
+            return
+        }
+
+        let request = URLRequest(url: statusURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 3)
+        // The first request can fail while the local network permission alert is open.
+        for attempt in 0..<10 {
+            guard !Task.isCancelled else { return }
+            if let (data, response) = try? await URLSession.shared.data(for: request),
+               (response as? HTTPURLResponse)?.statusCode == 200,
+               String(decoding: data, as: UTF8.self) == "packager-status:running" {
+                guard !Task.isCancelled else { return }
+                let connectedRuntime = Runtime(packagerHost: hostAndPort, packagerScheme: scheme)
+                if mode == .shared {
+                    Runtime.shared = connectedRuntime
+                }
+                runtime = connectedRuntime
+                return
+            }
+            if attempt < 9 {
+                try? await Task.sleep(for: .seconds(1))
+            }
+        }
+        if !Task.isCancelled {
+            connectionFailed = true
+        }
+    }
+
+    private struct PreviewController: UIViewControllerRepresentable {
+        let runtime: Runtime
+
+        func makeUIViewController(context: Context) -> UIViewController {
+            HostViewController(runtime: runtime)
+        }
+
+        func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+    }
+
+    @MainActor
+    private final class Runtime {
+        static var shared: Runtime?
+
+        private let factoryDelegate: FactoryDelegate
+        lazy var factory = RCTReactNativeFactory(delegate: factoryDelegate)
+
+        init(packagerHost: String, packagerScheme: String) {
+            factoryDelegate = FactoryDelegate(packagerHost: packagerHost, packagerScheme: packagerScheme)
+            factoryDelegate.dependencyProvider = RCTAppDependencyProvider()
+        }
+    }
 
     private final class HostViewController: UIViewController {
-        private let factoryDelegate = FactoryDelegate()
-        private lazy var factory = RCTReactNativeFactory(delegate: factoryDelegate)
+        private let runtime: Runtime
+
+        init(runtime: Runtime) {
+            self.runtime = runtime
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        @available(*, unavailable)
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
 
         override func loadView() {
-            factoryDelegate.dependencyProvider = RCTAppDependencyProvider()
-            view = factory.rootViewFactory.view(withModuleName: "SimilarMoviesPreview")
+            view = runtime.factory.rootViewFactory.view(withModuleName: "SimilarMoviesPreview")
         }
     }
 
     private final class FactoryDelegate: RCTDefaultReactNativeFactoryDelegate {
+        private let packagerHost: String
+        private let packagerScheme: String
+
+        init(packagerHost: String, packagerScheme: String) {
+            self.packagerHost = packagerHost
+            self.packagerScheme = packagerScheme
+            super.init()
+        }
+
         override func sourceURL(for bridge: RCTBridge) -> URL? {
             bundleURL()
         }
 
         override func bundleURL() -> URL? {
-            RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
+            RCTBundleURLProvider.sharedSettings().jsBundleURL(
+                forBundleRoot: "index",
+                packagerServerScheme: packagerScheme,
+                packagerServerHost: packagerHost,
+                packagerOptionsUpdater: { $0 }
+            )
         }
     }
 }

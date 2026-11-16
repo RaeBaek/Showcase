@@ -16,15 +16,18 @@ public struct MovieDetailView: View {
     @StateObject private var viewModel: MovieDetailViewModel
 
     private let onShowSimilarMovies: (() -> Void)?
+    private let onShowSimilarMoviesWithSharedRuntime: (() -> Void)?
     private let onNavigate: (Route) -> Void
 
     public init(
         viewModel: MovieDetailViewModel,
         onShowSimilarMovies: (() -> Void)? = nil,
+        onShowSimilarMoviesWithSharedRuntime: (() -> Void)? = nil,
         onNavigate: @escaping (Route) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onShowSimilarMovies = onShowSimilarMovies
+        self.onShowSimilarMoviesWithSharedRuntime = onShowSimilarMoviesWithSharedRuntime
         self.onNavigate = onNavigate
     }
 
@@ -81,6 +84,9 @@ public struct MovieDetailView: View {
                                 } footer: { _ in }
                                 if let onShowSimilarMovies {
                                     Button(L10n.Common.commonMore, action: onShowSimilarMovies)
+                                }
+                                if let onShowSimilarMoviesWithSharedRuntime {
+                                    Button("더보기 (런타임 재사용)", action: onShowSimilarMoviesWithSharedRuntime)
                                 }
                             }
                             Spacer(minLength: 40)
