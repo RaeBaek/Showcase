@@ -62,8 +62,6 @@ public class TMDBClient: HTTPClient {
           "Authorization": "Bearer \(accessToken)"
         ]
 
-        print("request: \(request)")
-
         let data: Data
         do {
             let (responseData, response) = try await URLSession.shared.data(for: request)

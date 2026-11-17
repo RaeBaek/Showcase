@@ -63,10 +63,11 @@ struct ShowcaseApp: App {
                 }
                 .onReceive(NotificationCenter.default.publisher(for: .init("ShowcaseSimilarMovieSelected"))) { notification in
                     guard let request = similarMoviesPreview,
-                          notification.object as? String == request.id.uuidString,
-                          let movieID = notification.userInfo?["movieID"] as? String,
-                          let id = Int32(movieID),
-                          request.movies.contains(where: { $0.id == Int(id) }) else { return }
+                          let id = SimilarMovieSelection.movieID(
+                              from: notification,
+                              requestID: request.id,
+                              allowedMovieIDs: request.movies.map(\.id)
+                          ) else { return }
 
                     selectedSimilarMovieID = id
                     similarMoviesPreview = nil
@@ -98,5 +99,20 @@ struct ShowcaseApp: App {
         #else
         return nil
         #endif
+    }
+}
+
+enum SimilarMovieSelection {
+    static func movieID(
+        from notification: Notification,
+        requestID: UUID,
+        allowedMovieIDs: [Int]
+    ) -> Int32? {
+        guard notification.object as? String == requestID.uuidString,
+              let movieID = notification.userInfo?["movieID"] as? String,
+              let id = Int32(movieID),
+              allowedMovieIDs.contains(Int(id)) else { return nil }
+
+        return id
     }
 }

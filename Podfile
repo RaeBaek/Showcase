@@ -24,6 +24,10 @@ target 'App' do
     :path => 'ReactNative/node_modules/react-native',
     :app_path => File.join(__dir__, 'ReactNative')
   )
+
+  target 'AppTests' do
+    inherit! :search_paths
+  end
 end
 
 post_install do |installer|
