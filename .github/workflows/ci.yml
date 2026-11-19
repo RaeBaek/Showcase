@@ -18,6 +18,17 @@ jobs:
           gem install bundler
           bundle install
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install React Native Dependencies
+        run: npm --prefix ReactNative ci
+
+      - name: Install CocoaPods
+        run: gem install cocoapods -v 1.16.2 --no-document
+
       - name: Install Tuist via mise
         uses: jdx/mise-action@v5
 
@@ -51,6 +62,9 @@ jobs:
       # 4) Generate Xcode project via Tuist
       - name: Generate Project
         run: tuist generate --no-open
+
+      - name: Integrate React Native Pods
+        run: pod _1.16.2_ install --deployment
 
 #      - name: Debug xcodebuild settings
 #        run: |
@@ -86,3 +100,17 @@ jobs:
       # 6) Run build
       - name: Run Build (Fastlane)
         run: bundle exec fastlane build_ci
+
+      - name: Build Release and Verify Embedded Bundle
+        run: |
+          xcodebuild \
+            -workspace Showcase.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/showcase-release" \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+          test -s "$RUNNER_TEMP/showcase-release/Build/Products/Release-iphonesimulator/App.app/main.jsbundle"
