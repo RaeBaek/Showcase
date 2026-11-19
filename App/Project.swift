@@ -45,6 +45,33 @@ let project = Project(
             ]),
             sources: ["Sources/**"],
             resources: ["Resources/**"],
+            scripts: [
+                .post(
+                    script: """
+                    set -e
+
+                    export PODFILE_DIR="$SRCROOT/.."
+                    export PROJECT_ROOT="$PODFILE_DIR/ReactNative"
+                    export REACT_NATIVE_PATH="$PROJECT_ROOT/node_modules/react-native"
+                    export ENTRY_FILE="index.js"
+                    export FORCE_BUNDLING=1
+                    export SKIP_BUNDLING_METRO_IP=1
+                    unset SKIP_BUNDLING
+
+                    if [ ! -f "$REACT_NATIVE_PATH/scripts/react-native-xcode.sh" ]; then
+                      echo "error: React Native dependencies are missing. Run npm --prefix ReactNative ci from the repository root."
+                      exit 1
+                    fi
+
+                    /bin/bash "$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh" \
+                      "$REACT_NATIVE_PATH/scripts/react-native-xcode.sh"
+                    """,
+                    name: "Bundle React Native code and images",
+                    outputPaths: ["$(CONFIGURATION_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/main.jsbundle"],
+                    basedOnDependencyAnalysis: false,
+                    shellPath: "/bin/bash"
+                )
+            ],
             dependencies: [
                 .project(target: "Localization", path: "../Core/Localization"),
                 .project(target: "NavigationInterface", path: "../Core/NavigationInterface"),
