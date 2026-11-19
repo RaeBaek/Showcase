@@ -268,8 +268,9 @@ npm --prefix ReactNative start -- --host 0.0.0.0
 **실기기에서 실행할 때**
 
 1. 맥과 iPhone을 같은 Wi-Fi에 연결합니다. iPhone Safari에서 `http://<맥의 Wi-Fi IP>:8081/status`를 열어 `packager-status:running`을 확인합니다.
-2. Xcode의 **Product → Scheme → Edit Scheme… → Run → Arguments → Arguments Passed On Launch**에 `-RCT_jsLocation <맥의 Wi-Fi IP>:8081`을 추가합니다.
-3. Xcode에서 실기기로 실행하고, 로컬 네트워크 접근을 묻는 창이 뜨면 허용합니다. 프로젝트 재생성 후 실행 인자가 초기화되면 다시 추가합니다.
+2. Debug 빌드 시 맥의 기본 네트워크 인터페이스를 우선 확인하고, 활성 Ethernet·Wi-Fi 인터페이스의 IPv4 주소를 `ip.txt`로 앱에 포함합니다. 시뮬레이터 빌드는 `localhost`를 사용합니다.
+3. 별도의 Scheme IP 실행 인자나 xcconfig 설정 없이 빌드·실행합니다. 네트워크를 변경했다면 다시 빌드해 주소를 갱신합니다. Metro 포트는 기본값인 8081을 사용합니다.
+4. 로컬 네트워크 접근을 묻는 창이 뜨면 허용합니다. LAN 주소를 찾지 못하면 빌드 경고가 표시되므로 네트워크 연결을 확인하고 다시 빌드합니다. VPN·복수 네트워크 환경에서는 선택된 주소에 실기기가 접근 가능한지 확인합니다.
 
 **Metro 없이 Release로 실행할 때**
 
