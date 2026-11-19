@@ -50,12 +50,15 @@ let project = Project(
                     script: """
                     set -e
 
+                    if [ "$CONFIGURATION" = "Debug" ]; then
+                      echo "Debug loads JavaScript from Metro; skipping embedded bundle generation."
+                      exit 0
+                    fi
+
                     export PODFILE_DIR="$SRCROOT/.."
                     export PROJECT_ROOT="$PODFILE_DIR/ReactNative"
                     export REACT_NATIVE_PATH="$PROJECT_ROOT/node_modules/react-native"
                     export ENTRY_FILE="index.js"
-                    export FORCE_BUNDLING=1
-                    export SKIP_BUNDLING_METRO_IP=1
                     unset SKIP_BUNDLING
 
                     if [ ! -f "$REACT_NATIVE_PATH/scripts/react-native-xcode.sh" ]; then

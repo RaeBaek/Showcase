@@ -240,7 +240,10 @@ let project = Project(
 
 ## 📱 기존 iOS 앱에 React Native 연동 (Brownfield)
 
-영화 상세의 **비슷한 작품 → 더보기**를 Debug 빌드에서 React Native 화면으로 표시합니다. SwiftUI가 TMDB에서 가져온 작품 데이터를 전달하고, React Native가 목록 표시와 선택을 담당합니다.
+영화 상세의 **비슷한 작품 → 더보기**를 Debug와 Release 모두 React Native 화면으로 표시합니다. SwiftUI가 TMDB에서 가져온 작품 데이터를 전달하고, React Native가 목록 표시와 선택을 담당합니다.
+
+- Debug: Metro에서 개발용 JS(`dev=true`)를 불러와 Fast Refresh와 RN 개발 도구를 사용합니다.
+- Release: 빌드할 때 JS와 이미지 리소스를 앱에 포함하고 `dev=false`로 실행합니다. 앱 실행 시 Metro 서버가 필요하지 않습니다.
 
 ### 로컬 실행
 
@@ -267,6 +270,10 @@ npm --prefix ReactNative start -- --host 0.0.0.0
 1. 맥과 iPhone을 같은 Wi-Fi에 연결합니다. iPhone Safari에서 `http://<맥의 Wi-Fi IP>:8081/status`를 열어 `packager-status:running`을 확인합니다.
 2. Xcode의 **Product → Scheme → Edit Scheme… → Run → Arguments → Arguments Passed On Launch**에 `-RCT_jsLocation <맥의 Wi-Fi IP>:8081`을 추가합니다.
 3. Xcode에서 실기기로 실행하고, 로컬 네트워크 접근을 묻는 창이 뜨면 허용합니다. 프로젝트 재생성 후 실행 인자가 초기화되면 다시 추가합니다.
+
+**Metro 없이 Release로 실행할 때**
+
+Xcode의 **Product → Scheme → Edit Scheme… → Run → Info → Build Configuration**을 `Release`로 변경한 뒤 빌드·실행합니다. JS 번들은 빌드 과정에서 생성되므로 Node.js와 npm 의존성은 필요하지만, 별도로 Metro 서버를 켤 필요는 없습니다. JS 코드를 수정했다면 앱을 다시 빌드해야 합니다. RN 개발을 이어갈 때는 `Debug`로 되돌립니다.
 
 ### 화면과 데이터 흐름
 

@@ -5,7 +5,6 @@
 //  Created by 백래훈 on 11/15/26.
 //
 
-#if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
 import DetailDomain
 import React
 import React_RCTAppDelegate
@@ -27,8 +26,7 @@ struct SimilarMoviesReactNativePreview: View {
 
     let request: Request
     @State private var runtime: Runtime?
-    @State private var connectionFailed = false
-    @State private var connectionAttempt = 0
+    @State private var bundleMissing = false
 
     init(request: Request) {
         self.request = request
@@ -38,73 +36,43 @@ struct SimilarMoviesReactNativePreview: View {
         Group {
             if let runtime {
                 PreviewController(runtime: runtime, request: request)
-            } else if connectionFailed {
-                VStack(spacing: 12) {
-                    Text("Metro에 연결할 수 없어요. 로컬 네트워크 권한과 Metro 주소를 확인해 주세요.")
-                    Button("다시 시도") {
-                        connectionFailed = false
-                        connectionAttempt += 1
-                    }
-                }
-                .padding()
+            } else if bundleMissing {
+                Text("React Native 화면을 불러올 수 없어요.")
+                    .padding()
             } else {
-                ProgressView("Metro 연결 중…")
+                ProgressView()
             }
         }
-        .task(id: connectionAttempt) {
-            await connectToMetro()
+        .task {
+            prepareRuntime()
         }
     }
 
     @MainActor
-    private func connectToMetro() async {
+    private func prepareRuntime() {
+        guard runtime == nil else { return }
         if request.mode == .shared, let shared = Runtime.shared {
             runtime = shared
             return
         }
 
-        let provider = RCTBundleURLProvider.sharedSettings()
-        let bundledHost = Bundle.main.url(forResource: "ip", withExtension: "txt")
-            .flatMap { try? String(contentsOf: $0, encoding: .utf8) }?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        let host = [provider.jsLocation, bundledHost].compactMap { $0 }.first { !$0.isEmpty } ?? "localhost"
-        let scheme = provider.packagerScheme
-        guard var endpoint = URLComponents(string: "\(scheme)://\(host)"),
-              endpoint.host != nil else {
-            connectionFailed = true
+        #if DEBUG
+        let bundleURLProvider: () -> URL? = {
+            RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
+        }
+        #else
+        guard let bundleURL = Bundle.main.url(forResource: "main", withExtension: "jsbundle") else {
+            bundleMissing = true
             return
         }
-        let port = endpoint.port ?? 8081
-        let hostAndPort = endpoint.port == nil ? "\(host):\(port)" : host
-        endpoint.port = port
-        endpoint.path = "/status"
-        guard let statusURL = endpoint.url else {
-            connectionFailed = true
-            return
-        }
+        let bundleURLProvider: () -> URL? = { bundleURL }
+        #endif
 
-        let statusRequest = URLRequest(url: statusURL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 3)
-        // The first request can fail while the local network permission alert is open.
-        for attempt in 0..<10 {
-            guard !Task.isCancelled else { return }
-            if let (data, response) = try? await URLSession.shared.data(for: statusRequest),
-               (response as? HTTPURLResponse)?.statusCode == 200,
-               String(decoding: data, as: UTF8.self) == "packager-status:running" {
-                guard !Task.isCancelled else { return }
-                let connectedRuntime = Runtime(packagerHost: hostAndPort, packagerScheme: scheme)
-                if request.mode == .shared {
-                    Runtime.shared = connectedRuntime
-                }
-                runtime = connectedRuntime
-                return
-            }
-            if attempt < 9 {
-                try? await Task.sleep(for: .seconds(1))
-            }
+        let newRuntime = Runtime(bundleURLProvider: bundleURLProvider)
+        if request.mode == .shared {
+            Runtime.shared = newRuntime
         }
-        if !Task.isCancelled {
-            connectionFailed = true
-        }
+        runtime = newRuntime
     }
 
     private struct PreviewController: UIViewControllerRepresentable {
@@ -125,8 +93,8 @@ struct SimilarMoviesReactNativePreview: View {
         private let factoryDelegate: FactoryDelegate
         lazy var factory = RCTReactNativeFactory(delegate: factoryDelegate)
 
-        init(packagerHost: String, packagerScheme: String) {
-            factoryDelegate = FactoryDelegate(packagerHost: packagerHost, packagerScheme: packagerScheme)
+        init(bundleURLProvider: @escaping () -> URL?) {
+            factoryDelegate = FactoryDelegate(bundleURLProvider: bundleURLProvider)
             factoryDelegate.dependencyProvider = RCTAppDependencyProvider()
         }
     }
@@ -162,27 +130,19 @@ struct SimilarMoviesReactNativePreview: View {
     }
 
     private final class FactoryDelegate: RCTDefaultReactNativeFactoryDelegate {
-        private let packagerHost: String
-        private let packagerScheme: String
+        private let bundleURLProvider: () -> URL?
 
-        init(packagerHost: String, packagerScheme: String) {
-            self.packagerHost = packagerHost
-            self.packagerScheme = packagerScheme
+        init(bundleURLProvider: @escaping () -> URL?) {
+            self.bundleURLProvider = bundleURLProvider
             super.init()
         }
-
+        
         override func sourceURL(for bridge: RCTBridge) -> URL? {
             bundleURL()
         }
 
         override func bundleURL() -> URL? {
-            RCTBundleURLProvider.sharedSettings().jsBundleURL(
-                forBundleRoot: "index",
-                packagerServerScheme: packagerScheme,
-                packagerServerHost: packagerHost,
-                packagerOptionsUpdater: { $0 }
-            )
+            bundleURLProvider()
         }
     }
 }
-#endif

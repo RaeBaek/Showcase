@@ -19,10 +19,8 @@ import StreamingPresentation
 struct ShowcaseApp: App {
     @StateObject private var navigator = AppNavigator()
     private let container = DIContainer(httpClient: TMDBClient())
-    #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
     @State private var similarMoviesPreview: SimilarMoviesReactNativePreview.Request?
     @State private var selectedSimilarMovieID: Int32?
-    #endif
 
     var body: some Scene {
         WindowGroup {
@@ -57,7 +55,6 @@ struct ShowcaseApp: App {
                     }
                 }
                 .preferredColorScheme(.dark)
-                #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
                 .sheet(item: $similarMoviesPreview, onDismiss: openSelectedSimilarMovie) { request in
                     SimilarMoviesReactNativePreview(request: request)
                 }
@@ -72,33 +69,22 @@ struct ShowcaseApp: App {
                     selectedSimilarMovieID = id
                     similarMoviesPreview = nil
                 }
-                #endif
             }
         }
     }
 
-    #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
     private func openSelectedSimilarMovie() {
         guard let id = selectedSimilarMovieID else { return }
         selectedSimilarMovieID = nil
         navigator.push(.movieDetail(id: id))
     }
-    #endif
 
     private var showSimilarMovies: (([SimilarItemEntity]) -> Void)? {
-        #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
         return { similarMoviesPreview = .init(mode: .fresh, movies: $0) }
-        #else
-        return nil
-        #endif
     }
 
     private var showSimilarMoviesWithSharedRuntime: (([SimilarItemEntity]) -> Void)? {
-        #if DEBUG && canImport(React) && canImport(React_RCTAppDelegate) && canImport(ReactAppDependencyProvider)
         return { similarMoviesPreview = .init(mode: .shared, movies: $0) }
-        #else
-        return nil
-        #endif
     }
 }
 
