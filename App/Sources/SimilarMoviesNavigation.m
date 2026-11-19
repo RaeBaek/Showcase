@@ -1,4 +1,3 @@
-#if DEBUG && __has_include(<React/RCTBridgeModule.h>)
 #import <React/RCTBridgeModule.h>
 
 @interface SimilarMoviesNavigation : NSObject <RCTBridgeModule>
@@ -27,4 +26,3 @@ RCT_EXPORT_METHOD(selectMovie:(NSString *)movieID requestID:(NSString *)requestI
 }
 
 @end
-#endif

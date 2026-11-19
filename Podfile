@@ -1,11 +1,18 @@
 # CocoaPods captures Node output as binary, but React Native uses it as UTF-8 paths.
 module NodeOutputEncoding
   def execute_command(executable, command, raise_on_failure = true)
-    output = super
-    return output unless executable == 'node'
+    return super unless executable == 'node'
+
+    # On macOS, Node resolves paths as NFD while Ruby uses NFC. Keep Codegen's
+    # input paths consistent with Node, then return NFC paths to CocoaPods.
+    macos = RUBY_PLATFORM.include?('darwin')
+    node_command = macos ? command.map { |argument| argument.to_s.unicode_normalize(:nfd) } : command
+    output = super(executable, node_command, raise_on_failure)
 
     utf8_output = output.dup.force_encoding(Encoding::UTF_8)
-    utf8_output.valid_encoding? ? utf8_output : output
+    return output unless utf8_output.valid_encoding?
+
+    macos ? utf8_output.unicode_normalize(:nfc) : utf8_output
   end
 end
 

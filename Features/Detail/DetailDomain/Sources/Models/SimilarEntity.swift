@@ -99,7 +99,8 @@ extension SimilarResultEntity {
         SimilarItemEntity(
             id: id,
             title: title ?? name,
-            posterURL: posterURL
+            posterURL: posterURL,
+            originalTitle: originalTitle ?? originalName
         )
     }
 }
