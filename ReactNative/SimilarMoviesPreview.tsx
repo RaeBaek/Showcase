@@ -12,6 +12,7 @@ import {
 type SimilarMovie = {
   id: number;
   title: string | null;
+  originalTitle: string | null;
   posterURL: string | null;
 };
 
@@ -49,7 +50,12 @@ export default function SimilarMoviesPreview({movies, requestID}: Props) {
           ) : (
             <View style={styles.poster} />
           )}
-          <Text style={styles.title}>{item.title || '제목 없음'}</Text>
+          <View style={styles.titles}>
+            <Text style={styles.title}>{item.title || '제목 없음'}</Text>
+            {item.originalTitle?.trim() ? (
+              <Text style={styles.originalTitle}>{item.originalTitle}</Text>
+            ) : null}
+          </View>
         </Pressable>
       )}
     />
@@ -80,6 +86,14 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 6,
     backgroundColor: '#303030',
+  },
+  titles: {
+    flex: 1,
+    gap: 4,
+  },
+  originalTitle: {
+    color: '#aaaaaa',
+    fontSize: 14,
   },
   title: {
     flexShrink: 1,

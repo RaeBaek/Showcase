@@ -119,6 +119,7 @@ struct SimilarMoviesReactNativePreview: View {
                 [
                     "id": movie.id,
                     "title": movie.title as Any? ?? NSNull(),
+                    "originalTitle": movie.originalTitle as Any? ?? NSNull(),
                     "posterURL": movie.posterURL?.absoluteString as Any? ?? NSNull()
                 ]
             }

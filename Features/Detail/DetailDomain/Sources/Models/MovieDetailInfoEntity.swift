@@ -274,11 +274,13 @@ public extension VideoItemEntity {
 public struct SimilarItemEntity: Identifiable {
     public let id: Int
     public let title: String?
+    public let originalTitle: String?
     public let posterURL: URL?
 
-    public init(id: Int, title: String?, posterURL: URL?) {
+    public init(id: Int, title: String?, posterURL: URL?, originalTitle: String? = nil) {
         self.id = id
         self.title = title
+        self.originalTitle = originalTitle
         self.posterURL = posterURL
     }
 }
