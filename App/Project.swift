@@ -87,6 +87,7 @@ let project = Project(
                     export PROJECT_ROOT="$PODFILE_DIR/ReactNative"
                     export REACT_NATIVE_PATH="$PROJECT_ROOT/node_modules/react-native"
                     export ENTRY_FILE="index.js"
+                    export HERMES_CLI_PATH="$PROJECT_ROOT/scripts/hermesc.sh"
                     unset SKIP_BUNDLING
 
                     if [ ! -f "$REACT_NATIVE_PATH/scripts/react-native-xcode.sh" ]; then
