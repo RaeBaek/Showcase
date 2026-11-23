@@ -29,7 +29,8 @@ let project = Project(
             deploymentTargets: .iOS("17.0"),
             sources: ["Sources/**"],
             dependencies: [
-                .project(target: "NetworkModel", path: "../../../Core/NetworkModel")
+                .project(target: "NetworkModel", path: "../../../Core/NetworkModel"),
+                .project(target: "DomainInterface", path: "../../../Interface/DomainInterface")
             ]
         ),
         .target(
