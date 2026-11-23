@@ -9,6 +9,7 @@ import Combine
 
 import NetworkModel
 
+@MainActor
 public protocol PagingUseCase<Entity>: AnyObject {
     associatedtype Entity: Identifiable where Entity.ID == Int
     var items: [Entity] { get }

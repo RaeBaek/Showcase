@@ -12,6 +12,9 @@ let project = Project(
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",
+            "ENABLE_MODULE_VERIFIER": "YES",
+            "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
+            "STRING_CATALOG_GENERATE_SYMBOLS": "YES",
             "DEVELOPMENT_TEAM": "DD66GTY4AT",
             "CODE_SIGN_STYLE": "Automatic"
         ],

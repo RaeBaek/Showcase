@@ -16,6 +16,7 @@ let project = Project(
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",
+            "STRING_CATALOG_GENERATE_SYMBOLS": "YES",
             "DEVELOPMENT_TEAM": "DD66GTY4AT",
             "CODE_SIGN_STYLE": "Automatic"
         ],
@@ -114,7 +115,13 @@ let project = Project(
                 .project(target: "StreamingData", path: "../Features/Streaming/StreamingData"),
                 .project(target: "StreamingDomain", path: "../Features/Streaming/StreamingDomain"),
                 .project(target: "StreamingPresentation", path: "../Features/Streaming/StreamingPresentation")
-            ]
+            ],
+            settings: .settings(base: [
+                // RN scripts read node_modules and generate resources beyond declared outputs.
+                "ENABLE_USER_SCRIPT_SANDBOXING": "NO",
+                // Match RN's Swift-side suppression for incomplete prebuilt umbrella headers.
+                "OTHER_CFLAGS": ["$(inherited)", "-Wno-incomplete-umbrella"]
+            ])
         ),
         // Unit Tests
         .target(
