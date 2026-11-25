@@ -6,6 +6,7 @@
 //
 
 import DetailDomain
+import OSLog
 import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
@@ -13,19 +14,23 @@ import SwiftUI
 import UIKit
 
 struct SimilarMoviesReactNativePreview: View {
-    enum Mode {
+    enum Mode: String {
         case fresh
         case shared
     }
 
     struct Request: Identifiable {
+        let startedAt = ContinuousClock.now
         let id = UUID()
         let mode: Mode
         let movies: [SimilarItemEntity]
     }
 
     let request: Request
+    private static let logger = Logger(subsystem: "com.raehoon.Showcase.app", category: "RNRuntime")
     @State private var runtime: Runtime?
+    @State private var reusedRuntime = false
+    @State private var recordedFirstRowLayout = false
     @State private var loadingFailed = false
     @State private var connectionAttempt = 0
 
@@ -55,6 +60,15 @@ struct SimilarMoviesReactNativePreview: View {
                 ProgressView()
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .init("ShowcaseSimilarMoviesFirstRowLaidOut"))) { notification in
+            guard notification.object as? String == request.id.uuidString,
+                  !recordedFirstRowLayout else { return }
+
+            let elapsed = request.startedAt.duration(to: .now).components
+            let milliseconds = Double(elapsed.seconds) * 1_000 + Double(elapsed.attoseconds) / 1e15
+            recordedFirstRowLayout = true
+            Self.logger.notice("RN first row layout: mode=\(request.mode.rawValue, privacy: .public) reused=\(reusedRuntime, privacy: .public) elapsed_ms=\(milliseconds, privacy: .public)")
+        }
         .task(id: connectionAttempt) {
             await prepareRuntime()
         }
@@ -64,6 +78,7 @@ struct SimilarMoviesReactNativePreview: View {
     private func prepareRuntime() async {
         guard runtime == nil else { return }
         if request.mode == .shared, let shared = Runtime.shared {
+            reusedRuntime = true
             runtime = shared
             return
         }
