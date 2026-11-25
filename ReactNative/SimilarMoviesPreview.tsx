@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   FlatList,
   Image,
@@ -22,6 +22,17 @@ type Props = {
 };
 
 export default function SimilarMoviesPreview({movies, requestID}: Props) {
+  const reportedRequestID = useRef<string | null>(null);
+
+  const reportFirstRowLayout = () => {
+    if (reportedRequestID.current === requestID) {
+      return;
+    }
+
+    reportedRequestID.current = requestID;
+    NativeModules.SimilarMoviesNavigation?.reportFirstRowLayout?.(requestID);
+  };
+
   return (
     <FlatList
       style={styles.container}
@@ -31,9 +42,10 @@ export default function SimilarMoviesPreview({movies, requestID}: Props) {
       keyExtractor={movie => String(movie.id)}
       ListHeaderComponent={<Text style={styles.heading}>비슷한 작품</Text>}
       ListEmptyComponent={<Text style={styles.title}>비슷한 작품이 없어요.</Text>}
-      renderItem={({item}) => (
+      renderItem={({item, index}) => (
         <Pressable
           accessibilityRole="button"
+          onLayout={index === 0 ? reportFirstRowLayout : undefined}
           onPress={() =>
             NativeModules.SimilarMoviesNavigation.selectMovie(
               String(item.id),

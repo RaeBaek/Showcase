@@ -25,4 +25,16 @@ RCT_EXPORT_METHOD(selectMovie:(NSString *)movieID requestID:(NSString *)requestI
     });
 }
 
+RCT_EXPORT_METHOD(reportFirstRowLayout:(NSString *)requestID)
+{
+    if (![requestID isKindOfClass:[NSString class]]) {
+        return;
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowcaseSimilarMoviesFirstRowLaidOut"
+                                                            object:requestID];
+    });
+}
+
 @end
