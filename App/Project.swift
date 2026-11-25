@@ -16,6 +16,8 @@ let project = Project(
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",
+            "STRING_CATALOG_GENERATE_SYMBOLS": "YES",
+            "ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "YES",
             "DEVELOPMENT_TEAM": "DD66GTY4AT",
             "CODE_SIGN_STYLE": "Automatic"
         ],
@@ -85,6 +87,7 @@ let project = Project(
                     export PROJECT_ROOT="$PODFILE_DIR/ReactNative"
                     export REACT_NATIVE_PATH="$PROJECT_ROOT/node_modules/react-native"
                     export ENTRY_FILE="index.js"
+                    export HERMES_CLI_PATH="$PROJECT_ROOT/scripts/hermesc.sh"
                     unset SKIP_BUNDLING
 
                     if [ ! -f "$REACT_NATIVE_PATH/scripts/react-native-xcode.sh" ]; then
@@ -114,7 +117,13 @@ let project = Project(
                 .project(target: "StreamingData", path: "../Features/Streaming/StreamingData"),
                 .project(target: "StreamingDomain", path: "../Features/Streaming/StreamingDomain"),
                 .project(target: "StreamingPresentation", path: "../Features/Streaming/StreamingPresentation")
-            ]
+            ],
+            settings: .settings(base: [
+                // RN scripts read node_modules and generate resources beyond declared outputs.
+                "ENABLE_USER_SCRIPT_SANDBOXING": "NO",
+                // Match RN's Swift-side suppression for incomplete prebuilt umbrella headers.
+                "OTHER_CFLAGS": ["$(inherited)", "-Wno-incomplete-umbrella"]
+            ])
         ),
         // Unit Tests
         .target(

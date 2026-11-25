@@ -32,6 +32,11 @@ target 'App' do
     :app_path => File.join(__dir__, 'ReactNative')
   )
 
+  # RN declares these pods above; only change their warning policy.
+  %w[React-Core-prebuilt React-RCTAppDelegate].each do |pod_name|
+    current_target_definition.set_inhibit_warnings_for_pod(pod_name, true)
+  end
+
   target 'AppTests' do
     inherit! :search_paths
   end
@@ -39,6 +44,20 @@ end
 
 post_install do |installer|
   react_native_post_install(installer, react_native_path, :mac_catalyst_enabled => false)
+
+  # CocoaPods adds per-pod system search paths to C flags, but not Swift's Clang importer.
+  # Limit the Swift-side policy to the prebuilt RN framework and relocated RN headers.
+  installer.aggregate_targets.each do |aggregate_target|
+    aggregate_target.xcconfigs.each do |configuration_name, config|
+      ReactNativePodsUtils.add_flag_to_map_with_inheritance(
+        config.attributes,
+        'OTHER_SWIFT_FLAGS',
+        ' -Xcc -isystem -Xcc "$(PODS_ROOT)/React-Core-prebuilt/Headers"' \
+        ' -Xcc -iframework -Xcc "$(PODS_XCFRAMEWORKS_BUILD_DIR)/React-Core-prebuilt"'
+      )
+      config.save_as(aggregate_target.xcconfig_path(configuration_name))
+    end
+  end
 
   # The Swift app target also links the prebuilt React Native C++ code.
   installer.aggregate_targets.map(&:user_project).uniq.each do |project|

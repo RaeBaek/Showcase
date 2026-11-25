@@ -12,6 +12,12 @@ let project = Project(
     settings: .settings(
         base: [
             "SWIFT_VERSION": "5.10",
+            "ENABLE_MODULE_VERIFIER": "YES",
+            "MODULE_VERIFIER_SUPPORTED_LANGUAGES": ["objective-c", "objective-c++"],
+            "MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS": ["gnu11", "gnu++14"],
+            "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
+            "STRING_CATALOG_GENERATE_SYMBOLS": "YES",
+            "ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "YES",
             "DEVELOPMENT_TEAM": "DD66GTY4AT",
             "CODE_SIGN_STYLE": "Automatic"
         ],
