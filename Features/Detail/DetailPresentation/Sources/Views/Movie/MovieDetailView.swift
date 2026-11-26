@@ -15,14 +15,14 @@ import DetailDomain
 public struct MovieDetailView: View {
     @StateObject private var viewModel: MovieDetailViewModel
 
-    private let onShowSimilarMovies: (([SimilarItemEntity]) -> Void)?
-    private let onShowSimilarMoviesWithSharedRuntime: (([SimilarItemEntity]) -> Void)?
+    private let onShowSimilarMovies: ((SimilarMoviesPage) -> Void)?
+    private let onShowSimilarMoviesWithSharedRuntime: ((SimilarMoviesPage) -> Void)?
     private let onNavigate: (Route) -> Void
 
     public init(
         viewModel: MovieDetailViewModel,
-        onShowSimilarMovies: (([SimilarItemEntity]) -> Void)? = nil,
-        onShowSimilarMoviesWithSharedRuntime: (([SimilarItemEntity]) -> Void)? = nil,
+        onShowSimilarMovies: ((SimilarMoviesPage) -> Void)? = nil,
+        onShowSimilarMoviesWithSharedRuntime: ((SimilarMoviesPage) -> Void)? = nil,
         onNavigate: @escaping (Route) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -78,13 +78,13 @@ public struct MovieDetailView: View {
                             if !viewModel.movieDetailState.videos.isEmpty {
                                 VideoSection(videos: viewModel.movieDetailState.videos)
                             }
-                            if !viewModel.movieDetailState.similars.isEmpty {
-                                HorizontalContentSection(title: L10n.MovieTVDetail.detailSimilarPiece, items: viewModel.movieDetailState.similars) { item in
+                            if let page = viewModel.movieDetailState.similarMoviesPage, !page.items.isEmpty {
+                                HorizontalContentSection(title: L10n.MovieTVDetail.detailSimilarPiece, items: page.items) { item in
                                     onNavigate(.movieDetail(id: Int32(item.id)))
                                 } footer: { _ in }
                                 if let onShowSimilarMovies {
                                     Button(L10n.Common.commonMore) {
-                                        onShowSimilarMovies(viewModel.movieDetailState.similars)
+                                        onShowSimilarMovies(page)
                                     }
                                     .tint(.white)
                                     .padding(.top, 8)
@@ -92,7 +92,7 @@ public struct MovieDetailView: View {
                                 }
                                 if let onShowSimilarMoviesWithSharedRuntime {
                                     Button("더보기 (런타임 재사용)") {
-                                        onShowSimilarMoviesWithSharedRuntime(viewModel.movieDetailState.similars)
+                                        onShowSimilarMoviesWithSharedRuntime(page)
                                     }
                                     .tint(.white)
                                     .padding(.top, 8)

@@ -1,5 +1,6 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   NativeModules,
@@ -18,11 +19,82 @@ type SimilarMovie = {
 
 type Props = {
   movies: SimilarMovie[];
+  page: number;
+  totalPages: number;
+  hasMore: boolean;
   requestID: string;
 };
 
-export default function SimilarMoviesPreview({movies, requestID}: Props) {
+type NextPageResult =
+  | {status: 'loaded'; movies: SimilarMovie[]; page: number; hasMore: boolean}
+  | {status: 'end' | 'inactive' | 'busy' | 'failed'; hasMore: boolean};
+
+type LoadStatus = 'idle' | 'loading' | 'failed' | 'continue';
+
+export default function SimilarMoviesPreview(props: Props) {
+  return <SimilarMoviesList key={props.requestID} {...props} />;
+}
+
+function SimilarMoviesList({movies, hasMore, requestID}: Props) {
+  const [items, setItems] = useState(movies);
+  const [loadStatus, setLoadStatus] = useState<LoadStatus>('idle');
+  const pagination = useRef<{hasMore: boolean; status: LoadStatus}>({
+    hasMore,
+    status: 'idle',
+  });
+  const isMounted = useRef(true);
   const reportedRequestID = useRef<string | null>(null);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  const updateLoadStatus = (status: LoadStatus) => {
+    pagination.current.status = status;
+    setLoadStatus(status);
+  };
+
+  const loadNextPage = async () => {
+    if (
+      !pagination.current.hasMore ||
+      pagination.current.status === 'loading'
+    ) {
+      return;
+    }
+
+    updateLoadStatus('loading');
+
+    try {
+      const result: NextPageResult =
+        await NativeModules.SimilarMoviesNavigation.loadNextPage(requestID);
+      if (!isMounted.current) {
+        return;
+      }
+
+      pagination.current.hasMore = result.hasMore;
+      if (result.status === 'loaded' && result.movies.length > 0) {
+        setItems(currentItems => [...currentItems, ...result.movies]);
+        updateLoadStatus('idle');
+      } else if (result.status === 'failed') {
+        updateLoadStatus('failed');
+      } else {
+        updateLoadStatus(result.hasMore ? 'continue' : 'idle');
+      }
+    } catch {
+      if (isMounted.current) {
+        updateLoadStatus('failed');
+      }
+    }
+  };
+
+  const loadMoreAtEnd = () => {
+    if (pagination.current.status === 'idle') {
+      void loadNextPage();
+    }
+  };
 
   const reportFirstRowLayout = () => {
     if (reportedRequestID.current === requestID) {
@@ -38,10 +110,37 @@ export default function SimilarMoviesPreview({movies, requestID}: Props) {
       style={styles.container}
       contentContainerStyle={styles.content}
       contentInsetAdjustmentBehavior="automatic"
-      data={movies}
+      data={items}
       keyExtractor={movie => String(movie.id)}
+      onEndReached={loadMoreAtEnd}
+      onEndReachedThreshold={0.5}
       ListHeaderComponent={<Text style={styles.heading}>비슷한 작품</Text>}
       ListEmptyComponent={<Text style={styles.title}>비슷한 작품이 없어요.</Text>}
+      ListFooterComponent={
+        loadStatus === 'loading' ? (
+          <ActivityIndicator
+            accessibilityLabel="비슷한 작품 불러오는 중"
+            color="#ffffff"
+            style={styles.footer}
+          />
+        ) : loadStatus === 'failed' || loadStatus === 'continue' ? (
+          <View style={styles.footer}>
+            {loadStatus === 'failed' ? (
+              <Text style={styles.originalTitle}>작품을 더 불러오지 못했어요.</Text>
+            ) : null}
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => {
+                void loadNextPage();
+              }}
+              style={styles.footerButton}>
+              <Text style={styles.title}>
+                {loadStatus === 'failed' ? '다시 시도' : '더 불러오기'}
+              </Text>
+            </Pressable>
+          </View>
+        ) : null
+      }
       renderItem={({item, index}) => (
         <Pressable
           accessibilityRole="button"
@@ -87,6 +186,14 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 22,
     fontWeight: '700',
+  },
+  footer: {
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+  },
+  footerButton: {
+    padding: 12,
   },
   row: {
     flexDirection: 'row',

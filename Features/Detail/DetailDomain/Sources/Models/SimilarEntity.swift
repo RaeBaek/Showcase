@@ -7,6 +7,18 @@
 
 import Foundation
 
+public struct SimilarMoviesPage {
+    public let items: [SimilarItemEntity]
+    public let page: Int
+    public let totalPages: Int
+
+    public init(items: [SimilarItemEntity], page: Int, totalPages: Int) {
+        self.items = items
+        self.page = page
+        self.totalPages = totalPages
+    }
+}
+
 public struct SimilarEntity {
     let page: Int
     let results: [SimilarResultEntity]

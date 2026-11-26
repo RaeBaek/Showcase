@@ -27,7 +27,7 @@ final class MovieDetailViewModelTests: XCTestCase {
         useCase.stubDetail = makeMovieDetailInfoEntity(id: id)
         useCase.stubCredits = makeCreditInfoEntitys()
         useCase.stubVideos = makeVideoItemEntitys()
-        useCase.stubSimilar = makeSimilarItemEntitys()
+        useCase.stubSimilar = SimilarMoviesPage(items: makeSimilarItemEntitys(), page: 1, totalPages: 3)
 
         viewModel = MovieDetailViewModel(
             id: id,
@@ -78,7 +78,9 @@ final class MovieDetailViewModelTests: XCTestCase {
             XCTAssertNotNil(state.adapter)
             XCTAssertEqual(state.credits.count, useCase.stubCredits.count)
             XCTAssertEqual(state.videos.count, useCase.stubVideos.count)
-            XCTAssertEqual(state.similars.count, useCase.stubSimilar.count)
+            XCTAssertEqual(state.similarMoviesPage?.items.count, useCase.stubSimilar.items.count)
+            XCTAssertEqual(state.similarMoviesPage?.page, useCase.stubSimilar.page)
+            XCTAssertEqual(state.similarMoviesPage?.totalPages, useCase.stubSimilar.totalPages)
         } else {
             XCTFail("Expected state to be .loaded, got \(state.state)")
         }

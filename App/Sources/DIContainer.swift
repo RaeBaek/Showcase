@@ -30,29 +30,39 @@ final class DIContainer {
         self.httpClient = httpClient
         self.language = language
     }
+}
 
-    // Repository
-    private func makeHomeRepository() -> HomeRepositoryImpl {
+/// Repository
+private extension DIContainer {
+    func makeHomeRepository() -> HomeRepositoryImpl {
         return HomeRepositoryImpl(client: httpClient)
     }
 
-    private func makeMovieDetailRepository() -> MovieDetailRepositoryImpl {
+    func makeMovieDetailRepository() -> MovieDetailRepositoryImpl {
         return MovieDetailRepositoryImpl(client: httpClient)
     }
 
-    private func makePeopleDetailRepository() -> PeopleDetailRepositoryImpl {
+    func makePeopleDetailRepository() -> PeopleDetailRepositoryImpl {
         return PeopleDetailRepositoryImpl(client: httpClient)
     }
 
-    private func makeTVDetailRepository() -> TVDetailRepositoryImpl {
+    func makeTVDetailRepository() -> TVDetailRepositoryImpl {
         return TVDetailRepositoryImpl(client: httpClient)
     }
 
-    private func makeStreamingRepository() -> HLSStreamRepositoryImpl {
+    func makeStreamingRepository() -> HLSStreamRepositoryImpl {
         return HLSStreamRepositoryImpl()
     }
 }
 
+/// UseCase
+extension DIContainer {
+    func makeMovieDetailUseCase() -> MovieDetailUseCase {
+        return MovieDetailUseCaseImpl(repository: makeMovieDetailRepository())
+    }
+}
+
+/// ViewModel
 extension DIContainer {
     @MainActor
     func makeHomeViewModel() -> HomeViewModel {
@@ -66,11 +76,10 @@ extension DIContainer {
 
     @MainActor
     func makeMovieDetailViewModel(id: Int32) -> MovieDetailViewModel {
-        let repository = makeMovieDetailRepository()
         return MovieDetailViewModel(
             id: id,
             language: language,
-            useCase: MovieDetailUseCaseImpl(repository: repository)
+            useCase: makeMovieDetailUseCase()
         )
     }
 

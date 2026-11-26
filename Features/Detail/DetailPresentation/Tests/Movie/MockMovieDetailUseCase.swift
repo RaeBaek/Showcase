@@ -22,7 +22,7 @@ final class MockMovieDetailUseCase: MovieDetailUseCase {
     var stubDetail: MovieDetailInfoEntity!
     var stubCredits: [CreditInfoEntity] = []
     var stubVideos: [VideoItemEntity] = []
-    var stubSimilar: [SimilarItemEntity] = []
+    var stubSimilar = SimilarMoviesPage(items: [], page: 1, totalPages: 0)
 
     // MARK: - Stubbed 에러
     var error: Error?
@@ -45,7 +45,7 @@ final class MockMovieDetailUseCase: MovieDetailUseCase {
         return stubVideos
     }
 
-    func fetchSimilar(_ input: DetailInput) async throws -> [SimilarItemEntity] {
+    func fetchSimilar(_ input: DetailInput) async throws -> SimilarMoviesPage {
         fetchSimilarCallCount += 1
         if let error { throw error }
         return stubSimilar

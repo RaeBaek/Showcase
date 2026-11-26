@@ -46,7 +46,7 @@ final class AppTests: XCTestCase {
     private func selectedMovieID(
         _ movieID: String,
         eventRequestID: UUID,
-        allowedMovieIDs: [Int] = [42]
+        allowedMovieIDs: Set<Int> = [42]
     ) -> Int32? {
         let notification = Notification(
             name: .init("ShowcaseSimilarMovieSelected"),

@@ -133,7 +133,10 @@ let project = Project(
             bundleId: "com.raehoon.Showcase.tests",
             infoPlist: .default,
             sources: ["Tests/**"],
-            dependencies: [.target(name: "App")]
+            dependencies: [
+                .target(name: "App"),
+                .project(target: "DetailDomain", path: "../Features/Detail/DetailDomain")
+            ]
         ),
     ],
     schemes: [
