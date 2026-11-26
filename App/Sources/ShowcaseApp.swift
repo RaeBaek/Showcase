@@ -33,8 +33,8 @@ struct ShowcaseApp: App {
                     case .movieDetail(let id):
                         MovieDetailView(
                             viewModel: container.makeMovieDetailViewModel(id: id),
-                            onShowSimilarMovies: showSimilarMovies,
-                            onShowSimilarMoviesWithSharedRuntime: showSimilarMoviesWithSharedRuntime
+                            onShowSimilarMovies: { showSimilarMovies(movieID: id, page: $0, mode: .fresh) },
+                            onShowSimilarMoviesWithSharedRuntime: { showSimilarMovies(movieID: id, page: $0, mode: .shared) }
                         ) { item in
                             navigator.push(item)
                         }
@@ -57,15 +57,17 @@ struct ShowcaseApp: App {
                 .preferredColorScheme(.dark)
                 .sheet(item: $similarMoviesPreview, onDismiss: openSelectedSimilarMovie) { request in
                     SimilarMoviesReactNativePreview(request: request)
+                        .onDisappear { request.pagination.cancel() }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: .init("ShowcaseSimilarMovieSelected"))) { notification in
                     guard let request = similarMoviesPreview,
                           let id = SimilarMovieSelection.movieID(
                               from: notification,
                               requestID: request.id,
-                              allowedMovieIDs: request.initialPage.items.map(\.id)
+                              allowedMovieIDs: request.pagination.allowedMovieIDs
                           ) else { return }
 
+                    request.pagination.cancel()
                     selectedSimilarMovieID = id
                     similarMoviesPreview = nil
                 }
@@ -79,12 +81,19 @@ struct ShowcaseApp: App {
         navigator.push(.movieDetail(id: id))
     }
 
-    private var showSimilarMovies: ((SimilarMoviesPage) -> Void)? {
-        return { similarMoviesPreview = .init(mode: .fresh, initialPage: $0) }
-    }
-
-    private var showSimilarMoviesWithSharedRuntime: ((SimilarMoviesPage) -> Void)? {
-        return { similarMoviesPreview = .init(mode: .shared, initialPage: $0) }
+    private func showSimilarMovies(
+        movieID: Int32,
+        page: SimilarMoviesPage,
+        mode: SimilarMoviesReactNativePreview.Mode
+    ) {
+        similarMoviesPreview?.pagination.cancel()
+        let pagination = SimilarMoviesPagination(
+            movieID: movieID,
+            language: container.language,
+            initialPage: page,
+            useCase: container.makeMovieDetailUseCase()
+        )
+        similarMoviesPreview = .init(mode: mode, initialPage: page, pagination: pagination)
     }
 }
 
@@ -92,7 +101,7 @@ enum SimilarMovieSelection {
     static func movieID(
         from notification: Notification,
         requestID: UUID,
-        allowedMovieIDs: [Int]
+        allowedMovieIDs: Set<Int>
     ) -> Int32? {
         guard notification.object as? String == requestID.uuidString,
               let movieID = notification.userInfo?["movieID"] as? String,

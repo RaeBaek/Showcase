@@ -20,6 +20,7 @@ type Props = {
   movies: SimilarMovie[];
   page: number;
   totalPages: number;
+  hasMore: boolean;
   requestID: string;
 };
 
