@@ -40,14 +40,14 @@ public final class MovieDetailViewModel: ObservableObject {
             async let videosTask = self.useCase.fetchVideos(input)
             async let similarTask = self.useCase.fetchSimilar(input)
 
-            let (detail, credits, videos, similars) = try await (detailTask, creditsTask, videosTask, similarTask)
+            let (detail, credits, videos, similarMoviesPage) = try await (detailTask, creditsTask, videosTask, similarTask)
 
             let adapter = MovieHeaderAdapter(info: detail)
 
             self.movieDetailState.adapter = adapter
             self.movieDetailState.credits = credits
             self.movieDetailState.videos = videos
-            self.movieDetailState.similars = similars
+            self.movieDetailState.similarMoviesPage = similarMoviesPage
 
             self.movieDetailState.state = .loaded
         } catch let domainError as DetailDomainError {
@@ -67,6 +67,6 @@ struct MovieDetailState {
     var adapter: MovieHeaderAdapter?
     var credits: [CreditInfoEntity] = []
     var videos: [VideoItemEntity] = []
-    var similars: [SimilarItemEntity] = []
+    var similarMoviesPage: SimilarMoviesPage?
     var showFullOverview: Bool = false
 }

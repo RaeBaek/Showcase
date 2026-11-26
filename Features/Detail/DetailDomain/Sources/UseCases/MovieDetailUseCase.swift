@@ -11,7 +11,7 @@ public protocol MovieDetailUseCase {
     func fetchDetail(_ input: DetailInput) async throws -> MovieDetailInfoEntity
     func fetchCredits(_ input: DetailInput) async throws -> [CreditInfoEntity]
     func fetchVideos(_ input: DetailInput) async throws -> [VideoItemEntity]
-    func fetchSimilar(_ input: DetailInput) async throws -> [SimilarItemEntity]
+    func fetchSimilar(_ input: DetailInput) async throws -> SimilarMoviesPage
 }
 
 public final class MovieDetailUseCaseImpl: MovieDetailUseCase {
@@ -37,8 +37,12 @@ public final class MovieDetailUseCaseImpl: MovieDetailUseCase {
         return videos.results.map { $0.toVideoItemEntity }
     }
 
-    public func fetchSimilar(_ input: DetailInput) async throws -> [SimilarItemEntity] {
+    public func fetchSimilar(_ input: DetailInput) async throws -> SimilarMoviesPage {
         let similars = try await self.repository.fetchSimilars(input)
-        return similars.results.map { $0.toSimilarMovieItemEntity }
+        return SimilarMoviesPage(
+            items: similars.results.map { $0.toSimilarMovieItemEntity },
+            page: similars.page,
+            totalPages: similars.totalPages
+        )
     }
 }

@@ -63,7 +63,7 @@ struct ShowcaseApp: App {
                           let id = SimilarMovieSelection.movieID(
                               from: notification,
                               requestID: request.id,
-                              allowedMovieIDs: request.movies.map(\.id)
+                              allowedMovieIDs: request.initialPage.items.map(\.id)
                           ) else { return }
 
                     selectedSimilarMovieID = id
@@ -79,12 +79,12 @@ struct ShowcaseApp: App {
         navigator.push(.movieDetail(id: id))
     }
 
-    private var showSimilarMovies: (([SimilarItemEntity]) -> Void)? {
-        return { similarMoviesPreview = .init(mode: .fresh, movies: $0) }
+    private var showSimilarMovies: ((SimilarMoviesPage) -> Void)? {
+        return { similarMoviesPreview = .init(mode: .fresh, initialPage: $0) }
     }
 
-    private var showSimilarMoviesWithSharedRuntime: (([SimilarItemEntity]) -> Void)? {
-        return { similarMoviesPreview = .init(mode: .shared, movies: $0) }
+    private var showSimilarMoviesWithSharedRuntime: ((SimilarMoviesPage) -> Void)? {
+        return { similarMoviesPreview = .init(mode: .shared, initialPage: $0) }
     }
 }
 

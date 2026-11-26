@@ -23,7 +23,7 @@ struct SimilarMoviesReactNativePreview: View {
         let startedAt = ContinuousClock.now
         let id = UUID()
         let mode: Mode
-        let movies: [SimilarItemEntity]
+        let initialPage: SimilarMoviesPage
     }
 
     let request: Request
@@ -184,7 +184,7 @@ struct SimilarMoviesReactNativePreview: View {
         }
 
         override func loadView() {
-            let movieProperties: [[String: Any]] = request.movies.map { movie in
+            let movieProperties: [[String: Any]] = request.initialPage.items.map { movie in
                 [
                     "id": movie.id,
                     "title": movie.title as Any? ?? NSNull(),
@@ -194,7 +194,12 @@ struct SimilarMoviesReactNativePreview: View {
             }
             view = runtime.factory.rootViewFactory.view(
                 withModuleName: "SimilarMoviesPreview",
-                initialProperties: ["movies": movieProperties, "requestID": request.id.uuidString]
+                initialProperties: [
+                    "movies": movieProperties,
+                    "page": request.initialPage.page,
+                    "totalPages": request.initialPage.totalPages,
+                    "requestID": request.id.uuidString
+                ]
             )
         }
     }

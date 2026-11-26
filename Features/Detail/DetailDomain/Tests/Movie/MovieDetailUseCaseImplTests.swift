@@ -98,7 +98,7 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
         XCTAssertEqual(result.count, repository.stubVideos.results.count)
     }
 
-    /// fetchSimilar(), DetailInput 체크와 result.map { $0.toSimilarMovieItemEntity } 동작 확인
+    /// fetchSimilar()의 입력, 작품 매핑 및 페이지 정보 전달 확인
     func test_fetchSimilar_buildsInputWithKoreanLanguage_andMapsResults() async throws {
         // given
         let id: Int32 = 650
@@ -112,9 +112,9 @@ final class MovieDetailUseCaseImplTests: XCTestCase {
         let input = try XCTUnwrap(repository.similarsInputs.first)
         XCTAssertEqual(input.id, id)
         XCTAssertEqual(input.language, "ko-KR")
-        XCTAssertEqual(result.count, repository.stubSimilars.results.count)
-        XCTAssertEqual(repository.stubSimilars.totalPages, 3)
-        XCTAssertEqual(repository.stubSimilars.totalResults, 30)
+        XCTAssertEqual(result.items.map(\.id), repository.stubSimilars.results.map(\.id))
+        XCTAssertEqual(result.page, 1)
+        XCTAssertEqual(result.totalPages, 3)
     }
 }
 
