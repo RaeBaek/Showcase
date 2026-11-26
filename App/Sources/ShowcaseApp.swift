@@ -57,6 +57,8 @@ struct ShowcaseApp: App {
                 .preferredColorScheme(.dark)
                 .sheet(item: $similarMoviesPreview, onDismiss: openSelectedSimilarMovie) { request in
                     SimilarMoviesReactNativePreview(request: request)
+                        .presentationDragIndicator(.visible)
+                        .presentationBackground(Color(white: 22.0 / 255.0))
                         .onDisappear { request.pagination.cancel() }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: .init("ShowcaseSimilarMovieSelected"))) { notification in
